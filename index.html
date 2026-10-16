@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>مینی اپ تلگرام</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding: 30px;
+      background-color: var(--tg-theme-bg-color, #1e1e24);
+      color: var(--tg-theme-text-color, #ffffff);
+    }
+    .card {
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 20px;
+      margin-top: 15px;
+    }
+    .btn {
+      background: #2481cc;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h3 id="user">در حال بارگذاری...</h3>
+    <p>این مینی‌اپ با موفقیت روی گیت‌هاب اجرا شد!</p>
+    <button class="btn" onclick="vibrateAndClose()">بستن اپلیکیشن</button>
+  </div>
+
+  <script>
+    const tg = window.Telegram.WebApp;
+    tg.ready();
+    tg.expand();
+
+    const username = tg.initDataUnsafe?.user?.first_name || 'کاربر گرامی';
+    document.getElementById('user').innerText = `سلام ${username} 👋`;
+
+    function vibrateAndClose() {
+      if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+      tg.close();
+    }
+  </script>
+</body>
+</html>
