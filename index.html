@@ -3,39 +3,107 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>مینی اپ تلگرام</title>
+  <title>فروشگاه و پنل مدیریت</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
+    :root {
+      --bg: var(--tg-theme-bg-color, #17212b);
+      --card-bg: var(--tg-theme-secondary-bg-color, #232e3c);
+      --text: var(--tg-theme-text-color, #ffffff);
+      --hint: var(--tg-theme-hint-color, #708499);
+      --button: var(--tg-theme-button-color, #2f6ea5);
+      --button-text: var(--tg-theme-button-text-color, #ffffff);
+    }
     body {
-      font-family: sans-serif;
-      text-align: center;
-      padding: 30px;
-      background-color: var(--tg-theme-bg-color, #1e1e24);
-      color: var(--tg-theme-text-color, #ffffff);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      margin: 0;
+      padding: 16px;
+      background: var(--bg);
+      color: var(--text);
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .badge {
+      background: rgba(47, 110, 165, 0.2);
+      color: var(--button);
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: bold;
     }
     .card {
-      background: rgba(255, 255, 255, 0.08);
-      border-radius: 14px;
-      padding: 20px;
-      margin-top: 15px;
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
     }
-    .btn {
-      background: #2481cc;
-      color: white;
-      border: none;
-      padding: 12px 24px;
-      border-radius: 10px;
+    .product-title {
       font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+    .product-price {
+      color: #4caf50;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    button {
+      background: var(--button);
+      color: var(--button-text);
+      border: none;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 14px;
       cursor: pointer;
-      margin-top: 15px;
+      width: 100%;
+      font-weight: 600;
+    }
+    input {
+      width: calc(100% - 20px);
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(0,0,0,0.2);
+      color: #fff;
+      outline: none;
+    }
+    #admin-panel {
+      display: none;
+      border: 2px dashed #28a745;
+      padding: 14px;
+      border-radius: 12px;
+      margin-top: 24px;
+      background: rgba(40, 167, 69, 0.05);
     }
   </style>
 </head>
 <body>
-  <div class="card">
-    <h3 id="user">در حال بارگذاری...</h3>
-    <p>این مینی‌اپ با موفقیت روی گیت‌هاب اجرا شد!</p>
-    <button class="btn" onclick="vibrateAndClose()">بستن اپلیکیشن</button>
+
+  <div class="header">
+    <div>
+      <span id="user-greeting" style="font-weight:bold;">سلام کاربر</span>
+      <div id="user-role" style="font-size: 12px; color: var(--hint);">کاربر عادی</div>
+    </div>
+    <div class="badge" id="role-badge">فروشگاه</div>
+  </div>
+
+  <div id="products-list">
+    <!-- محصولات اینجا لود می‌شوند -->
+  </div>
+
+  <!-- بخش اختصاصی مدیریت -->
+  <div id="admin-panel">
+    <h3 style="margin-top:0; color:#28a745;">⚙️ پنل مدیریت محصولات</h3>
+    <p style="font-size: 13px; color: var(--hint);">افزودن محصول جدید به کاتالوگ فروشگاه:</p>
+    <input type="text" id="prod-name" placeholder="نام محصول (مثلاً کانفیگ ۱ ماهه اختصاصی)">
+    <input type="text" id="prod-price" placeholder="قیمت (مثلاً ۱۵۰,۰۰۰ تومان)">
+    <button onclick="addNewProduct()" style="background:#28a745;">ثبت و انتشار محصول</button>
   </div>
 
   <script>
@@ -43,13 +111,77 @@
     tg.ready();
     tg.expand();
 
-    const username = tg.initDataUnsafe?.user?.first_name || 'کاربر گرامی';
-    document.getElementById('user').innerText = `سلام ${username} 👋`;
+    // آیدی عددی تلگرام شما
+    const ADMIN_ID = 1309025996;
 
-    function vibrateAndClose() {
-      if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
-      tg.close();
+    const currentUserId = tg.initDataUnsafe?.user?.id;
+    const currentUserName = tg.initDataUnsafe?.user?.first_name || 'کاربر گرامی';
+    document.getElementById('user-greeting').innerText = `سلام ${currentUserName} 👋`;
+
+    // بررسی سطح دسترسی کاربر
+    const isAdmin = (currentUserId === ADMIN_ID);
+
+    if (isAdmin) {
+      document.getElementById('user-role').innerText = 'دسترسی: مدیریت سیستم';
+      document.getElementById('role-badge').innerText = 'ادمین';
+      document.getElementById('admin-panel').style.display = 'block';
     }
+
+    // محصولات پیش‌فرض
+    let defaultProducts = [
+      { id: 1, title: 'محصول نمونه ۱', price: '۱۰۰,۰۰۰ تومان' },
+      { id: 2, title: 'محصول نمونه ۲', price: '۲۰۰,۰۰۰ تومان' }
+    ];
+
+    function getProducts() {
+      const stored = localStorage.getItem('app_products');
+      return stored ? JSON.parse(stored) : defaultProducts;
+    }
+
+    function renderProducts() {
+      const list = document.getElementById('products-list');
+      const products = getProducts();
+      list.innerHTML = '';
+
+      products.forEach(p => {
+        list.innerHTML += `
+          <div class="card">
+            <div class="product-title">${p.title}</div>
+            <div class="product-price">${p.price}</div>
+            <button onclick="orderProduct('${p.title}')">سفارش محصول</button>
+          </div>
+        `;
+      });
+    }
+
+    function addNewProduct() {
+      const name = document.getElementById('prod-name').value.trim();
+      const price = document.getElementById('prod-price').value.trim();
+
+      if (!name || !price) {
+        if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('error');
+        alert('لطفاً عنوان و قیمت را کامل وارد کنید.');
+        return;
+      }
+
+      const products = getProducts();
+      products.push({ id: Date.now(), title: name, price: price });
+      localStorage.setItem('app_products', JSON.stringify(products));
+
+      document.getElementById('prod-name').value = '';
+      document.getElementById('prod-price').value = '';
+
+      if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+      renderProducts();
+    }
+
+    function orderProduct(title) {
+      if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+      tg.sendData(JSON.stringify({ action: 'order', product: title }));
+    }
+
+    renderProducts();
   </script>
 </body>
 </html>
+
