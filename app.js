@@ -1,18 +1,21 @@
 const ADMIN_ID = 1309025996;
 
+// آیکون‌های وکتور شیک پیش‌فرض (با Remix Icon)
+const defaultNavItems = [
+  { icon: "ri-user-3-line", label: "پروفایل" },
+  { icon: "ri-task-line", label: "Task" },
+  { icon: "ri-store-2-line", label: "فروشگاه" },
+  { icon: "ri-gamepad-line", label: "بازی" },
+  { icon: "ri-wallet-3-line", label: "کیف پول" }
+];
+
 let defaultConfig = {
   title: "Black Item",
   bgColor: "#121212",
   cardColor: "#1e1e1e",
   textColor: "#ffffff",
   navActiveColor: "#0088cc",
-  navItems: [
-    { icon: "👤", label: "پروفایل" },
-    { icon: "📋", label: "Task" },
-    { icon: "🛍️", label: "فروشگاه" },
-    { icon: "🎮", label: "بازی" },
-    { icon: "💳", label: "کیف پول" }
-  ],
+  navItems: defaultNavItems,
   products: [
     { id: 1, title: "محصول نمونه ۱", desc: "توضیحات آیتم اول", price: "10$", img: "https://via.placeholder.com/150" },
     { id: 2, title: "محصول نمونه ۲", desc: "توضیحات آیتم دوم", price: "25$", img: "https://via.placeholder.com/150" }
@@ -23,7 +26,7 @@ let saved = localStorage.getItem("black_item_config");
 let appConfig = saved ? JSON.parse(saved) : defaultConfig;
 
 if (!appConfig.navItems || appConfig.navItems.length < 5) {
-  appConfig.navItems = defaultConfig.navItems;
+  appConfig.navItems = defaultNavItems;
 }
 
 const tg = window.Telegram?.WebApp;
@@ -51,12 +54,27 @@ function applyTheme() {
   appTitleEl.textContent = appConfig.title;
 }
 
+// تابع هوشمند برای تشخیص نوع آیکون (عکس اینترنتی، کلاس RemixIcon یا ایموجی)
+function renderIconHTML(iconStr) {
+  if (!iconStr) return "★";
+  // اگر لینک تصویر بود
+  if (iconStr.startsWith("http://") || iconStr.startsWith("https://") || iconStr.endsWith(".png") || iconStr.endsWith(".svg")) {
+    return `<img src="${iconStr}" style="width: 22px; height: 22px; object-fit: contain; display: block;" alt="icon">`;
+  }
+  // اگر کلاس آیکون وکتور بود
+  if (iconStr.startsWith("ri-")) {
+    return `<i class="${iconStr}" style="font-size: 20px;"></i>`;
+  }
+  // اگر ایموجی یا کاراکتر متنی بود
+  return `<span style="font-size: 18px;">${iconStr}</span>`;
+}
+
 function renderBottomNav() {
   bottomNav.innerHTML = "";
   appConfig.navItems.forEach((item, index) => {
     const btn = document.createElement("button");
     btn.className = `nav-item ${index === activeTabIndex ? "active" : ""}`;
-    btn.innerHTML = `${item.icon} <span>${item.label}</span>`;
+    btn.innerHTML = `${renderIconHTML(item.icon)} <span>${item.label}</span>`;
     btn.addEventListener("click", () => {
       activeTabIndex = index;
       renderBottomNav();
@@ -121,7 +139,7 @@ addProductBtn.addEventListener("click", () => {
   const img = document.getElementById("new-prod-img").value.trim();
 
   if (!title || !price) {
-    alert("لطفاً عنوان و قیمت را بنویس.");
+    alert("لطفاً حداقل عنوان و قیمت را بنویسید.");
     return;
   }
 
@@ -150,8 +168,8 @@ saveSettingsBtn.addEventListener("click", () => {
 
   for (let i = 0; i < 5; i++) {
     appConfig.navItems[i] = {
-      icon: document.getElementById(`tab-icon-${i}`).value.trim() || defaultConfig.navItems[i].icon,
-      label: document.getElementById(`tab-label-${i}`).value.trim() || defaultConfig.navItems[i].label
+      icon: document.getElementById(`tab-icon-${i}`).value.trim() || defaultNavItems[i].icon,
+      label: document.getElementById(`tab-label-${i}`).value.trim() || defaultNavItems[i].label
     };
   }
 
@@ -159,7 +177,7 @@ saveSettingsBtn.addEventListener("click", () => {
   applyTheme();
   renderBottomNav();
   adminModal.classList.add("hidden");
-  alert("تمام تنظیمات و تب‌ها با موفقیت ذخیره شدند!");
+  alert("تمام تنظیمات و آیکون‌ها ذخیره شدند!");
 });
 
 applyTheme();
