@@ -11,13 +11,14 @@
   margin: 0;
   padding: 0;
   font-family: system-ui, -apple-system, sans-serif;
+  user-select: none;
 }
 
 body {
   background-color: var(--bg-color);
   color: var(--text-color);
   min-height: 100vh;
-  padding-bottom: 70px;
+  padding-bottom: 75px;
 }
 
 /* هدر */
@@ -53,20 +54,129 @@ body {
 
 .user-balance {
   font-size: 14px;
+  font-weight: bold;
 }
 
-/* محتوا و گرید دو ستونه */
+/* مدیریت صفحات */
 .content-area {
   padding: 16px;
 }
 
+.app-page {
+  display: block;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.page-heading {
+  font-size: 16px;
+  margin-bottom: 12px;
+}
+
+/* صفحه ۱: پروفایل */
+.profile-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 24px 16px;
+  text-align: center;
+}
+
+.profile-avatar {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: #2a2a2a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  margin: 0 auto 12px;
+}
+
+.prof-sub {
+  color: #888;
+  font-size: 12px;
+  margin: 4px 0 16px;
+}
+
+.prof-stats {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.stat-box {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.stat-num {
+  display: block;
+  font-size: 16px;
+  font-weight: bold;
+  color: var(--accent-color);
+}
+
+.stat-label {
+  font-size: 11px;
+  color: #aaa;
+}
+
+/* صفحه ۲: تسک‌ها */
+.tasks-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.task-item {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  padding: 12px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.task-info h4 {
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+.task-info span {
+  font-size: 11px;
+  color: #4cd964;
+}
+
+.task-btn {
+  background: var(--accent-color);
+  border: none;
+  color: #fff;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.task-btn.completed {
+  background: #333;
+  color: #777;
+  cursor: default;
+}
+
+/* صفحه ۳: فروشگاه و گرید محصولات */
 .items-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
 }
 
-/* کارت محصول */
 .product-card {
   background: var(--card-bg);
   border: 1px solid var(--border-color);
@@ -89,7 +199,7 @@ body {
 }
 
 .product-title {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: bold;
   margin-bottom: 4px;
 }
@@ -112,16 +222,83 @@ body {
 .product-price {
   font-weight: bold;
   color: #4cd964;
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .buy-btn {
   background: var(--accent-color);
   border: none;
   color: #fff;
-  padding: 4px 8px;
+  padding: 4px 10px;
   border-radius: 6px;
   font-size: 11px;
+  cursor: pointer;
+}
+
+/* صفحه ۴: بازی کلیکی */
+.game-wrapper {
+  text-align: center;
+  padding: 20px 0;
+}
+
+.game-sub {
+  color: #888;
+  font-size: 12px;
+  margin-bottom: 25px;
+}
+
+.coin-tap-btn {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #f39c12, #d35400);
+  box-shadow: 0 0 25px rgba(243, 156, 18, 0.5);
+  font-size: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 25px;
+  cursor: pointer;
+  transition: transform 0.08s ease;
+}
+
+.coin-tap-btn:active {
+  transform: scale(0.92);
+}
+
+.energy-bar-wrap {
+  font-size: 13px;
+  color: #ccc;
+}
+
+/* صفحه ۵: ولت */
+.wallet-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  padding: 30px 16px;
+  text-align: center;
+}
+
+.wallet-icon {
+  font-size: 40px;
+  margin-bottom: 10px;
+}
+
+.wallet-status {
+  font-size: 12px;
+  color: #888;
+  margin: 8px 0 20px;
+}
+
+.wallet-connect-btn {
+  background: #0098ea;
+  border: none;
+  color: #fff;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 13px;
   cursor: pointer;
 }
 
@@ -137,6 +314,7 @@ body {
   display: flex;
   justify-content: space-around;
   align-items: center;
+  z-index: 100;
 }
 
 .nav-item {
@@ -147,7 +325,7 @@ body {
   flex-direction: column;
   align-items: center;
   font-size: 10px;
-  gap: 4px;
+  gap: 3px;
   cursor: pointer;
 }
 
@@ -155,7 +333,7 @@ body {
   color: var(--accent-color);
 }
 
-/* پنل و دکمه ادمین */
+/* پنل ادمین */
 .admin-fab {
   position: fixed;
   bottom: 75px;
@@ -169,10 +347,6 @@ body {
   cursor: pointer;
   z-index: 1000;
   box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-}
-
-.hidden {
-  display: none !important;
 }
 
 .modal {
