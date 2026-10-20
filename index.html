@@ -4,14 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>Black Item</title>
-  <!-- فونت آیکون فوق‌العاده باکیفیت Remix Icon -->
   <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- هدر -->
+  <!-- هدر اپلیکیشن -->
   <header class="app-header">
     <div class="user-info">
       <div class="avatar" id="user-avatar">👤</div>
@@ -23,15 +22,71 @@
     </div>
   </header>
 
-  <!-- محتوا -->
+  <!-- محتوای صفحات مختلف -->
   <main class="content-area">
-    <div class="items-grid" id="products-container"></div>
+
+    <!-- صفحه ۱: پروفایل -->
+    <section id="page-profile" class="app-page hidden">
+      <div class="profile-card">
+        <div class="profile-avatar" id="prof-avatar">👤</div>
+        <h3 id="prof-name">نام کاربر</h3>
+        <p class="prof-sub" id="prof-id">ID: 00000000</p>
+        <div class="prof-stats">
+          <div class="stat-box">
+            <span class="stat-num" id="prof-balance">0</span>
+            <span class="stat-label">سکه جمع‌شده</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-num">سطح ۱</span>
+            <span class="stat-label">لول کاربری</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- صفحه ۲: تسک‌ها -->
+    <section id="page-task" class="app-page hidden">
+      <h3 class="page-heading">📋 ماموریت‌ها و پاداش‌ها</h3>
+      <div class="tasks-list" id="tasks-container">
+        <!-- تسک‌ها به صورت پویا ساخته می‌شوند -->
+      </div>
+    </section>
+
+    <!-- صفحه ۳: فروشگاه (فعال پیش‌فرض) -->
+    <section id="page-shop" class="app-page">
+      <div class="items-grid" id="products-container"></div>
+    </section>
+
+    <!-- صفحه ۴: بازی -->
+    <section id="page-game" class="app-page hidden">
+      <div class="game-wrapper">
+        <h3 class="page-heading">🎮 مینی‌گیم کلیکی</h3>
+        <p class="game-sub">روی سکه بزن و موجودی جمع کن!</p>
+        <div class="coin-tap-btn" id="coin-tap">
+          🪙
+        </div>
+        <div class="energy-bar-wrap">
+          <p>انرژی: <span id="game-energy">100</span> / 100 ⚡</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- صفحه ۵: کیف پول -->
+    <section id="page-wallet" class="app-page hidden">
+      <div class="wallet-card">
+        <div class="wallet-icon">💎</div>
+        <h3>کیف پول تلگرام (TON)</h3>
+        <p class="wallet-status" id="wallet-status">ولت متصل نیست</p>
+        <button class="wallet-connect-btn" id="btn-connect-wallet">اتصال به Tonkeeper</button>
+      </div>
+    </section>
+
   </main>
 
   <!-- نوار ناوبری پایین -->
   <nav class="bottom-nav" id="bottom-nav"></nav>
 
-  <!-- دکمه شناور ادمین -->
+  <!-- دکمه شناور چرخ‌دنده ادمین -->
   <button id="admin-gear-btn" class="admin-fab hidden">⚙️</button>
 
   <!-- پنل مدیریت -->
@@ -59,35 +114,35 @@
         <input type="color" id="cfg-nav-active-color">
 
         <hr>
-        <h4>🧭 مدیریت منوی پایین (آیکون، لینک عکس یا کلاس RemixIcon)</h4>
+        <h4>🧭 مدیریت منوی پایین</h4>
         
         <label>تب ۱ (پروفایل):</label>
         <div style="display: flex; gap: 6px;">
-          <input type="text" id="tab-icon-0" style="flex: 1;" placeholder="آیکون / لینک">
+          <input type="text" id="tab-icon-0" style="flex: 1;" placeholder="آیکون">
           <input type="text" id="tab-label-0" style="flex: 1;" placeholder="نام">
         </div>
 
         <label>تب ۲ (تسک):</label>
         <div style="display: flex; gap: 6px;">
-          <input type="text" id="tab-icon-1" style="flex: 1;" placeholder="آیکون / لینک">
+          <input type="text" id="tab-icon-1" style="flex: 1;" placeholder="آیکون">
           <input type="text" id="tab-label-1" style="flex: 1;" placeholder="نام">
         </div>
 
         <label>تب ۳ (فروشگاه):</label>
         <div style="display: flex; gap: 6px;">
-          <input type="text" id="tab-icon-2" style="flex: 1;" placeholder="آیکون / لینک">
+          <input type="text" id="tab-icon-2" style="flex: 1;" placeholder="آیکون">
           <input type="text" id="tab-label-2" style="flex: 1;" placeholder="نام">
         </div>
 
         <label>تب ۴ (بازی):</label>
         <div style="display: flex; gap: 6px;">
-          <input type="text" id="tab-icon-3" style="flex: 1;" placeholder="آیکون / لینک">
+          <input type="text" id="tab-icon-3" style="flex: 1;" placeholder="آیکون">
           <input type="text" id="tab-label-3" style="flex: 1;" placeholder="نام">
         </div>
 
         <label>تب ۵ (کیف پول):</label>
         <div style="display: flex; gap: 6px;">
-          <input type="text" id="tab-icon-4" style="flex: 1;" placeholder="آیکون / لینک">
+          <input type="text" id="tab-icon-4" style="flex: 1;" placeholder="آیکون">
           <input type="text" id="tab-label-4" style="flex: 1;" placeholder="نام">
         </div>
 
@@ -105,6 +160,7 @@
     </div>
   </div>
 
-  <script src="app.js?v=3"></script>
+  <script src="app.js?v=4"></script>
 </body>
-</html>
+          </html>
+          
