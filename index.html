@@ -13,39 +13,36 @@
       font-family: system-ui, -apple-system, sans-serif;
     }
     body {
-      background-color: #0e0f12;
+      background-color: #0c0d14;
       color: #ffffff;
-      direction: rtl;
       padding: 16px;
-      padding-bottom: 85px;
+      padding-bottom: 90px;
       user-select: none;
       -webkit-tap-highlight-color: transparent;
     }
 
-    /* نوار بالا */
+    /* نوار بالایی */
     .top-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: #181920;
+      background: #151724;
       padding: 12px 16px;
       border-radius: 14px;
-      margin-bottom: 20px;
-      border: 1px solid #282936;
+      margin-bottom: 18px;
+      border: 1px solid #23273c;
     }
-    .balance-badge {
+    .balance-box {
+      color: #00d2ff;
+      font-weight: bold;
+      font-size: 15px;
       display: flex;
       align-items: center;
       gap: 6px;
-      font-weight: bold;
-      color: #00d2ff;
-      font-size: 15px;
     }
 
-    /* صفحه فروشگاه */
-    #tab-shop {
-      display: block;
-    }
+    /* تب فروشگاه */
+    #tab-shop { display: block; }
     .product-list {
       display: flex;
       flex-direction: column;
@@ -53,23 +50,16 @@
       margin-top: 14px;
     }
     .product-card {
-      background: #181920;
-      border: 1px solid #282936;
+      background: #151724;
+      border: 1px solid #23273c;
       border-radius: 14px;
       padding: 14px;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
-    .product-card h3 {
-      font-size: 15px;
-      margin-bottom: 6px;
-    }
-    .product-card p {
-      font-size: 13px;
-      color: #2ed573;
-      font-weight: bold;
-    }
+    .product-card h3 { font-size: 15px; margin-bottom: 6px; }
+    .product-card p { font-size: 13px; color: #2ed573; font-weight: bold; }
     .buy-btn {
       background: #0088cc;
       color: #fff;
@@ -80,10 +70,8 @@
       cursor: pointer;
     }
 
-    /* صفحه بازی و اسپین */
-    #tab-spin {
-      display: none;
-    }
+    /* تب انتخاب جعبه‌ها */
+    #tab-spin { display: none; }
     .boxes-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -91,67 +79,63 @@
       margin-top: 14px;
     }
     .box-card {
-      background: #181920;
+      background: #151724;
       border-radius: 16px;
-      padding: 16px;
+      padding: 18px 12px;
       text-align: center;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
       cursor: pointer;
       position: relative;
     }
-    .box-card.free { border: 1px solid #ffd700; }
-    .box-card.premium { border: 1px solid #8a2be2; }
-    .box-badge {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      font-size: 10px;
-      padding: 2px 6px;
-      border-radius: 6px;
-    }
-    .badge-gold { background: #ffd700; color: #000; }
-    .badge-purple { background: #8a2be2; color: #fff; }
-    .box-icon { font-size: 42px; margin-top: 4px; }
+    .box-card.free { border: 1px solid #e1b12c; box-shadow: 0 4px 15px rgba(225, 177, 44, 0.15); }
+    .box-card.premium { border: 1px solid #8854d0; box-shadow: 0 4px 15px rgba(136, 84, 208, 0.15); }
+    .box-icon { font-size: 46px; }
     .box-title { font-size: 14px; font-weight: bold; }
     .box-btn {
       width: 100%;
-      padding: 8px 0;
+      padding: 9px 0;
       border-radius: 10px;
       border: none;
       font-weight: bold;
       color: #fff;
     }
     .btn-gold { background: #e1b12c; }
-    .btn-purple { background: #7158e2; }
+    .btn-purple { background: #8854d0; }
 
-    /* نمای اجرای اسپین رول */
+    /* صفحه گردونه افقی */
     #spin-screen {
       display: none;
       flex-direction: column;
-      gap: 16px;
+      gap: 20px;
       align-items: center;
     }
     .back-btn {
       align-self: flex-start;
-      background: #252634;
+      background: #23273c;
       border: none;
       color: #fff;
       padding: 8px 14px;
       border-radius: 8px;
       cursor: pointer;
     }
+
+    /* باکس گردونه رول افقی */
     .roulette-container {
       position: relative;
       width: 100%;
-      height: 110px;
-      background: #121318;
-      border-radius: 16px;
+      height: 130px;
+      background: #090a0f;
+      border-radius: 18px;
       overflow: hidden;
-      border: 2px solid #2d2f3f;
+      border: 2px solid #282c44;
+      box-shadow: inset 0 0 25px rgba(0,0,0,0.8);
+      direction: ltr; /* چرخش اصولی و استاندارد از چپ به راست */
     }
+
+    /* خط نشانگر وسط گردونه */
     .roulette-pointer {
       position: absolute;
       top: 0;
@@ -160,58 +144,88 @@
       width: 4px;
       background: #ff4757;
       transform: translateX(-50%);
-      z-index: 10;
-      box-shadow: 0 0 10px #ff4757;
+      z-index: 20;
+      box-shadow: 0 0 12px #ff4757, 0 0 20px #ff4757;
     }
+    .roulette-pointer::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      border-left: 7px solid transparent;
+      border-right: 7px solid transparent;
+      border-top: 9px solid #ff4757;
+    }
+    .roulette-pointer::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      border-left: 7px solid transparent;
+      border-right: 7px solid transparent;
+      border-bottom: 9px solid #ff4757;
+    }
+
+    /* نوار حامل کارت‌ها */
     .roulette-track {
       display: flex;
+      align-items: center;
       height: 100%;
       position: absolute;
       left: 0;
       top: 0;
+      will-change: transform;
     }
+
+    /* استایل هر کارت جایزه */
     .roulette-item {
-      width: 90px;
-      height: 90px;
-      margin: 10px 5px;
-      background: #1e1f29;
-      border-radius: 12px;
+      width: 100px;
+      height: 105px;
+      margin: 0 5px;
+      background: linear-gradient(180deg, #1f2335 0%, #131522 100%);
+      border-radius: 14px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      border: 1px solid #323547;
+      border: 1px solid #313652;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.4);
     }
-    .roulette-item span { font-size: 28px; }
-    .roulette-item p { font-size: 11px; margin-top: 4px; color: #ddd; }
+    .roulette-item span { font-size: 34px; margin-bottom: 4px; }
+    .roulette-item p { font-size: 11px; color: #e1e3ec; text-align: center; font-weight: bold; }
 
+    /* دکمه چرخش */
     .roll-btn {
       width: 100%;
-      background: #ffa502;
+      background: linear-gradient(90deg, #ff9f43, #ee5253);
       border: none;
-      padding: 14px;
-      border-radius: 12px;
+      padding: 15px;
+      border-radius: 14px;
       font-size: 16px;
       font-weight: bold;
-      color: #000;
+      color: #fff;
       cursor: pointer;
+      box-shadow: 0 6px 20px rgba(238, 82, 83, 0.3);
     }
     .roll-btn:disabled {
-      background: #444;
-      color: #777;
+      background: #333647;
+      color: #666a80;
+      box-shadow: none;
       cursor: not-allowed;
     }
 
-    /* نوار پایین صفحه */
+    /* نوار پایین */
     .bottom-bar {
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
       height: 65px;
-      background: #14151a;
-      border-top: 1px solid #23242e;
+      background: #12141f;
+      border-top: 1px solid #23273c;
       display: flex;
       justify-content: space-around;
       align-items: center;
@@ -224,33 +238,29 @@
       gap: 4px;
       background: none;
       border: none;
-      color: #747d8c;
+      color: #6c7293;
       font-size: 12px;
       cursor: pointer;
       width: 45%;
     }
-    .bottom-btn.active {
-      color: #00a8ff;
-    }
-    .bottom-btn span {
-      font-size: 20px;
-    }
+    .bottom-btn.active { color: #00d2ff; }
+    .bottom-btn span { font-size: 22px; }
   </style>
 </head>
 <body>
 
-  <!-- نوار بالای صفحه -->
+  <!-- نوار وضعیت بالا -->
   <div class="top-bar">
     <span>بلک نت | BlackNet</span>
-    <div class="balance-badge">
+    <div class="balance-box">
       <span>💎</span>
       <span id="user-balance">100</span>
     </div>
   </div>
 
-  <!-- تب فروشگاه -->
+  <!-- تب محصولات -->
   <div id="tab-shop">
-    <h3>محصولات مجازی</h3>
+    <h3>فروشگاه محصولات مجازی</h3>
     <div class="product-list">
       <div class="product-card">
         <div>
@@ -265,7 +275,7 @@
           <h3>اکانت گوگل جیمینای پرو</h3>
           <p>۲۸۰,۰۰۰ تومان</p>
         </div>
-        <button class="buy-btn" onclick="buyItem('جیمینای پرو')">خرید</button>
+        <button class="buy-btn" onclick="buyItem('اکانت جیمینای پرو')">خرید</button>
       </div>
 
       <div class="product-card">
@@ -278,42 +288,40 @@
     </div>
   </div>
 
-  <!-- تب بازی و اسپین -->
+  <!-- تب بازی -->
   <div id="tab-spin">
     <div id="spin-lobby">
       <h3>جعبه‌های جوایز</h3>
       <div class="boxes-grid">
         <div class="box-card free" onclick="openBox('free')">
-          <span class="box-badge badge-gold">روزانه</span>
           <div class="box-icon">🎁</div>
-          <div class="box-title">اسپین رایگان</div>
-          <button class="box-btn btn-gold">ورود رایگان</button>
+          <div class="box-title">جعبه رایگان روزانه</div>
+          <button class="box-btn btn-gold">باز کردن رایگان</button>
         </div>
 
         <div class="box-card premium" onclick="openBox('vip')">
-          <span class="box-badge badge-purple">VIP</span>
           <div class="box-icon">👑</div>
-          <div class="box-title">اسپین پولی</div>
+          <div class="box-title">جعبه پولی VIP</div>
           <button class="box-btn btn-purple">۱۰ الماس</button>
         </div>
       </div>
     </div>
 
-    <!-- صفحه رول اسپین -->
+    <!-- بخش اسپین افقی -->
     <div id="spin-screen">
       <button class="back-btn" onclick="backToLobby()">⬅ بازگشت به جعبه‌ها</button>
       <h3 id="box-title">جعبه جوایز</h3>
 
-      <div class="roulette-container">
+      <div class="roulette-container" id="roulette-container">
         <div class="roulette-pointer"></div>
         <div class="roulette-track" id="roulette-track"></div>
       </div>
 
-      <button id="roll-button" class="roll-btn" onclick="startRoll()">باز کردن جعبه</button>
+      <button id="roll-button" class="roll-btn" onclick="startRoll()">شروع چرخش</button>
     </div>
   </div>
 
-  <!-- نوار منوی پایین -->
+  <!-- منوی پایین -->
   <div class="bottom-bar">
     <button id="btn-tab-shop" class="bottom-btn active" onclick="switchTab('shop')">
       <span>🛒</span>
@@ -343,7 +351,7 @@
       { name: "تخفیف ۵۰٪", icon: "🏷️" },
       { name: "۵۰ الماس", icon: "💎" },
       { name: "کانفیگ VIP", icon: "⚡" },
-      { name: "شانس مجدد", icon: "🔄" }
+      { name: "شانس دوباره", icon: "🔄" }
     ];
 
     function buyItem(name) {
@@ -358,7 +366,6 @@
       }
     }
 
-    // جابه‌جایی تب‌ها با کلیک روی منوی پایین
     function switchTab(tab) {
       const shopTab = document.getElementById("tab-shop");
       const spinTab = document.getElementById("tab-spin");
@@ -382,7 +389,7 @@
       currentMode = mode;
       document.getElementById("spin-lobby").style.display = "none";
       document.getElementById("spin-screen").style.display = "flex";
-      document.getElementById("box-title").innerText = mode === "free" ? "اسپین رایگان روزانه" : "اسپین پولی VIP";
+      document.getElementById("box-title").innerText = mode === "free" ? "جعبه رایگان روزانه" : "جعبه پولی VIP";
       generateTrack();
     }
 
@@ -392,13 +399,14 @@
       document.getElementById("spin-lobby").style.display = "block";
     }
 
+    // تولید کارت‌ها به صورت پشت سر هم داخل نوار
     function generateTrack() {
       const track = document.getElementById("roulette-track");
       track.style.transition = "none";
       track.style.transform = "translateX(0px)";
       track.innerHTML = "";
 
-      for (let i = 0; i < 50; i++) {
+      for (let i = 0; i < 70; i++) {
         const prize = spinPrizes[Math.floor(Math.random() * spinPrizes.length)];
         const el = document.createElement("div");
         el.className = "roulette-item";
@@ -407,11 +415,12 @@
       }
     }
 
+    // انیمیشن چرخشی دقیق و نرم شبیه CS:GO
     function startRoll() {
       if (isRolling) return;
 
       if (currentMode === "vip" && balance < 10) {
-        alert("موجودی شما کافی نیست!");
+        alert("موجودی الماس شما کافی نیست!");
         return;
       }
 
@@ -428,16 +437,21 @@
       track.style.transition = "none";
       track.style.transform = "translateX(0px)";
 
-      const targetIndex = Math.floor(Math.random() * 8) + 35;
-      const itemWidth = 100;
-      const containerWidth = document.querySelector(".roulette-container").offsetWidth;
-      const stopAt = (targetIndex * itemWidth) - (containerWidth / 2) + (itemWidth / 2);
+      // انتخاب تصادفی آیتم برنده بین ردیف‌های ۵۰ تا ۶۰
+      const targetIndex = Math.floor(Math.random() * 10) + 50;
+      const itemWidth = 110; // عرض ۱۰۰ پیکسل کارت + ۱۰ پیکسل مارجین
+      const containerWidth = document.getElementById("roulette-container").offsetWidth;
+      
+      // محاسبه موقعیت دقیق جهت ایستادن روی خط قرمز وسط
+      const stopAt = -((targetIndex * itemWidth) - (containerWidth / 2) + (itemWidth / 2));
 
+      // شتاب اولیه بالا و ترمز نرم در انتها
       setTimeout(() => {
-        track.style.transition = "transform 5s cubic-bezier(0.1, 0.85, 0.25, 1)";
+        track.style.transition = "transform 6.5s cubic-bezier(0.15, 0.9, 0.25, 1)";
         track.style.transform = `translateX(${stopAt}px)`;
       }, 50);
 
+      // اتمام چرخش و اعلام برنده
       setTimeout(() => {
         isRolling = false;
         btn.disabled = false;
@@ -445,13 +459,12 @@
         const prizeName = winner.querySelector("p").innerText;
 
         if (tg?.showAlert) {
-          tg.showAlert(`🎉 برنده شدید: ${prizeName}`);
+          tg.showAlert(`🎉 تبریک! شما برنده «${prizeName}» شدید!`);
         } else {
-          alert(`🎉 برنده شدید: ${prizeName}`);
+          alert(`🎉 تبریک! شما برنده «${prizeName}» شدید!`);
         }
-      }, 5300);
+      }, 6800);
     }
   </script>
 </body>
-  </html>
-  
+</html>
