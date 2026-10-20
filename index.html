@@ -6,339 +6,96 @@
   <title>بلک نت</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: system-ui, -apple-system, sans-serif;
-    }
-    body {
-      background-color: #0c0d14;
-      color: #ffffff;
-      padding: 16px;
-      padding-bottom: 90px;
-      user-select: none;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    /* نوار بالایی */
-    .top-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #151724;
-      padding: 12px 16px;
-      border-radius: 14px;
-      margin-bottom: 18px;
-      border: 1px solid #23273c;
-    }
-    .balance-box {
-      color: #00d2ff;
-      font-weight: bold;
-      font-size: 15px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    /* تب فروشگاه */
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, sans-serif; }
+    body { background-color: #0c0d14; color: #fff; padding: 16px 16px 90px; user-select: none; }
+    .top-bar { display: flex; justify-content: space-between; align-items: center; background: #151724; padding: 12px 16px; border-radius: 14px; margin-bottom: 18px; border: 1px solid #23273c; }
+    .balance-box { color: #00d2ff; font-weight: bold; font-size: 15px; display: flex; align-items: center; gap: 6px; }
     #tab-shop { display: block; }
-    .product-list {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-top: 14px;
-    }
-    .product-card {
-      background: #151724;
-      border: 1px solid #23273c;
-      border-radius: 14px;
-      padding: 14px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+    .product-list { display: flex; flex-direction: column; gap: 12px; margin-top: 14px; }
+    .product-card { background: #151724; border: 1px solid #23273c; border-radius: 14px; padding: 14px; display: flex; justify-content: space-between; align-items: center; }
     .product-card h3 { font-size: 15px; margin-bottom: 6px; }
     .product-card p { font-size: 13px; color: #2ed573; font-weight: bold; }
-    .buy-btn {
-      background: #0088cc;
-      color: #fff;
-      border: none;
-      padding: 9px 18px;
-      border-radius: 10px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    /* تب انتخاب جعبه‌ها */
+    .buy-btn { background: #0088cc; color: #fff; border: none; padding: 9px 18px; border-radius: 10px; font-weight: bold; cursor: pointer; }
     #tab-spin { display: none; }
-    .boxes-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-      margin-top: 14px;
-    }
-    .box-card {
-      background: #151724;
-      border-radius: 16px;
-      padding: 18px 12px;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
-      cursor: pointer;
-      position: relative;
-    }
-    .box-card.free { border: 1px solid #e1b12c; box-shadow: 0 4px 15px rgba(225, 177, 44, 0.15); }
-    .box-card.premium { border: 1px solid #8854d0; box-shadow: 0 4px 15px rgba(136, 84, 208, 0.15); }
+    .boxes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 14px; }
+    .box-card { background: #151724; border-radius: 16px; padding: 18px 12px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 12px; cursor: pointer; }
+    .box-card.free { border: 1px solid #e1b12c; }
+    .box-card.premium { border: 1px solid #8854d0; }
     .box-icon { font-size: 46px; }
     .box-title { font-size: 14px; font-weight: bold; }
-    .box-btn {
-      width: 100%;
-      padding: 9px 0;
-      border-radius: 10px;
-      border: none;
-      font-weight: bold;
-      color: #fff;
-    }
+    .box-btn { width: 100%; padding: 9px 0; border-radius: 10px; border: none; font-weight: bold; color: #fff; }
     .btn-gold { background: #e1b12c; }
     .btn-purple { background: #8854d0; }
-
-    /* صفحه گردونه افقی */
-    #spin-screen {
-      display: none;
-      flex-direction: column;
-      gap: 20px;
-      align-items: center;
-    }
-    .back-btn {
-      align-self: flex-start;
-      background: #23273c;
-      border: none;
-      color: #fff;
-      padding: 8px 14px;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-
-    /* باکس گردونه رول افقی */
-    .roulette-container {
-      position: relative;
-      width: 100%;
-      height: 130px;
-      background: #090a0f;
-      border-radius: 18px;
-      overflow: hidden;
-      border: 2px solid #282c44;
-      box-shadow: inset 0 0 25px rgba(0,0,0,0.8);
-      direction: ltr; /* چرخش اصولی و استاندارد از چپ به راست */
-    }
-
-    /* خط نشانگر وسط گردونه */
-    .roulette-pointer {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 50%;
-      width: 4px;
-      background: #ff4757;
-      transform: translateX(-50%);
-      z-index: 20;
-      box-shadow: 0 0 12px #ff4757, 0 0 20px #ff4757;
-    }
-    .roulette-pointer::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      border-left: 7px solid transparent;
-      border-right: 7px solid transparent;
-      border-top: 9px solid #ff4757;
-    }
-    .roulette-pointer::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      border-left: 7px solid transparent;
-      border-right: 7px solid transparent;
-      border-bottom: 9px solid #ff4757;
-    }
-
-    /* نوار حامل کارت‌ها */
-    .roulette-track {
-      display: flex;
-      align-items: center;
-      height: 100%;
-      position: absolute;
-      left: 0;
-      top: 0;
-      will-change: transform;
-    }
-
-    /* استایل هر کارت جایزه */
-    .roulette-item {
-      width: 100px;
-      height: 105px;
-      margin: 0 5px;
-      background: linear-gradient(180deg, #1f2335 0%, #131522 100%);
-      border-radius: 14px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      border: 1px solid #313652;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-    }
+    #spin-screen { display: none; flex-direction: column; gap: 20px; align-items: center; }
+    .back-btn { align-self: flex-start; background: #23273c; border: none; color: #fff; padding: 8px 14px; border-radius: 8px; cursor: pointer; }
+    .roulette-container { position: relative; width: 100%; height: 130px; background: #090a0f; border-radius: 18px; overflow: hidden; border: 2px solid #282c44; direction: ltr; }
+    .roulette-pointer { position: absolute; top: 0; bottom: 0; left: 50%; width: 4px; background: #ff4757; transform: translateX(-50%); z-index: 20; box-shadow: 0 0 12px #ff4757; }
+    .roulette-track { display: flex; align-items: center; height: 100%; position: absolute; left: 0; top: 0; will-change: transform; }
+    .roulette-item { width: 100px; height: 105px; margin: 0 5px; background: linear-gradient(180deg, #1f2335 0%, #131522 100%); border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; border: 1px solid #313652; }
     .roulette-item span { font-size: 34px; margin-bottom: 4px; }
     .roulette-item p { font-size: 11px; color: #e1e3ec; text-align: center; font-weight: bold; }
-
-    /* دکمه چرخش */
-    .roll-btn {
-      width: 100%;
-      background: linear-gradient(90deg, #ff9f43, #ee5253);
-      border: none;
-      padding: 15px;
-      border-radius: 14px;
-      font-size: 16px;
-      font-weight: bold;
-      color: #fff;
-      cursor: pointer;
-      box-shadow: 0 6px 20px rgba(238, 82, 83, 0.3);
-    }
-    .roll-btn:disabled {
-      background: #333647;
-      color: #666a80;
-      box-shadow: none;
-      cursor: not-allowed;
-    }
-
-    /* نوار پایین */
-    .bottom-bar {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 65px;
-      background: #12141f;
-      border-top: 1px solid #23273c;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      z-index: 100;
-    }
-    .bottom-btn {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-      background: none;
-      border: none;
-      color: #6c7293;
-      font-size: 12px;
-      cursor: pointer;
-      width: 45%;
-    }
+    .roll-btn { width: 100%; background: linear-gradient(90deg, #ff9f43, #ee5253); border: none; padding: 15px; border-radius: 14px; font-size: 16px; font-weight: bold; color: #fff; cursor: pointer; }
+    .roll-btn:disabled { background: #333647; color: #666a80; cursor: not-allowed; }
+    .bottom-bar { position: fixed; bottom: 0; left: 0; right: 0; height: 65px; background: #12141f; border-top: 1px solid #23273c; display: flex; justify-content: space-around; align-items: center; z-index: 100; }
+    .bottom-btn { display: flex; flex-direction: column; align-items: center; gap: 4px; background: none; border: none; color: #6c7293; font-size: 12px; cursor: pointer; }
     .bottom-btn.active { color: #00d2ff; }
     .bottom-btn span { font-size: 22px; }
   </style>
 </head>
 <body>
-
-  <!-- نوار وضعیت بالا -->
   <div class="top-bar">
     <span>بلک نت | BlackNet</span>
-    <div class="balance-box">
-      <span>💎</span>
-      <span id="user-balance">100</span>
-    </div>
+    <div class="balance-box"><span>💎</span><span id="user-balance">100</span></div>
   </div>
 
-  <!-- تب محصولات -->
   <div id="tab-shop">
     <h3>فروشگاه محصولات مجازی</h3>
     <div class="product-list">
       <div class="product-card">
-        <div>
-          <h3>فیلترشکن مستر ادیشن (۱ ماهه)</h3>
-          <p>۱۵۰,۰۰۰ تومان</p>
-        </div>
+        <div><h3>فیلترشکن مستر ادیشن (۱ ماهه)</h3><p>۱۵۰,۰۰۰ تومان</p></div>
         <button class="buy-btn" onclick="buyItem('مستر ادیشن ۱ ماهه')">خرید</button>
       </div>
-
       <div class="product-card">
-        <div>
-          <h3>اکانت گوگل جیمینای پرو</h3>
-          <p>۲۸۰,۰۰۰ تومان</p>
-        </div>
+        <div><h3>اکانت گوگل جیمینای پرو</h3><p>۲۸۰,۰۰۰ تومان</p></div>
         <button class="buy-btn" onclick="buyItem('اکانت جیمینای پرو')">خرید</button>
-      </div>
-
-      <div class="product-card">
-        <div>
-          <h3>کانفیگ اختصاصی VIP</h3>
-          <p>۲۰۰,۰۰۰ تومان</p>
-        </div>
-        <button class="buy-btn" onclick="buyItem('کانفیگ VIP')">خرید</button>
       </div>
     </div>
   </div>
 
-  <!-- تب بازی -->
   <div id="tab-spin">
     <div id="spin-lobby">
       <h3>جعبه‌های جوایز</h3>
       <div class="boxes-grid">
         <div class="box-card free" onclick="openBox('free')">
-          <div class="box-icon">🎁</div>
-          <div class="box-title">جعبه رایگان روزانه</div>
+          <div class="box-icon">🎁</div><div class="box-title">جعبه رایگان روزانه</div>
           <button class="box-btn btn-gold">باز کردن رایگان</button>
         </div>
-
         <div class="box-card premium" onclick="openBox('vip')">
-          <div class="box-icon">👑</div>
-          <div class="box-title">جعبه پولی VIP</div>
+          <div class="box-icon">👑</div><div class="box-title">جعبه پولی VIP</div>
           <button class="box-btn btn-purple">۱۰ الماس</button>
         </div>
       </div>
     </div>
 
-    <!-- بخش اسپین افقی -->
     <div id="spin-screen">
       <button class="back-btn" onclick="backToLobby()">⬅ بازگشت به جعبه‌ها</button>
       <h3 id="box-title">جعبه جوایز</h3>
-
       <div class="roulette-container" id="roulette-container">
         <div class="roulette-pointer"></div>
         <div class="roulette-track" id="roulette-track"></div>
       </div>
-
       <button id="roll-button" class="roll-btn" onclick="startRoll()">شروع چرخش</button>
     </div>
   </div>
 
-  <!-- منوی پایین -->
   <div class="bottom-bar">
-    <button id="btn-tab-shop" class="bottom-btn active" onclick="switchTab('shop')">
-      <span>🛒</span>
-      فروشگاه
-    </button>
-    <button id="btn-tab-spin" class="bottom-btn" onclick="switchTab('spin')">
-      <span>🎁</span>
-      بازی و اسپین
-    </button>
+    <button id="btn-tab-shop" class="bottom-btn active" onclick="switchTab('shop')"><span>🛒</span>فروشگاه</button>
+    <button id="btn-tab-spin" class="bottom-btn" onclick="switchTab('spin')"><span>🎁</span>بازی و اسپین</button>
   </div>
-
-  <script>
+    <script>
+    const SERVER_URL = "https://lmnph-195-201-20-40.run.pinggy-free.link";
     const tg = window.Telegram?.WebApp;
-    if (tg) {
-      tg.ready();
-      tg.expand();
-    }
+    if (tg) { tg.ready(); tg.expand(); }
 
     let balance = 100;
     let currentMode = "free";
@@ -354,15 +111,21 @@
       { name: "شانس دوباره", icon: "🔄" }
     ];
 
+    function sendToServer(actionType, dataPayload) {
+      const tgUser = tg?.initDataUnsafe?.user || { first_name: "کاربر تستی", id: "1309025996" };
+      fetch(`${SERVER_URL}/api/action`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: actionType, user: tgUser, ...dataPayload })
+      }).catch(err => console.error("Error:", err));
+    }
+
     function buyItem(name) {
+      sendToServer("buy", { product: name });
       if (tg?.showPopup) {
-        tg.showPopup({
-          title: "خرید محصول",
-          message: `آیا مایل به خرید ${name} هستید؟`,
-          buttons: [{ type: "ok", text: "تایید" }, { type: "cancel" }]
-        });
+        tg.showPopup({ title: "ثبت سفارش", message: `درخواست خرید ${name} ارسال شد!`, buttons: [{ type: "ok", text: "تایید" }] });
       } else {
-        alert("سفارش شما ثبت شد: " + name);
+        alert(`درخواست خرید ${name} ارسال شد!`);
       }
     }
 
@@ -373,15 +136,11 @@
       const btnSpin = document.getElementById("btn-tab-spin");
 
       if (tab === "shop") {
-        shopTab.style.display = "block";
-        spinTab.style.display = "none";
-        btnShop.classList.add("active");
-        btnSpin.classList.remove("active");
+        shopTab.style.display = "block"; spinTab.style.display = "none";
+        btnShop.classList.add("active"); btnSpin.classList.remove("active");
       } else {
-        shopTab.style.display = "none";
-        spinTab.style.display = "block";
-        btnSpin.classList.add("active");
-        btnShop.classList.remove("active");
+        shopTab.style.display = "none"; spinTab.style.display = "block";
+        btnSpin.classList.add("active"); btnShop.classList.remove("active");
       }
     }
 
@@ -399,7 +158,6 @@
       document.getElementById("spin-lobby").style.display = "block";
     }
 
-    // تولید کارت‌ها به صورت پشت سر هم داخل نوار
     function generateTrack() {
       const track = document.getElementById("roulette-track");
       track.style.transition = "none";
@@ -415,14 +173,9 @@
       }
     }
 
-    // انیمیشن چرخشی دقیق و نرم شبیه CS:GO
     function startRoll() {
       if (isRolling) return;
-
-      if (currentMode === "vip" && balance < 10) {
-        alert("موجودی الماس شما کافی نیست!");
-        return;
-      }
+      if (currentMode === "vip" && balance < 10) { alert("موجودی کم است!"); return; }
 
       if (currentMode === "vip") {
         balance -= 10;
@@ -437,26 +190,23 @@
       track.style.transition = "none";
       track.style.transform = "translateX(0px)";
 
-      // انتخاب تصادفی آیتم برنده بین ردیف‌های ۵۰ تا ۶۰
       const targetIndex = Math.floor(Math.random() * 10) + 50;
-      const itemWidth = 110; // عرض ۱۰۰ پیکسل کارت + ۱۰ پیکسل مارجین
+      const itemWidth = 110;
       const containerWidth = document.getElementById("roulette-container").offsetWidth;
-      
-      // محاسبه موقعیت دقیق جهت ایستادن روی خط قرمز وسط
       const stopAt = -((targetIndex * itemWidth) - (containerWidth / 2) + (itemWidth / 2));
 
-      // شتاب اولیه بالا و ترمز نرم در انتها
       setTimeout(() => {
         track.style.transition = "transform 6.5s cubic-bezier(0.15, 0.9, 0.25, 1)";
         track.style.transform = `translateX(${stopAt}px)`;
       }, 50);
 
-      // اتمام چرخش و اعلام برنده
       setTimeout(() => {
         isRolling = false;
         btn.disabled = false;
         const winner = track.children[targetIndex];
         const prizeName = winner.querySelector("p").innerText;
+
+        sendToServer("spin", { prize: prizeName });
 
         if (tg?.showAlert) {
           tg.showAlert(`🎉 تبریک! شما برنده «${prizeName}» شدید!`);
