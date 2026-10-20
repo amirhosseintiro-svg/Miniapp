@@ -1,20 +1,20 @@
-// آیدی تلگرام ادمین
 const ADMIN_ID = 1309025996;
 
-// تنظیمات پیش‌فرض با قابلیت سفارشی‌سازی کامل ناوبری
+const defaultNavItems = [
+  { id: "profile", label: "پروفایل", icon: "👤", active: false },
+  { id: "task", label: "Task", icon: "📋", active: false },
+  { id: "shop", label: "فروشگاه", icon: "🛍️", active: true },
+  { id: "game", label: "بازی", icon: "🎮", active: false },
+  { id: "wallet", label: "کیف پول", icon: "💳", active: false }
+];
+
 let defaultConfig = {
   title: "Black Item",
   bgColor: "#121212",
   cardColor: "#1e1e1e",
   textColor: "#ffffff",
   navActiveColor: "#0088cc",
-  navItems: [
-    { id: "profile", label: "پروفایل", icon: "👤", active: false },
-    { id: "task", label: "Task", icon: "📋", active: false },
-    { id: "shop", label: "فروشگاه", icon: "🛍️", active: true },
-    { id: "game", label: "بازی", icon: "🎮", active: false },
-    { id: "wallet", label: "کیف پول", icon: "💳", active: false }
-  ],
+  navItems: defaultNavItems,
   products: [
     {
       id: 1,
@@ -33,19 +33,23 @@ let defaultConfig = {
   ]
 };
 
-// دریافت دیتای ذخیره شده
-let appConfig = JSON.parse(localStorage.getItem("black_item_config")) || defaultConfig;
-if (!appConfig.navItems) appConfig.navItems = defaultConfig.navItems;
-if (!appConfig.navActiveColor) appConfig.navActiveColor = "#0088cc";
+// بازیابی و تضمین وجود تب‌ها
+let saved = localStorage.getItem("black_item_config");
+let appConfig = saved ? JSON.parse(saved) : defaultConfig;
 
-// اتصال به وب‌اپ تلگرام
+if (!appConfig.navItems || !Array.isArray(appConfig.navItems) || appConfig.navItems.length === 0) {
+  appConfig.navItems = defaultNavItems;
+}
+if (!appConfig.navActiveColor) {
+  appConfig.navActiveColor = "#0088cc";
+}
+
 const tg = window.Telegram?.WebApp;
 if (tg) {
   tg.ready();
   tg.expand();
 }
 
-// المان‌ها
 const appTitleEl = document.getElementById("app-title");
 const productsContainer = document.getElementById("products-container");
 const bottomNav = document.getElementById("bottom-nav");
@@ -56,7 +60,6 @@ const saveSettingsBtn = document.getElementById("save-settings-btn");
 const addProductBtn = document.getElementById("add-product-btn");
 const navManagerContainer = document.getElementById("nav-items-manager");
 
-// اعمال رنگ‌ها و استایل‌ها
 function applyTheme() {
   document.documentElement.style.setProperty("--bg-color", appConfig.bgColor);
   document.documentElement.style.setProperty("--card-bg", appConfig.cardColor);
@@ -65,23 +68,21 @@ function applyTheme() {
   appTitleEl.textContent = appConfig.title;
 }
 
-// ساخت و نمایش منوی پایین (پویا)
 function renderBottomNav() {
   bottomNav.innerHTML = "";
-  appConfig.navItems.forEach(item => {
+  appConfig.navItems.forEach((item, index) => {
     const btn = document.createElement("button");
     btn.className = `nav-item ${item.active ? "active" : ""}`;
     btn.innerHTML = `${item.icon} <span>${item.label}</span>`;
     btn.addEventListener("click", () => {
       appConfig.navItems.forEach(i => i.active = false);
-      item.active = true;
+      appConfig.navItems[index].active = true;
       renderBottomNav();
     });
     bottomNav.appendChild(btn);
   });
 }
 
-// ساخت کارت‌های محصولات
 function renderProducts() {
   productsContainer.innerHTML = "";
   appConfig.products.forEach(p => {
@@ -102,21 +103,20 @@ function renderProducts() {
   });
 }
 
-// رندر فیلدهای مدیریت نوار ناوبری داخل پنل
+// ساخت فیلدهای ویرایش تک‌تک ۵ تب با استایل تمیز
 function renderNavManager() {
   navManagerContainer.innerHTML = "";
   appConfig.navItems.forEach((item, index) => {
     const row = document.createElement("div");
-    row.style.cssText = "display: flex; gap: 8px; margin-top: 6px; align-items: center;";
+    row.style.cssText = "display: flex; gap: 8px; margin-top: 8px; align-items: center;";
     row.innerHTML = `
-      <input type="text" value="${item.icon}" id="nav-icon-${index}" style="width: 45px; text-align: center;">
-      <input type="text" value="${item.label}" id="nav-label-${index}" style="flex: 1;">
+      <input type="text" value="${item.icon}" id="nav-icon-${index}" style="width: 50px; text-align: center; font-size: 16px; padding: 6px; border-radius: 6px; border: 1px solid #444; background: #111; color: #fff;">
+      <input type="text" value="${item.label}" id="nav-label-${index}" style="flex: 1; padding: 6px; border-radius: 6px; border: 1px solid #444; background: #111; color: #fff;">
     `;
     navManagerContainer.appendChild(row);
   });
 }
 
-// بررسی دسترسی ادمین
 function checkAdminAccess() {
   const currentUserId = tg?.initDataUnsafe?.user?.id;
   if (currentUserId === ADMIN_ID || !tg?.initDataUnsafe?.user) {
@@ -124,7 +124,6 @@ function checkAdminAccess() {
   }
 }
 
-// لود داده‌ها داخل فرم ادمین
 function loadAdminInputs() {
   document.getElementById("cfg-app-title").value = appConfig.title;
   document.getElementById("cfg-bg-color").value = appConfig.bgColor;
@@ -134,7 +133,6 @@ function loadAdminInputs() {
   renderNavManager();
 }
 
-// باز/بسته کردن پنل
 adminGearBtn.addEventListener("click", () => {
   loadAdminInputs();
   adminModal.classList.remove("hidden");
@@ -144,7 +142,6 @@ closeAdminBtn.addEventListener("click", () => {
   adminModal.classList.add("hidden");
 });
 
-// افزودن محصول
 addProductBtn.addEventListener("click", () => {
   const title = document.getElementById("new-prod-title").value.trim();
   const desc = document.getElementById("new-prod-desc").value.trim();
@@ -152,7 +149,7 @@ addProductBtn.addEventListener("click", () => {
   const img = document.getElementById("new-prod-img").value.trim();
 
   if (!title || !price) {
-    alert("لطفاً حداقل عنوان و قیمت را وارد کنید.");
+    alert("لطفاً حداقل عنوان و قیمت را بنویس.");
     return;
   }
 
@@ -165,14 +162,13 @@ addProductBtn.addEventListener("click", () => {
   });
 
   renderProducts();
-  alert("محصول اضافه شد! حتما دکمه ذخیره تمام تغییرات را بزنید.");
+  alert("محصول اضافه شد! در پایان دکمه ذخیره تغییرات را بزن.");
   document.getElementById("new-prod-title").value = "";
   document.getElementById("new-prod-desc").value = "";
   document.getElementById("new-prod-price").value = "";
   document.getElementById("new-prod-img").value = "";
 });
 
-// ذخیره تغییرات
 saveSettingsBtn.addEventListener("click", () => {
   appConfig.title = document.getElementById("cfg-app-title").value.trim() || appConfig.title;
   appConfig.bgColor = document.getElementById("cfg-bg-color").value;
@@ -180,13 +176,13 @@ saveSettingsBtn.addEventListener("click", () => {
   appConfig.textColor = document.getElementById("cfg-text-color").value;
   appConfig.navActiveColor = document.getElementById("cfg-nav-active-color").value;
 
-  // ذخیره نام و آیکون تک‌تک تب‌ها
+  // دریافت و ذخیره دقیق نام و آیکون تک‌تک تب‌ها
   appConfig.navItems.forEach((item, index) => {
     const iconInput = document.getElementById(`nav-icon-${index}`);
     const labelInput = document.getElementById(`nav-label-${index}`);
     if (iconInput && labelInput) {
-      item.icon = iconInput.value.trim();
-      item.label = labelInput.value.trim();
+      item.icon = iconInput.value.trim() || item.icon;
+      item.label = labelInput.value.trim() || item.label;
     }
   });
 
@@ -194,7 +190,7 @@ saveSettingsBtn.addEventListener("click", () => {
   applyTheme();
   renderBottomNav();
   adminModal.classList.add("hidden");
-  alert("تمام تنظیمات، رنگ‌ها و تب‌ها ذخیره شدند!");
+  alert("تغییرات با موفقیت ذخیره شد!");
 });
 
 // اجرای اولیه
@@ -202,5 +198,4 @@ applyTheme();
 renderProducts();
 renderBottomNav();
 checkAdminAccess();
-  
-    
+                                
