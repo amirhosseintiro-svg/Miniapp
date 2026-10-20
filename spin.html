@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>بخش بازی و اسپین</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+    body { background-color: #121212; color: #fff; padding: 16px; direction: rtl; user-select: none; }
+
+    .header-bar {
+      display: flex; justify-content: space-between; align-items: center;
+      background: #1e1e1e; padding: 12px 16px; border-radius: 14px; margin-bottom: 20px;
+    }
+    .balance-box { font-size: 15px; font-weight: bold; color: #00d2ff; }
+
+    .nav-link {
+      display: inline-block; margin-bottom: 15px; color: #aaa; text-decoration: none; font-size: 14px;
+    }
+
+    .boxes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .box-card {
+      background: #1a1a1a; border: 1px solid #2d2d2d; border-radius: 16px;
+      padding: 16px; text-align: center; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 10px;
+    }
+    .box-card.free { border-color: #ffd700; }
+    .box-card.premium { border-color: #7b2cbf; }
+    .box-icon { font-size: 44px; }
+    .box-title { font-size: 15px; font-weight: bold; }
+    .box-btn { width: 100%; padding: 8px 0; border-radius: 10px; border: none; font-weight: bold; color: #fff; }
+    .btn-free { background: #e0a905; }
+    .btn-premium { background: #6f42c1; }
+
+    #spin-screen { display: none; flex-direction: column; align-items: center; gap: 18px; }
+    .back-btn { align-self: flex-start; background: #2a2a2a; border: none; color: #fff; padding: 8px 14px; border-radius: 8px; cursor: pointer; }
+
+    .roulette-wrapper {
+      position: relative; width: 100%; height: 110px; background: #181818;
+      border-radius: 16px; overflow: hidden; border: 2px solid #333;
+    }
+    .pointer {
+      position: absolute; top: 0; bottom: 0; left: 50%; width: 4px; background: #00e5ff;
+      transform: translateX(-50%); z-index: 10; box-shadow: 0 0 10px #00e5ff;
+    }
+    .roulette-track { display: flex; height: 100%; position: absolute; left: 0; top: 0; transform: translateX(0); }
+    .item-card {
+      width: 90px; height: 90px; margin: 10px 5px; background: #242424;
+      border-radius: 12px; display: flex; flex-direction: column; align-items: center;
+      justify-content: center; flex-shrink: 0; border: 1px solid #383838;
+    }
+    .item-card span { font-size: 28px; }
+    .item-card p { font-size: 11px; margin-top: 4px; color: #ccc; }
+
+    .spin-action-btn {
+      width: 100%; background: #ffaa00; border: none; padding: 14px;
+      border-radius: 12px; font-size: 16px; font-weight: bold; color: #111; cursor: pointer;
+    }
+    .spin-action-btn:disabled { background: #555; color: #888; cursor: not-allowed; }
+  </style>
+</head>
+<body>
+
+  <!-- صفحه انتخاب اسپین -->
+  <div id="lobby-screen">
+    <div class="header-bar">
+      <span>موجودی شما:</span>
+      <span class="balance-box">💎 0.023</span>
+    </div>
+
+    <div class="boxes-grid">
+      <div class="box-card free" onclick="openBoxView('free')">
+        <div class="box-icon">🎁</div>
+        <div class="box-title">Free 24h</div>
+        <button class="box-btn btn-free">رایگان</button>
+      </div>
+
+      <div class="box-card premium" onclick="openBoxView('premium')">
+        <div class="box-icon">👑</div>
+        <div class="box-title">VIP Case</div>
+        <button class="box-btn btn-premium">0.1 💎</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- صفحه گردونه افقی -->
+  <div id="spin-screen">
+    <button class="back-btn" onclick="backToLobby()">⬅ بازگشت</button>
+    <h2 id="current-box-title">جعبه روزانه</h2>
+
+    <div class="roulette-wrapper">
+      <div class="pointer"></div>
+      <div class="roulette-track" id="roulette-track"></div>
+    </div>
+
+    <button id="spin-btn" class="spin-action-btn" onclick="startHorizontalSpin()">باز کردن جعبه</button>
+  </div>
+
+  <!-- فایل اسکریپت اختصاصی اسپین -->
+  <script src="js/spin.js"></script>
+</body>
+</html>
+      
