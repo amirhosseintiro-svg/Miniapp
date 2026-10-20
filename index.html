@@ -3,121 +3,486 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>بلک نت</title>
+  <title>بلک نت | BlackNet Store</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, sans-serif; }
-    body { background-color: #0c0d14; color: #fff; padding: 16px 16px 90px; user-select: none; }
-    .top-bar { display: flex; justify-content: space-between; align-items: center; background: #151724; padding: 12px 16px; border-radius: 14px; margin-bottom: 18px; border: 1px solid #23273c; }
-    .balance-box { color: #00d2ff; font-weight: bold; font-size: 15px; display: flex; align-items: center; gap: 6px; }
+    :root {
+      --bg: #090a10;
+      --card-bg: rgba(21, 23, 36, 0.7);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --accent: #00d2ff;
+      --accent-glow: rgba(0, 210, 255, 0.35);
+      --gold: #f5af19;
+      --gold-glow: rgba(245, 175, 25, 0.4);
+      --purple: #8e2de2;
+      --danger: #ff4757;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
     
-    /* تب فروشگاه */
+    body {
+      background-color: var(--bg);
+      background-image: radial-gradient(circle at 50% 0%, #171b30 0%, #090a10 70%);
+      color: #fff;
+      padding: 16px 16px 95px;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      min-height: 100vh;
+    }
+
+    /* نوار هدر مدرن */
+    .header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding: 14px 18px;
+      border-radius: 18px;
+      border: 1px solid var(--card-border);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+      margin-bottom: 20px;
+    }
+    .brand-title {
+      font-weight: 800;
+      font-size: 16px;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .brand-badge {
+      background: linear-gradient(135deg, #00d2ff, #0066ff);
+      color: #fff;
+      font-size: 10px;
+      padding: 2px 7px;
+      border-radius: 6px;
+      font-weight: bold;
+    }
+    .balance-pill {
+      background: rgba(0, 210, 255, 0.1);
+      border: 1px solid rgba(0, 210, 255, 0.3);
+      padding: 6px 14px;
+      border-radius: 20px;
+      color: var(--accent);
+      font-weight: 800;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 0 12px var(--accent-glow);
+    }
+
+    /* عناوین بخش‌ها */
+    .section-header {
+      font-size: 15px;
+      font-weight: 700;
+      color: #a4b0be;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* کارت‌های فروشگاه */
     #tab-shop { display: block; }
-    .product-list { display: flex; flex-direction: column; gap: 12px; margin-top: 14px; }
-    .product-card { background: #151724; border: 1px solid #23273c; border-radius: 14px; padding: 14px; display: flex; justify-content: space-between; align-items: center; }
-    .product-card h3 { font-size: 15px; margin-bottom: 6px; }
-    .product-card p { font-size: 13px; color: #2ed573; font-weight: bold; }
-    .buy-btn { background: #0088cc; color: #fff; border: none; padding: 9px 18px; border-radius: 10px; font-weight: bold; cursor: pointer; }
-    
-    /* تب بازی و اسپین */
+    .product-list { display: flex; flex-direction: column; gap: 14px; }
+    .product-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.15s ease, border-color 0.2s ease;
+    }
+    .product-card:active { transform: scale(0.98); }
+    .product-info h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+    .product-info p {
+      font-size: 14px;
+      color: #2ed573;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .buy-btn {
+      background: linear-gradient(135deg, #00d2ff, #0072ff);
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0, 114, 255, 0.35);
+      transition: all 0.2s ease;
+    }
+    .buy-btn:active { transform: scale(0.92); }
+
+    /* تب جعبه‌ها */
     #tab-spin { display: none; }
-    .boxes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 14px; }
-    .box-card { background: #151724; border-radius: 16px; padding: 18px 12px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 12px; cursor: pointer; }
-    .box-card.free { border: 1px solid #e1b12c; }
-    .box-card.premium { border: 1px solid #8854d0; }
-    .box-icon { font-size: 46px; }
-    .box-title { font-size: 14px; font-weight: bold; }
-    .box-btn { width: 100%; padding: 9px 0; border-radius: 10px; border: none; font-weight: bold; color: #fff; }
-    .btn-gold { background: #e1b12c; }
-    .btn-purple { background: #8854d0; }
-    
-    #spin-screen { display: none; flex-direction: column; gap: 20px; align-items: center; }
-    .back-btn { align-self: flex-start; background: #23273c; border: none; color: #fff; padding: 8px 14px; border-radius: 8px; cursor: pointer; }
-    .roulette-container { position: relative; width: 100%; height: 130px; background: #090a0f; border-radius: 18px; overflow: hidden; border: 2px solid #282c44; direction: ltr; }
-    .roulette-pointer { position: absolute; top: 0; bottom: 0; left: 50%; width: 4px; background: #ff4757; transform: translateX(-50%); z-index: 20; box-shadow: 0 0 12px #ff4757; }
-    .roulette-track { display: flex; align-items: center; height: 100%; position: absolute; left: 0; top: 0; will-change: transform; }
-    .roulette-item { width: 100px; height: 105px; margin: 0 5px; background: linear-gradient(180deg, #1f2335 0%, #131522 100%); border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; border: 1px solid #313652; }
-    .roulette-item span { font-size: 34px; margin-bottom: 4px; }
-    .roulette-item p { font-size: 11px; color: #e1e3ec; text-align: center; font-weight: bold; }
-    .roll-btn { width: 100%; background: linear-gradient(90deg, #ff9f43, #ee5253); border: none; padding: 15px; border-radius: 14px; font-size: 16px; font-weight: bold; color: #fff; cursor: pointer; }
-    .roll-btn:disabled { background: #333647; color: #666a80; cursor: not-allowed; }
+    .boxes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .box-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      padding: 22px 14px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      border: 1px solid var(--card-border);
+      transition: all 0.2s ease;
+      position: relative;
+    }
+    .box-card:active { transform: scale(0.96); }
+    .box-card.free {
+      border-color: rgba(245, 175, 25, 0.3);
+      box-shadow: 0 8px 25px var(--gold-glow);
+    }
+    .box-card.premium {
+      border-color: rgba(142, 45, 226, 0.4);
+      box-shadow: 0 8px 25px rgba(142, 45, 226, 0.3);
+    }
+    .box-icon {
+      font-size: 52px;
+      filter: drop-shadow(0 6px 12px rgba(0,0,0,0.5));
+      animation: float 3s ease-in-out infinite alternate;
+    }
+    @keyframes float {
+      from { transform: translateY(0px); }
+      to { transform: translateY(-6px); }
+    }
+    .box-title { font-size: 14px; font-weight: 800; }
+    .box-btn {
+      width: 100%;
+      padding: 10px 0;
+      border-radius: 12px;
+      border: none;
+      font-weight: 800;
+      font-size: 13px;
+      color: #fff;
+    }
+    .btn-gold { background: linear-gradient(135deg, #f5af19, #e65c00); box-shadow: 0 4px 15px var(--gold-glow); }
+    .btn-purple { background: linear-gradient(135deg, #8e2de2, #4a00e0); box-shadow: 0 4px 15px rgba(142, 45, 226, 0.4); }
 
-    /* تب مخفی ادمین */
+    /* صفحه باز کردن جعبه و گردونه */
+    #spin-screen { display: none; flex-direction: column; gap: 22px; align-items: center; }
+    .back-btn {
+      align-self: flex-start;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    /* ماژول رول افقی */
+    .roulette-container {
+      position: relative;
+      width: 100%;
+      height: 140px;
+      background: #06070a;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      box-shadow: inset 0 0 35px rgba(0, 0, 0, 0.9);
+      direction: ltr;
+    }
+    .roulette-pointer {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 3px;
+      background: #ff3838;
+      transform: translateX(-50%);
+      z-index: 30;
+      box-shadow: 0 0 14px #ff3838, 0 0 25px #ff3838;
+    }
+    .roulette-pointer::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      border-left: 8px solid transparent;
+      border-right: 8px solid transparent;
+      border-top: 10px solid #ff3838;
+    }
+    .roulette-pointer::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      border-left: 8px solid transparent;
+      border-right: 8px solid transparent;
+      border-bottom: 10px solid #ff3838;
+    }
+    .roulette-track {
+      display: flex;
+      align-items: center;
+      height: 100%;
+      position: absolute;
+      left: 0;
+      top: 0;
+      will-change: transform;
+    }
+    .roulette-item {
+      width: 105px;
+      height: 115px;
+      margin: 0 5px;
+      background: linear-gradient(180deg, #181b2a 0%, #0d0f17 100%);
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.4);
+    }
+    .roulette-item span { font-size: 38px; margin-bottom: 6px; }
+    .roulette-item p { font-size: 11px; color: #ced6e0; text-align: center; font-weight: 700; padding: 0 4px; }
+
+    .roll-btn {
+      width: 100%;
+      background: linear-gradient(90deg, #ff416c, #ff4b2b);
+      border: none;
+      padding: 16px;
+      border-radius: 16px;
+      font-size: 16px;
+      font-weight: 800;
+      color: #fff;
+      cursor: pointer;
+      box-shadow: 0 6px 25px rgba(255, 65, 108, 0.4);
+      transition: all 0.2s ease;
+    }
+    .roll-btn:active { transform: scale(0.98); }
+    .roll-btn:disabled {
+      background: #252837;
+      color: #57606f;
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+
+    /* پاپ‌آپ جایزه */
+    .win-modal {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      animation: fadeIn 0.3s ease;
+    }
+    .win-card {
+      background: #151724;
+      border: 1px solid var(--accent);
+      box-shadow: 0 0 35px var(--accent-glow);
+      border-radius: 24px;
+      padding: 28px 22px;
+      text-align: center;
+      width: 85%;
+      max-width: 320px;
+      animation: popUp 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes popUp { from { transform: scale(0.7); } to { transform: scale(1); } }
+    .win-icon { font-size: 64px; margin-bottom: 12px; }
+    .win-name { font-size: 18px; font-weight: 800; color: #fff; margin-bottom: 20px; }
+    .win-close-btn {
+      background: var(--accent);
+      color: #000;
+      border: none;
+      width: 100%;
+      padding: 12px;
+      border-radius: 12px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    /* پنل مدیریت ادمین */
     #tab-admin { display: none; }
-    .admin-box { background: #151724; border: 1px solid #ff4757; border-radius: 14px; padding: 14px; margin-top: 14px; }
-    .admin-input { width: 100%; background: #0c0d14; border: 1px solid #23273c; color: #fff; padding: 10px; border-radius: 8px; margin-bottom: 10px; }
-    .admin-add-btn { width: 100%; background: #2ed573; border: none; color: #fff; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+    .admin-box {
+      background: var(--card-bg);
+      border: 1px solid var(--danger);
+      box-shadow: 0 0 20px rgba(255, 71, 87, 0.2);
+      border-radius: 18px;
+      padding: 18px;
+    }
+    .admin-input {
+      width: 100%;
+      background: #090a10;
+      border: 1px solid var(--card-border);
+      color: #fff;
+      padding: 12px;
+      border-radius: 10px;
+      margin-bottom: 12px;
+      font-size: 13px;
+    }
+    .admin-add-btn {
+      width: 100%;
+      background: #2ed573;
+      border: none;
+      color: #fff;
+      padding: 12px;
+      border-radius: 10px;
+      font-weight: 800;
+      cursor: pointer;
+    }
 
-    /* نوار پایین */
-    .bottom-bar { position: fixed; bottom: 0; left: 0; right: 0; height: 65px; background: #12141f; border-top: 1px solid #23273c; display: flex; justify-content: space-around; align-items: center; z-index: 100; }
-    .bottom-btn { display: flex; flex-direction: column; align-items: center; gap: 4px; background: none; border: none; color: #6c7293; font-size: 12px; cursor: pointer; }
-    .bottom-btn.active { color: #00d2ff; }
-    .bottom-btn span { font-size: 20px; }
+    /* نوار ناوبری پایین */
+    .bottom-bar {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      height: 70px;
+      background: rgba(18, 20, 31, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-top: 1px solid var(--card-border);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 100;
+    }
+    .bottom-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      background: none;
+      border: none;
+      color: #747d8c;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: color 0.2s ease;
+    }
+    .bottom-btn.active { color: var(--accent); }
+    .bottom-btn span { font-size: 22px; }
   </style>
 </head>
 <body>
-  <div class="top-bar">
-    <span>بلک نت | BlackNet</span>
-    <div class="balance-box"><span>💎</span><span id="user-balance">100</span></div>
+
+  <!-- هدر اپلیکیشن -->
+  <div class="header-bar">
+    <div class="brand-title">
+      <span>بلک نت</span>
+      <span class="brand-badge">PRO</span>
+    </div>
+    <div class="balance-box balance-pill">
+      <span>💎</span>
+      <span id="user-balance">100</span>
+    </div>
   </div>
 
   <!-- تب فروشگاه -->
   <div id="tab-shop">
-    <h3>فروشگاه محصولات مجازی</h3>
+    <div class="section-header">🛒 محصولات ویژه</div>
     <div class="product-list" id="product-container"></div>
   </div>
 
-  <!-- تب بازی -->
+  <!-- تب جعبه‌ها و گردونه -->
   <div id="tab-spin">
     <div id="spin-lobby">
-      <h3>جعبه‌های جوایز</h3>
+      <div class="section-header">🎁 جعبه‌های شانس روزانه</div>
       <div class="boxes-grid">
         <div class="box-card free" onclick="openBox('free')">
-          <div class="box-icon">🎁</div><div class="box-title">جعبه رایگان روزانه</div>
+          <div class="box-icon">📦</div>
+          <div class="box-title">جعبه رایگان</div>
           <button class="box-btn btn-gold">باز کردن رایگان</button>
         </div>
         <div class="box-card premium" onclick="openBox('vip')">
-          <div class="box-icon">👑</div><div class="box-title">جعبه پولی VIP</div>
+          <div class="box-icon">👑</div>
+          <div class="box-title">جعبه VIP</div>
           <button class="box-btn btn-purple">۱۰ الماس</button>
         </div>
       </div>
     </div>
 
+    <!-- مانیتور گردونه افقی -->
     <div id="spin-screen">
-      <button class="back-btn" onclick="backToLobby()">⬅ بازگشت به جعبه‌ها</button>
-      <h3 id="box-title">جعبه جوایز</h3>
+      <button class="back-btn" onclick="backToLobby()">⬅ بازگشت</button>
+      <h3 id="box-title" style="font-weight: 800;">جعبه جوایز</h3>
+      
       <div class="roulette-container" id="roulette-container">
         <div class="roulette-pointer"></div>
         <div class="roulette-track" id="roulette-track"></div>
       </div>
-      <button id="roll-button" class="roll-btn" onclick="startRoll()">شروع چرخش</button>
+
+      <button id="roll-button" class="roll-btn" onclick="startRoll()">چرخش گردونه</button>
     </div>
   </div>
 
-  <!-- تب اختصاصی ادمین -->
+  <!-- پنل مخفی ادمین -->
   <div id="tab-admin">
-    <h3 style="color: #ff4757;">پنل مدیریت بلک نت</h3>
+    <div class="section-header" style="color: var(--danger);">⚙️ پنل مدیریت بلک نت</div>
     <div class="admin-box">
-      <input type="text" id="new-prod-name" class="admin-input" placeholder="نام محصول جدید (مثلاً: کانفیگ ۲ ماهه)">
-      <input type="text" id="new-prod-price" class="admin-input" placeholder="قیمت (مثلاً: ۲۵۰,۰۰۰ تومان)">
-      <button class="admin-add-btn" onclick="addProduct()">➕ افزودن به فروشگاه</button>
+      <input type="text" id="new-prod-name" class="admin-input" placeholder="نام محصول جدید">
+      <input type="text" id="new-prod-price" class="admin-input" placeholder="قیمت (مثلاً ۱۵۰,۰۰۰ تومان)">
+      <button class="admin-add-btn" onclick="addProduct()">➕ ثبت در فروشگاه</button>
     </div>
   </div>
 
-  <!-- منوی پایین -->
-  <div class="bottom-bar">
-    <button id="btn-tab-shop" class="bottom-btn active" onclick="switchTab('shop')"><span>🛒</span>فروشگاه</button>
-    <button id="btn-tab-spin" class="bottom-btn" onclick="switchTab('spin')"><span>🎁</span>بازی و اسپین</button>
-    <button id="btn-tab-admin" class="bottom-btn" style="display: none;" onclick="switchTab('admin')"><span>⚙️</span>مدیریت</button>
+  <!-- پاپ‌آپ جایزه برنده -->
+  <div class="win-modal" id="win-modal">
+    <div class="win-card">
+      <div class="win-icon" id="win-icon">🎁</div>
+      <h3 style="color: #a4b0be; font-size: 14px; margin-bottom: 6px;">تبریک! شما برنده شدید</h3>
+      <div class="win-name" id="win-name">---</div>
+      <button class="win-close-btn" onclick="closeWinModal()">دریافت جایزه</button>
+    </div>
   </div>
-    <script>
+
+  <!-- نوار ناوبری شیشه‌ای پایین -->
+  <div class="bottom-bar">
+    <button id="btn-tab-shop" class="bottom-btn active" onclick="switchTab('shop')">
+      <span>🛒</span>
+      فروشگاه
+    </button>
+    <button id="btn-tab-spin" class="bottom-btn" onclick="switchTab('spin')">
+      <span>🎁</span>
+      گردونه
+    </button>
+    <button id="btn-tab-admin" class="bottom-btn" style="display: none;" onclick="switchTab('admin')">
+      <span>⚙️</span>
+      مدیریت
+    </button>
+        </div>
+          <script>
     const BOT_TOKEN = "8418244556:AAFy6h9Rdwrp2F5EttzsKChMfjMbA4fcJtM";
     const ADMIN_ID = "1309025996";
 
     const tg = window.Telegram?.WebApp;
-    if (tg) { tg.ready(); tg.expand(); }
+    if (tg) {
+      tg.ready();
+      tg.expand();
+      tg.setHeaderColor?.('#090a10');
+      tg.setBackgroundColor?.('#090a10');
+    }
 
-    // محصولات ذخیره شده در حافظه مرورگر
+    // لرزش حسی گوشی (Haptic Feedback)
+    function triggerHaptic(type = "light") {
+      if (!tg?.HapticFeedback) return;
+      if (type === "success") tg.HapticFeedback.notificationOccurred("success");
+      else if (type === "heavy") tg.HapticFeedback.impactOccurred("heavy");
+      else tg.HapticFeedback.impactOccurred("light");
+    }
+
     let products = JSON.parse(localStorage.getItem("bn_products")) || [
       { name: "فیلترشکن مستر ادیشن (۱ ماهه)", price: "۱۵۰,۰۰۰ تومان" },
       { name: "اکانت گوگل جیمینای پرو", price: "۲۸۰,۰۰۰ تومان" },
@@ -138,7 +503,7 @@
       { name: "شانس دوباره", icon: "🔄" }
     ];
 
-    // بررسی ورود ادمین اصلی
+    // شناسایی ادمین اصلی
     const currentUser = tg?.initDataUnsafe?.user;
     if (currentUser && String(currentUser.id) === ADMIN_ID) {
       document.getElementById("btn-tab-admin").style.display = "flex";
@@ -147,12 +512,12 @@
     function renderProducts() {
       const container = document.getElementById("product-container");
       container.innerHTML = "";
-      products.forEach((p, idx) => {
+      products.forEach((p) => {
         container.innerHTML += `
           <div class="product-card">
-            <div>
+            <div class="product-info">
               <h3>${p.name}</h3>
-              <p>${p.price}</p>
+              <p>🏷️ ${p.price}</p>
             </div>
             <button class="buy-btn" onclick="buyItem('${p.name}')">خرید</button>
           </div>
@@ -161,21 +526,19 @@
     }
     renderProducts();
 
-    // افزودن محصول از پنل ادمین
     function addProduct() {
+      triggerHaptic("heavy");
       const name = document.getElementById("new-prod-name").value.trim();
       const price = document.getElementById("new-prod-price").value.trim();
-      if (!name || !price) { alert("نام و قیمت را وارد کنید!"); return; }
+      if (!name || !price) return;
       products.push({ name, price });
       localStorage.setItem("bn_products", JSON.stringify(products));
       renderProducts();
       document.getElementById("new-prod-name").value = "";
       document.getElementById("new-prod-price").value = "";
-      alert("محصول با موفقیت اضافه شد!");
       switchTab('shop');
     }
 
-    // ارسال مستقیم اعلان به پی‌وی تلگرام ادمین
     function sendDirectAlert(actionType, textPayload) {
       const userName = currentUser?.first_name || "کاربر تستی";
       const userId = currentUser?.id || "ناشناس";
@@ -195,15 +558,21 @@
     }
 
     function buyItem(name) {
+      triggerHaptic("heavy");
       sendDirectAlert("buy", name);
       if (tg?.showPopup) {
-        tg.showPopup({ title: "ثبت سفارش", message: `سفارش ${name} ارسال شد و به زودی تحویل داده می‌شود!`, buttons: [{ type: "ok", text: "باشه" }] });
+        tg.showPopup({
+          title: "ثبت سفارش",
+          message: `درخواست خرید ${name} ثبت شد و به زودی تحویل داده می‌شود!`,
+          buttons: [{ type: "ok", text: "متوجه شدم" }]
+        });
       } else {
-        alert(`سفارش ${name} برای ادمین ارسال شد!`);
+        alert(`درخواست خرید ${name} ارسال شد!`);
       }
     }
 
     function switchTab(tab) {
+      triggerHaptic("light");
       const tabs = ["shop", "spin", "admin"];
       tabs.forEach(t => {
         const el = document.getElementById(`tab-${t}`);
@@ -214,15 +583,17 @@
     }
 
     function openBox(mode) {
+      triggerHaptic("light");
       currentMode = mode;
       document.getElementById("spin-lobby").style.display = "none";
       document.getElementById("spin-screen").style.display = "flex";
-      document.getElementById("box-title").innerText = mode === "free" ? "جعبه رایگان روزانه" : "جعبه پولی VIP";
+      document.getElementById("box-title").innerText = mode === "free" ? "جعبه رایگان" : "جعبه VIP";
       generateTrack();
     }
 
     function backToLobby() {
       if (isRolling) return;
+      triggerHaptic("light");
       document.getElementById("spin-screen").style.display = "none";
       document.getElementById("spin-lobby").style.display = "block";
     }
@@ -244,7 +615,11 @@
 
     function startRoll() {
       if (isRolling) return;
-      if (currentMode === "vip" && balance < 10) { alert("موجودی کم است!"); return; }
+      if (currentMode === "vip" && balance < 10) {
+        triggerHaptic("heavy");
+        alert("موجودی الماس ناکافی است!");
+        return;
+      }
 
       if (currentMode === "vip") {
         balance -= 10;
@@ -252,6 +627,7 @@
       }
 
       isRolling = true;
+      triggerHaptic("heavy");
       const btn = document.getElementById("roll-button");
       btn.disabled = true;
 
@@ -260,29 +636,41 @@
       track.style.transform = "translateX(0px)";
 
       const targetIndex = Math.floor(Math.random() * 10) + 50;
-      const itemWidth = 110;
+      const itemWidth = 115;
       const containerWidth = document.getElementById("roulette-container").offsetWidth;
       const stopAt = -((targetIndex * itemWidth) - (containerWidth / 2) + (itemWidth / 2));
 
       setTimeout(() => {
-        track.style.transition = "transform 6.5s cubic-bezier(0.15, 0.9, 0.25, 1)";
+        track.style.transition = "transform 6.5s cubic-bezier(0.12, 0.9, 0.22, 1)";
         track.style.transform = `translateX(${stopAt}px)`;
       }, 50);
+
+      // لرزش‌های ریز در اواخر چرخش
+      setTimeout(() => triggerHaptic("light"), 4000);
+      setTimeout(() => triggerHaptic("light"), 5000);
+      setTimeout(() => triggerHaptic("light"), 5800);
 
       setTimeout(() => {
         isRolling = false;
         btn.disabled = false;
+        triggerHaptic("success");
+
         const winner = track.children[targetIndex];
         const prizeName = winner.querySelector("p").innerText;
+        const prizeIcon = winner.querySelector("span").innerText;
 
         sendDirectAlert("spin", prizeName);
 
-        if (tg?.showAlert) {
-          tg.showAlert(`🎉 تبریک! شما برنده «${prizeName}» شدید!`);
-        } else {
-          alert(`🎉 تبریک! شما برنده «${prizeName}» شدید!`);
-        }
+        // نمایش پاپ‌آپ جایزه
+        document.getElementById("win-icon").innerText = prizeIcon;
+        document.getElementById("win-name").innerText = prizeName;
+        document.getElementById("win-modal").style.display = "flex";
       }, 6800);
+    }
+
+    function closeWinModal() {
+      triggerHaptic("light");
+      document.getElementById("win-modal").style.display = "none";
     }
   </script>
 </body>
