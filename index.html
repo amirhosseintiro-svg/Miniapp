@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>Black Item</title>
+  <!-- فونت آیکون فوق‌العاده باکیفیت Remix Icon -->
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <link rel="stylesheet" href="style.css">
 </head>
@@ -21,7 +23,7 @@
     </div>
   </header>
 
-  <!-- محتوا و محصولات -->
+  <!-- محتوا -->
   <main class="content-area">
     <div class="items-grid" id="products-container"></div>
   </main>
@@ -29,10 +31,10 @@
   <!-- نوار ناوبری پایین -->
   <nav class="bottom-nav" id="bottom-nav"></nav>
 
-  <!-- دکمه شناور چرخ‌دنده ادمین -->
+  <!-- دکمه شناور ادمین -->
   <button id="admin-gear-btn" class="admin-fab hidden">⚙️</button>
 
-  <!-- مودال پنل مدیریت -->
+  <!-- پنل مدیریت -->
   <div id="admin-modal" class="modal hidden">
     <div class="modal-content">
       <div class="modal-header">
@@ -57,41 +59,36 @@
         <input type="color" id="cfg-nav-active-color">
 
         <hr>
-        <h4>🧭 مدیریت نوار ناوبری (منوی پایین)</h4>
+        <h4>🧭 مدیریت منوی پایین (آیکون، لینک عکس یا کلاس RemixIcon)</h4>
         
-        <!-- تب اول -->
-        <label>تب اول (آیکون و متن):</label>
-        <div style="display: flex; gap: 8px;">
-          <input type="text" id="tab-icon-0" value="👤" style="width: 50px; text-align: center;">
-          <input type="text" id="tab-label-0" value="پروفایل">
+        <label>تب ۱ (پروفایل):</label>
+        <div style="display: flex; gap: 6px;">
+          <input type="text" id="tab-icon-0" style="flex: 1;" placeholder="آیکون / لینک">
+          <input type="text" id="tab-label-0" style="flex: 1;" placeholder="نام">
         </div>
 
-        <!-- تب دوم -->
-        <label>تب دوم (آیکون و متن):</label>
-        <div style="display: flex; gap: 8px;">
-          <input type="text" id="tab-icon-1" value="📋" style="width: 50px; text-align: center;">
-          <input type="text" id="tab-label-1" value="Task">
+        <label>تب ۲ (تسک):</label>
+        <div style="display: flex; gap: 6px;">
+          <input type="text" id="tab-icon-1" style="flex: 1;" placeholder="آیکون / لینک">
+          <input type="text" id="tab-label-1" style="flex: 1;" placeholder="نام">
         </div>
 
-        <!-- تب سوم -->
-        <label>تب سوم (آیکون و متن):</label>
-        <div style="display: flex; gap: 8px;">
-          <input type="text" id="tab-icon-2" value="🛍️" style="width: 50px; text-align: center;">
-          <input type="text" id="tab-label-2" value="فروشگاه">
+        <label>تب ۳ (فروشگاه):</label>
+        <div style="display: flex; gap: 6px;">
+          <input type="text" id="tab-icon-2" style="flex: 1;" placeholder="آیکون / لینک">
+          <input type="text" id="tab-label-2" style="flex: 1;" placeholder="نام">
         </div>
 
-        <!-- تب چهارم -->
-        <label>تب چهارم (آیکون و متن):</label>
-        <div style="display: flex; gap: 8px;">
-          <input type="text" id="tab-icon-3" value="🎮" style="width: 50px; text-align: center;">
-          <input type="text" id="tab-label-3" value="بازی">
+        <label>تب ۴ (بازی):</label>
+        <div style="display: flex; gap: 6px;">
+          <input type="text" id="tab-icon-3" style="flex: 1;" placeholder="آیکون / لینک">
+          <input type="text" id="tab-label-3" style="flex: 1;" placeholder="نام">
         </div>
 
-        <!-- تب پنجم -->
-        <label>تب پنجم (آیکون و متن):</label>
-        <div style="display: flex; gap: 8px;">
-          <input type="text" id="tab-icon-4" value="💳" style="width: 50px; text-align: center;">
-          <input type="text" id="tab-label-4" value="کیف پول">
+        <label>تب ۵ (کیف پول):</label>
+        <div style="display: flex; gap: 6px;">
+          <input type="text" id="tab-icon-4" style="flex: 1;" placeholder="آیکون / لینک">
+          <input type="text" id="tab-label-4" style="flex: 1;" placeholder="نام">
         </div>
 
         <hr>
@@ -108,6 +105,6 @@
     </div>
   </div>
 
-  <script src="app.js?v=2"></script>
+  <script src="app.js?v=3"></script>
 </body>
 </html>
