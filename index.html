@@ -10,12 +10,16 @@
     body { background-color: #0c0d14; color: #fff; padding: 16px 16px 90px; user-select: none; }
     .top-bar { display: flex; justify-content: space-between; align-items: center; background: #151724; padding: 12px 16px; border-radius: 14px; margin-bottom: 18px; border: 1px solid #23273c; }
     .balance-box { color: #00d2ff; font-weight: bold; font-size: 15px; display: flex; align-items: center; gap: 6px; }
+    
+    /* تب فروشگاه */
     #tab-shop { display: block; }
     .product-list { display: flex; flex-direction: column; gap: 12px; margin-top: 14px; }
     .product-card { background: #151724; border: 1px solid #23273c; border-radius: 14px; padding: 14px; display: flex; justify-content: space-between; align-items: center; }
     .product-card h3 { font-size: 15px; margin-bottom: 6px; }
     .product-card p { font-size: 13px; color: #2ed573; font-weight: bold; }
     .buy-btn { background: #0088cc; color: #fff; border: none; padding: 9px 18px; border-radius: 10px; font-weight: bold; cursor: pointer; }
+    
+    /* تب بازی و اسپین */
     #tab-spin { display: none; }
     .boxes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 14px; }
     .box-card { background: #151724; border-radius: 16px; padding: 18px 12px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 12px; cursor: pointer; }
@@ -26,6 +30,7 @@
     .box-btn { width: 100%; padding: 9px 0; border-radius: 10px; border: none; font-weight: bold; color: #fff; }
     .btn-gold { background: #e1b12c; }
     .btn-purple { background: #8854d0; }
+    
     #spin-screen { display: none; flex-direction: column; gap: 20px; align-items: center; }
     .back-btn { align-self: flex-start; background: #23273c; border: none; color: #fff; padding: 8px 14px; border-radius: 8px; cursor: pointer; }
     .roulette-container { position: relative; width: 100%; height: 130px; background: #090a0f; border-radius: 18px; overflow: hidden; border: 2px solid #282c44; direction: ltr; }
@@ -36,10 +41,18 @@
     .roulette-item p { font-size: 11px; color: #e1e3ec; text-align: center; font-weight: bold; }
     .roll-btn { width: 100%; background: linear-gradient(90deg, #ff9f43, #ee5253); border: none; padding: 15px; border-radius: 14px; font-size: 16px; font-weight: bold; color: #fff; cursor: pointer; }
     .roll-btn:disabled { background: #333647; color: #666a80; cursor: not-allowed; }
+
+    /* تب مخفی ادمین */
+    #tab-admin { display: none; }
+    .admin-box { background: #151724; border: 1px solid #ff4757; border-radius: 14px; padding: 14px; margin-top: 14px; }
+    .admin-input { width: 100%; background: #0c0d14; border: 1px solid #23273c; color: #fff; padding: 10px; border-radius: 8px; margin-bottom: 10px; }
+    .admin-add-btn { width: 100%; background: #2ed573; border: none; color: #fff; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+
+    /* نوار پایین */
     .bottom-bar { position: fixed; bottom: 0; left: 0; right: 0; height: 65px; background: #12141f; border-top: 1px solid #23273c; display: flex; justify-content: space-around; align-items: center; z-index: 100; }
     .bottom-btn { display: flex; flex-direction: column; align-items: center; gap: 4px; background: none; border: none; color: #6c7293; font-size: 12px; cursor: pointer; }
     .bottom-btn.active { color: #00d2ff; }
-    .bottom-btn span { font-size: 22px; }
+    .bottom-btn span { font-size: 20px; }
   </style>
 </head>
 <body>
@@ -48,20 +61,13 @@
     <div class="balance-box"><span>💎</span><span id="user-balance">100</span></div>
   </div>
 
+  <!-- تب فروشگاه -->
   <div id="tab-shop">
     <h3>فروشگاه محصولات مجازی</h3>
-    <div class="product-list">
-      <div class="product-card">
-        <div><h3>فیلترشکن مستر ادیشن (۱ ماهه)</h3><p>۱۵۰,۰۰۰ تومان</p></div>
-        <button class="buy-btn" onclick="buyItem('مستر ادیشن ۱ ماهه')">خرید</button>
-      </div>
-      <div class="product-card">
-        <div><h3>اکانت گوگل جیمینای پرو</h3><p>۲۸۰,۰۰۰ تومان</p></div>
-        <button class="buy-btn" onclick="buyItem('اکانت جیمینای پرو')">خرید</button>
-      </div>
-    </div>
+    <div class="product-list" id="product-container"></div>
   </div>
 
+  <!-- تب بازی -->
   <div id="tab-spin">
     <div id="spin-lobby">
       <h3>جعبه‌های جوایز</h3>
@@ -88,14 +94,35 @@
     </div>
   </div>
 
+  <!-- تب اختصاصی ادمین -->
+  <div id="tab-admin">
+    <h3 style="color: #ff4757;">پنل مدیریت بلک نت</h3>
+    <div class="admin-box">
+      <input type="text" id="new-prod-name" class="admin-input" placeholder="نام محصول جدید (مثلاً: کانفیگ ۲ ماهه)">
+      <input type="text" id="new-prod-price" class="admin-input" placeholder="قیمت (مثلاً: ۲۵۰,۰۰۰ تومان)">
+      <button class="admin-add-btn" onclick="addProduct()">➕ افزودن به فروشگاه</button>
+    </div>
+  </div>
+
+  <!-- منوی پایین -->
   <div class="bottom-bar">
     <button id="btn-tab-shop" class="bottom-btn active" onclick="switchTab('shop')"><span>🛒</span>فروشگاه</button>
     <button id="btn-tab-spin" class="bottom-btn" onclick="switchTab('spin')"><span>🎁</span>بازی و اسپین</button>
+    <button id="btn-tab-admin" class="bottom-btn" style="display: none;" onclick="switchTab('admin')"><span>⚙️</span>مدیریت</button>
   </div>
     <script>
-    const SERVER_URL = "https://lmnph-195-201-20-40.run.pinggy-free.link";
+    const BOT_TOKEN = "8418244556:AAFy6h9Rdwrp2F5EttzsKChMfjMbA4fcJtM";
+    const ADMIN_ID = "1309025996";
+
     const tg = window.Telegram?.WebApp;
     if (tg) { tg.ready(); tg.expand(); }
+
+    // محصولات ذخیره شده در حافظه مرورگر
+    let products = JSON.parse(localStorage.getItem("bn_products")) || [
+      { name: "فیلترشکن مستر ادیشن (۱ ماهه)", price: "۱۵۰,۰۰۰ تومان" },
+      { name: "اکانت گوگل جیمینای پرو", price: "۲۸۰,۰۰۰ تومان" },
+      { name: "کانفیگ اختصاصی VIP", price: "۲۰۰,۰۰۰ تومان" }
+    ];
 
     let balance = 100;
     let currentMode = "free";
@@ -111,37 +138,79 @@
       { name: "شانس دوباره", icon: "🔄" }
     ];
 
-    function sendToServer(actionType, dataPayload) {
-      const tgUser = tg?.initDataUnsafe?.user || { first_name: "کاربر تستی", id: "1309025996" };
-      fetch(`${SERVER_URL}/api/action`, {
+    // بررسی ورود ادمین اصلی
+    const currentUser = tg?.initDataUnsafe?.user;
+    if (currentUser && String(currentUser.id) === ADMIN_ID) {
+      document.getElementById("btn-tab-admin").style.display = "flex";
+    }
+
+    function renderProducts() {
+      const container = document.getElementById("product-container");
+      container.innerHTML = "";
+      products.forEach((p, idx) => {
+        container.innerHTML += `
+          <div class="product-card">
+            <div>
+              <h3>${p.name}</h3>
+              <p>${p.price}</p>
+            </div>
+            <button class="buy-btn" onclick="buyItem('${p.name}')">خرید</button>
+          </div>
+        `;
+      });
+    }
+    renderProducts();
+
+    // افزودن محصول از پنل ادمین
+    function addProduct() {
+      const name = document.getElementById("new-prod-name").value.trim();
+      const price = document.getElementById("new-prod-price").value.trim();
+      if (!name || !price) { alert("نام و قیمت را وارد کنید!"); return; }
+      products.push({ name, price });
+      localStorage.setItem("bn_products", JSON.stringify(products));
+      renderProducts();
+      document.getElementById("new-prod-name").value = "";
+      document.getElementById("new-prod-price").value = "";
+      alert("محصول با موفقیت اضافه شد!");
+      switchTab('shop');
+    }
+
+    // ارسال مستقیم اعلان به پی‌وی تلگرام ادمین
+    function sendDirectAlert(actionType, textPayload) {
+      const userName = currentUser?.first_name || "کاربر تستی";
+      const userId = currentUser?.id || "ناشناس";
+
+      let msg = "";
+      if (actionType === "buy") {
+        msg = `🛒 <b>سفارش جدید در بلک نت!</b>\n\n👤 خریدار: ${userName} (<code>${userId}</code>)\n📦 محصول: <b>${textPayload}</b>`;
+      } else if (actionType === "spin") {
+        msg = `🎁 <b>برنده گردونه شانس!</b>\n\n👤 کاربر: ${userName} (<code>${userId}</code>)\n🎉 جایزه: <b>${textPayload}</b>`;
+      }
+
+      fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: actionType, user: tgUser, ...dataPayload })
-      }).catch(err => console.error("Error:", err));
+        body: JSON.stringify({ chat_id: ADMIN_ID, text: msg, parse_mode: "HTML" })
+      }).catch(err => console.error(err));
     }
 
     function buyItem(name) {
-      sendToServer("buy", { product: name });
+      sendDirectAlert("buy", name);
       if (tg?.showPopup) {
-        tg.showPopup({ title: "ثبت سفارش", message: `درخواست خرید ${name} ارسال شد!`, buttons: [{ type: "ok", text: "تایید" }] });
+        tg.showPopup({ title: "ثبت سفارش", message: `سفارش ${name} ارسال شد و به زودی تحویل داده می‌شود!`, buttons: [{ type: "ok", text: "باشه" }] });
       } else {
-        alert(`درخواست خرید ${name} ارسال شد!`);
+        alert(`سفارش ${name} برای ادمین ارسال شد!`);
       }
     }
 
     function switchTab(tab) {
-      const shopTab = document.getElementById("tab-shop");
-      const spinTab = document.getElementById("tab-spin");
-      const btnShop = document.getElementById("btn-tab-shop");
-      const btnSpin = document.getElementById("btn-tab-spin");
-
-      if (tab === "shop") {
-        shopTab.style.display = "block"; spinTab.style.display = "none";
-        btnShop.classList.add("active"); btnSpin.classList.remove("active");
-      } else {
-        shopTab.style.display = "none"; spinTab.style.display = "block";
-        btnSpin.classList.add("active"); btnShop.classList.remove("active");
-      }
+      const tabs = ["shop", "spin", "admin"];
+      tabs.forEach(t => {
+        const el = document.getElementById(`tab-${t}`);
+        const btn = document.getElementById(`btn-tab-${t}`);
+        if (el) el.style.display = (t === tab) ? "block" : "none";
+        if (btn) btn.classList.toggle("active", t === tab);
+      });
     }
 
     function openBox(mode) {
@@ -206,7 +275,7 @@
         const winner = track.children[targetIndex];
         const prizeName = winner.querySelector("p").innerText;
 
-        sendToServer("spin", { prize: prizeName });
+        sendDirectAlert("spin", prizeName);
 
         if (tg?.showAlert) {
           tg.showAlert(`🎉 تبریک! شما برنده «${prizeName}» شدید!`);
