@@ -2,86 +2,326 @@
 <html lang="fa" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>فروشگاه بلک نت</title>
-  <!-- اسکریپت وب‌اپ تلگرام -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-select=no">
+  <title>فروشگاه و بازی بلک نت</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: system-ui, -apple-system, sans-serif;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
     body {
-      background-color: #121212;
+      background-color: #0f0f12;
       color: #ffffff;
-      padding: 16px;
       direction: rtl;
+      padding: 16px;
+      padding-bottom: 90px;
+      user-select: none;
     }
-    header {
-      text-align: center;
-      margin-bottom: 24px;
+
+    /* نوار بالایی موجودی */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #181920;
+      padding: 10px 16px;
+      border-radius: 14px;
+      margin-bottom: 20px;
+      border: 1px solid #282936;
     }
-    header h1 {
-      font-size: 22px;
-      color: #0088cc;
-      margin-bottom: 6px;
+    .balance-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: bold;
+      color: #00d2ff;
+      font-size: 15px;
     }
-    header p {
-      font-size: 13px;
-      color: #aaa;
+
+    /* بخش فروشگاه */
+    #tab-shop {
+      display: block;
     }
-    #product-list {
+    .shop-header {
+      margin-bottom: 16px;
+    }
+    .shop-header h2 {
+      font-size: 18px;
+      color: #fff;
+    }
+    .product-list {
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 12px;
     }
     .product-card {
-      background-color: #1e1e1e;
-      border: 1px solid #333;
-      border-radius: 12px;
-      padding: 16px;
+      background: #181920;
+      border: 1px solid #282936;
+      border-radius: 14px;
+      padding: 14px;
       display: flex;
-      flex-direction: column;
-      gap: 8px;
+      justify-content: space-between;
+      align-items: center;
     }
-    .product-card h3 {
-      font-size: 16px;
-      color: #fff;
+    .product-info h3 {
+      font-size: 15px;
+      margin-bottom: 6px;
     }
-    .product-card p {
-      font-size: 14px;
-      color: #4cd964;
+    .product-info p {
+      font-size: 13px;
+      color: #2ed573;
       font-weight: bold;
     }
-    .product-card button {
-      background-color: #0088cc;
+    .buy-btn {
+      background: #0088cc;
       color: #fff;
       border: none;
-      padding: 10px;
-      border-radius: 8px;
-      font-size: 14px;
+      padding: 9px 18px;
+      border-radius: 10px;
+      font-weight: bold;
       cursor: pointer;
+    }
+
+    /* بخش بازی و اسپین */
+    #tab-spin {
+      display: none;
+    }
+    .boxes-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .box-card {
+      background: #181920;
+      border-radius: 16px;
+      padding: 16px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      position: relative;
+    }
+    .box-card.free {
+      border: 1px solid #ffd700;
+    }
+    .box-card.premium {
+      border: 1px solid #8a2be2;
+    }
+    .box-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 6px;
+    }
+    .badge-gold { background: #ffd700; color: #000; }
+    .badge-purple { background: #8a2be2; color: #fff; }
+    .box-icon {
+      font-size: 44px;
       margin-top: 6px;
     }
-    .product-card button:active {
-      opacity: 0.8;
+    .box-title {
+      font-size: 14px;
+      font-weight: bold;
+    }
+    .box-action-btn {
+      width: 100%;
+      padding: 8px 0;
+      border-radius: 10px;
+      border: none;
+      font-weight: bold;
+      color: #fff;
+    }
+    .btn-gold { background: #e1b12c; }
+    .btn-purple { background: #7158e2; }
+
+    /* صفحه باز کردن گردونه */
+    #spin-screen {
+      display: none;
+      flex-direction: column;
+      gap: 16px;
+      align-items: center;
+    }
+    .back-btn {
+      align-self: flex-start;
+      background: #252634;
+      border: none;
+      color: #fff;
+      padding: 8px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    /* نوار افقی رول */
+    .roulette-container {
+      position: relative;
+      width: 100%;
+      height: 110px;
+      background: #121318;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 2px solid #2d2f3f;
+    }
+    .roulette-pointer {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 3px;
+      background: #ff4757;
+      transform: translateX(-50%);
+      z-index: 10;
+      box-shadow: 0 0 10px #ff4757;
+    }
+    .roulette-track {
+      display: flex;
+      height: 100%;
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+    .roulette-item {
+      width: 90px;
+      height: 90px;
+      margin: 10px 5px;
+      background: #1e1f29;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      border: 1px solid #323547;
+    }
+    .roulette-item span { font-size: 28px; }
+    .roulette-item p { font-size: 11px; margin-top: 4px; color: #ddd; }
+
+    .roll-btn {
+      width: 100%;
+      background: #ffa502;
+      border: none;
+      padding: 14px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: bold;
+      color: #000;
+      cursor: pointer;
+    }
+    .roll-btn:disabled {
+      background: #444;
+      color: #777;
+      cursor: not-allowed;
+    }
+
+    /* نوار ناوبری پایین صفحه (منو) */
+    .bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 70px;
+      background: #14151a;
+      border-top: 1px solid #23242e;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 100;
+    }
+    .bottom-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      background: none;
+      border: none;
+      color: #747d8c;
+      font-size: 12px;
+      cursor: pointer;
+      width: 45%;
+    }
+    .bottom-btn.active {
+      color: #00a8ff;
+    }
+    .bottom-btn span {
+      font-size: 22px;
     }
   </style>
 </head>
 <body>
 
-  <header>
-    <h1>فروشگاه محصولات مجازی</h1>
-    <p>محصول مورد نظر خود را انتخاب کنید</p>
-  </header>
+  <!-- نوار بالای صفحه: وضعیت و موجودی -->
+  <div class="top-bar">
+    <span>بلک نت | BlackNet</span>
+    <div class="balance-badge">
+      <span>💎</span>
+      <span id="user-balance">100</span>
+    </div>
+  </div>
 
-  <main id="product-list">
-    <!-- محصولات توسط جاوااسکریپت اینجا اضافه می‌شوند -->
-  </main>
+  <!-- تب فروشگاه -->
+  <div id="tab-shop">
+    <div class="shop-header">
+      <h2>فروشگاه محصولات مجازی</h2>
+    </div>
+    <div class="product-list" id="product-list">
+      <!-- محصولات از طریق js لود می‌شوند -->
+    </div>
+  </div>
 
-  <!-- اتصال به فایل جاوااسکریپت داخل پوشه js -->
+  <!-- تب بازی و اسپین -->
+  <div id="tab-spin">
+    <!-- منوی انتخاب جعبه -->
+    <div id="spin-lobby">
+      <div class="boxes-grid">
+        <div class="box-card free" onclick="openBox('free')">
+          <span class="box-badge badge-gold">روزانه</span>
+          <div class="box-icon">🎁</div>
+          <div class="box-title">اسپین رایگان</div>
+          <button class="box-action-btn btn-gold">ورود رایگان</button>
+        </div>
+
+        <div class="box-card premium" onclick="openBox('vip')">
+          <span class="box-badge badge-purple">VIP</span>
+          <div class="box-icon">👑</div>
+          <div class="box-title">اسپین پولی</div>
+          <button class="box-action-btn btn-purple">۱۰ الماس</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- نمای چرخش رول -->
+    <div id="spin-screen">
+      <button class="back-btn" onclick="backToLobby()">⬅ بازگشت به جعبه‌ها</button>
+      <h3 id="box-title">جعبه جوایز</h3>
+
+      <div class="roulette-container">
+        <div class="roulette-pointer"></div>
+        <div class="roulette-track" id="roulette-track"></div>
+      </div>
+
+      <button id="roll-button" class="roll-btn" onclick="startRoll()">باز کردن جعبه</button>
+    </div>
+  </div>
+
+  <!-- منوی تب پایین -->
+  <div class="bottom-bar">
+    <button id="btn-tab-shop" class="bottom-btn active" onclick="switchTab('shop')">
+      <span>🛒</span>
+      فروشگاه
+    </button>
+    <button id="btn-tab-spin" class="bottom-btn" onclick="switchTab('spin')">
+      <span>🎁</span>
+      بازی و اسپین
+    </button>
+  </div>
+
   <script src="js/shop.js"></script>
 </body>
 </html>
