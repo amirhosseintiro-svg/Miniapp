@@ -2,32 +2,33 @@
 <html lang="fa" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-select=no">
-  <title>فروشگاه و بازی بلک نت</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>بلک نت</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-family: system-ui, -apple-system, sans-serif;
     }
     body {
-      background-color: #0f0f12;
+      background-color: #0e0f12;
       color: #ffffff;
       direction: rtl;
       padding: 16px;
-      padding-bottom: 90px;
+      padding-bottom: 85px;
       user-select: none;
+      -webkit-tap-highlight-color: transparent;
     }
 
-    /* نوار بالایی موجودی */
+    /* نوار بالا */
     .top-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
       background: #181920;
-      padding: 10px 16px;
+      padding: 12px 16px;
       border-radius: 14px;
       margin-bottom: 20px;
       border: 1px solid #282936;
@@ -41,21 +42,15 @@
       font-size: 15px;
     }
 
-    /* بخش فروشگاه */
+    /* صفحه فروشگاه */
     #tab-shop {
       display: block;
-    }
-    .shop-header {
-      margin-bottom: 16px;
-    }
-    .shop-header h2 {
-      font-size: 18px;
-      color: #fff;
     }
     .product-list {
       display: flex;
       flex-direction: column;
       gap: 12px;
+      margin-top: 14px;
     }
     .product-card {
       background: #181920;
@@ -66,11 +61,11 @@
       justify-content: space-between;
       align-items: center;
     }
-    .product-info h3 {
+    .product-card h3 {
       font-size: 15px;
       margin-bottom: 6px;
     }
-    .product-info p {
+    .product-card p {
       font-size: 13px;
       color: #2ed573;
       font-weight: bold;
@@ -85,7 +80,7 @@
       cursor: pointer;
     }
 
-    /* بخش بازی و اسپین */
+    /* صفحه بازی و اسپین */
     #tab-spin {
       display: none;
     }
@@ -93,6 +88,7 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 14px;
+      margin-top: 14px;
     }
     .box-card {
       background: #181920;
@@ -106,12 +102,8 @@
       cursor: pointer;
       position: relative;
     }
-    .box-card.free {
-      border: 1px solid #ffd700;
-    }
-    .box-card.premium {
-      border: 1px solid #8a2be2;
-    }
+    .box-card.free { border: 1px solid #ffd700; }
+    .box-card.premium { border: 1px solid #8a2be2; }
     .box-badge {
       position: absolute;
       top: 10px;
@@ -122,15 +114,9 @@
     }
     .badge-gold { background: #ffd700; color: #000; }
     .badge-purple { background: #8a2be2; color: #fff; }
-    .box-icon {
-      font-size: 44px;
-      margin-top: 6px;
-    }
-    .box-title {
-      font-size: 14px;
-      font-weight: bold;
-    }
-    .box-action-btn {
+    .box-icon { font-size: 42px; margin-top: 4px; }
+    .box-title { font-size: 14px; font-weight: bold; }
+    .box-btn {
       width: 100%;
       padding: 8px 0;
       border-radius: 10px;
@@ -141,7 +127,7 @@
     .btn-gold { background: #e1b12c; }
     .btn-purple { background: #7158e2; }
 
-    /* صفحه باز کردن گردونه */
+    /* نمای اجرای اسپین رول */
     #spin-screen {
       display: none;
       flex-direction: column;
@@ -156,10 +142,7 @@
       padding: 8px 14px;
       border-radius: 8px;
       cursor: pointer;
-      font-size: 13px;
     }
-
-    /* نوار افقی رول */
     .roulette-container {
       position: relative;
       width: 100%;
@@ -174,7 +157,7 @@
       top: 0;
       bottom: 0;
       left: 50%;
-      width: 3px;
+      width: 4px;
       background: #ff4757;
       transform: translateX(-50%);
       z-index: 10;
@@ -220,13 +203,13 @@
       cursor: not-allowed;
     }
 
-    /* نوار ناوبری پایین صفحه (منو) */
+    /* نوار پایین صفحه */
     .bottom-bar {
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
-      height: 70px;
+      height: 65px;
       background: #14151a;
       border-top: 1px solid #23242e;
       display: flex;
@@ -250,13 +233,13 @@
       color: #00a8ff;
     }
     .bottom-btn span {
-      font-size: 22px;
+      font-size: 20px;
     }
   </style>
 </head>
 <body>
 
-  <!-- نوار بالای صفحه: وضعیت و موجودی -->
+  <!-- نوار بالای صفحه -->
   <div class="top-bar">
     <span>بلک نت | BlackNet</span>
     <div class="balance-badge">
@@ -267,36 +250,56 @@
 
   <!-- تب فروشگاه -->
   <div id="tab-shop">
-    <div class="shop-header">
-      <h2>فروشگاه محصولات مجازی</h2>
-    </div>
-    <div class="product-list" id="product-list">
-      <!-- محصولات از طریق js لود می‌شوند -->
+    <h3>محصولات مجازی</h3>
+    <div class="product-list">
+      <div class="product-card">
+        <div>
+          <h3>فیلترشکن مستر ادیشن (۱ ماهه)</h3>
+          <p>۱۵۰,۰۰۰ تومان</p>
+        </div>
+        <button class="buy-btn" onclick="buyItem('مستر ادیشن ۱ ماهه')">خرید</button>
+      </div>
+
+      <div class="product-card">
+        <div>
+          <h3>اکانت گوگل جیمینای پرو</h3>
+          <p>۲۸۰,۰۰۰ تومان</p>
+        </div>
+        <button class="buy-btn" onclick="buyItem('جیمینای پرو')">خرید</button>
+      </div>
+
+      <div class="product-card">
+        <div>
+          <h3>کانفیگ اختصاصی VIP</h3>
+          <p>۲۰۰,۰۰۰ تومان</p>
+        </div>
+        <button class="buy-btn" onclick="buyItem('کانفیگ VIP')">خرید</button>
+      </div>
     </div>
   </div>
 
   <!-- تب بازی و اسپین -->
   <div id="tab-spin">
-    <!-- منوی انتخاب جعبه -->
     <div id="spin-lobby">
+      <h3>جعبه‌های جوایز</h3>
       <div class="boxes-grid">
         <div class="box-card free" onclick="openBox('free')">
           <span class="box-badge badge-gold">روزانه</span>
           <div class="box-icon">🎁</div>
           <div class="box-title">اسپین رایگان</div>
-          <button class="box-action-btn btn-gold">ورود رایگان</button>
+          <button class="box-btn btn-gold">ورود رایگان</button>
         </div>
 
         <div class="box-card premium" onclick="openBox('vip')">
           <span class="box-badge badge-purple">VIP</span>
           <div class="box-icon">👑</div>
           <div class="box-title">اسپین پولی</div>
-          <button class="box-action-btn btn-purple">۱۰ الماس</button>
+          <button class="box-btn btn-purple">۱۰ الماس</button>
         </div>
       </div>
     </div>
 
-    <!-- نمای چرخش رول -->
+    <!-- صفحه رول اسپین -->
     <div id="spin-screen">
       <button class="back-btn" onclick="backToLobby()">⬅ بازگشت به جعبه‌ها</button>
       <h3 id="box-title">جعبه جوایز</h3>
@@ -310,7 +313,7 @@
     </div>
   </div>
 
-  <!-- منوی تب پایین -->
+  <!-- نوار منوی پایین -->
   <div class="bottom-bar">
     <button id="btn-tab-shop" class="bottom-btn active" onclick="switchTab('shop')">
       <span>🛒</span>
@@ -322,6 +325,133 @@
     </button>
   </div>
 
-  <script src="js/shop.js"></script>
+  <script>
+    const tg = window.Telegram?.WebApp;
+    if (tg) {
+      tg.ready();
+      tg.expand();
+    }
+
+    let balance = 100;
+    let currentMode = "free";
+    let isRolling = false;
+
+    const spinPrizes = [
+      { name: "کانفیگ ۱ ماهه", icon: "🚀" },
+      { name: "اکانت پرو", icon: "✨" },
+      { name: "پوچ", icon: "💩" },
+      { name: "تخفیف ۵۰٪", icon: "🏷️" },
+      { name: "۵۰ الماس", icon: "💎" },
+      { name: "کانفیگ VIP", icon: "⚡" },
+      { name: "شانس مجدد", icon: "🔄" }
+    ];
+
+    function buyItem(name) {
+      if (tg?.showPopup) {
+        tg.showPopup({
+          title: "خرید محصول",
+          message: `آیا مایل به خرید ${name} هستید؟`,
+          buttons: [{ type: "ok", text: "تایید" }, { type: "cancel" }]
+        });
+      } else {
+        alert("سفارش شما ثبت شد: " + name);
+      }
+    }
+
+    // جابه‌جایی تب‌ها با کلیک روی منوی پایین
+    function switchTab(tab) {
+      const shopTab = document.getElementById("tab-shop");
+      const spinTab = document.getElementById("tab-spin");
+      const btnShop = document.getElementById("btn-tab-shop");
+      const btnSpin = document.getElementById("btn-tab-spin");
+
+      if (tab === "shop") {
+        shopTab.style.display = "block";
+        spinTab.style.display = "none";
+        btnShop.classList.add("active");
+        btnSpin.classList.remove("active");
+      } else {
+        shopTab.style.display = "none";
+        spinTab.style.display = "block";
+        btnSpin.classList.add("active");
+        btnShop.classList.remove("active");
+      }
+    }
+
+    function openBox(mode) {
+      currentMode = mode;
+      document.getElementById("spin-lobby").style.display = "none";
+      document.getElementById("spin-screen").style.display = "flex";
+      document.getElementById("box-title").innerText = mode === "free" ? "اسپین رایگان روزانه" : "اسپین پولی VIP";
+      generateTrack();
+    }
+
+    function backToLobby() {
+      if (isRolling) return;
+      document.getElementById("spin-screen").style.display = "none";
+      document.getElementById("spin-lobby").style.display = "block";
+    }
+
+    function generateTrack() {
+      const track = document.getElementById("roulette-track");
+      track.style.transition = "none";
+      track.style.transform = "translateX(0px)";
+      track.innerHTML = "";
+
+      for (let i = 0; i < 50; i++) {
+        const prize = spinPrizes[Math.floor(Math.random() * spinPrizes.length)];
+        const el = document.createElement("div");
+        el.className = "roulette-item";
+        el.innerHTML = `<span>${prize.icon}</span><p>${prize.name}</p>`;
+        track.appendChild(el);
+      }
+    }
+
+    function startRoll() {
+      if (isRolling) return;
+
+      if (currentMode === "vip" && balance < 10) {
+        alert("موجودی شما کافی نیست!");
+        return;
+      }
+
+      if (currentMode === "vip") {
+        balance -= 10;
+        document.getElementById("user-balance").innerText = balance;
+      }
+
+      isRolling = true;
+      const btn = document.getElementById("roll-button");
+      btn.disabled = true;
+
+      const track = document.getElementById("roulette-track");
+      track.style.transition = "none";
+      track.style.transform = "translateX(0px)";
+
+      const targetIndex = Math.floor(Math.random() * 8) + 35;
+      const itemWidth = 100;
+      const containerWidth = document.querySelector(".roulette-container").offsetWidth;
+      const stopAt = (targetIndex * itemWidth) - (containerWidth / 2) + (itemWidth / 2);
+
+      setTimeout(() => {
+        track.style.transition = "transform 5s cubic-bezier(0.1, 0.85, 0.25, 1)";
+        track.style.transform = `translateX(${stopAt}px)`;
+      }, 50);
+
+      setTimeout(() => {
+        isRolling = false;
+        btn.disabled = false;
+        const winner = track.children[targetIndex];
+        const prizeName = winner.querySelector("p").innerText;
+
+        if (tg?.showAlert) {
+          tg.showAlert(`🎉 برنده شدید: ${prizeName}`);
+        } else {
+          alert(`🎉 برنده شدید: ${prizeName}`);
+        }
+      }, 5300);
+    }
+  </script>
 </body>
-</html>
+  </html>
+  
