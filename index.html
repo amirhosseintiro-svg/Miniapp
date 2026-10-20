@@ -2,384 +2,81 @@
 <html lang="fa" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>فروشگاه هوشمند</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Black Item</title>
+  <!-- اسکریپت وب‌اپ تلگرام -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <style>
-    :root {
-      --bg: var(--tg-theme-bg-color, #18191c);
-      --card-bg: var(--tg-theme-secondary-bg-color, #222428);
-      --text: var(--tg-theme-text-color, #ffffff);
-      --hint: var(--tg-theme-hint-color, #8e929b);
-      --primary: var(--tg-theme-button-color, #2481cc);
-      --primary-text: var(--tg-theme-button-text-color, #ffffff);
-      --danger: #eb5757;
-      --success: #27ae60;
-    }
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      margin: 0;
-      padding: 0 0 75px 0;
-      background: var(--bg);
-      color: var(--text);
-    }
-    .header {
-      padding: 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: var(--card-bg);
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-    }
-    .badge {
-      padding: 4px 10px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: bold;
-      background: rgba(36,129,204,0.15);
-      color: var(--primary);
-    }
-    .badge.admin {
-      background: rgba(39,174,96,0.2);
-      color: var(--success);
-    }
-    .container { padding: 14px; }
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
-    
-    /* کارت محصول */
-    .card {
-      background: var(--card-bg);
-      border-radius: 14px;
-      padding: 14px;
-      margin-bottom: 12px;
-      border: 1px solid rgba(255,255,255,0.04);
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-    .card-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-    }
-    .prod-title { font-size: 15px; font-weight: bold; }
-    .prod-price { font-size: 14px; color: var(--success); font-weight: bold; }
-    .prod-desc { font-size: 12px; color: var(--hint); margin-bottom: 6px; }
-
-    .btn {
-      background: var(--primary);
-      color: var(--primary-text);
-      border: none;
-      padding: 10px 14px;
-      border-radius: 10px;
-      font-size: 14px;
-      font-weight: bold;
-      cursor: pointer;
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
-      gap: 6px;
-      width: 100%;
-    }
-    .btn-danger { background: var(--danger); color: #fff; width: auto; padding: 6px 10px; font-size: 12px; }
-    .btn-success { background: var(--success); }
-
-    /* فرم ادمین */
-    .form-group { margin-bottom: 12px; }
-    label { font-size: 13px; color: var(--hint); display: block; margin-bottom: 6px; }
-    input, textarea {
-      width: 100%;
-      padding: 12px;
-      border-radius: 10px;
-      border: 1px solid rgba(255,255,255,0.1);
-      background: rgba(0,0,0,0.25);
-      color: #fff;
-      font-family: inherit;
-      font-size: 14px;
-    }
-
-    /* نوار پایین (Bottom Navigation) */
-    .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 60px;
-      background: var(--card-bg);
-      border-top: 1px solid rgba(255,255,255,0.08);
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      z-index: 99;
-    }
-    .nav-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-      color: var(--hint);
-      font-size: 11px;
-      cursor: pointer;
-      flex: 1;
-    }
-    .nav-item.active { color: var(--primary); font-weight: bold; }
-    .nav-icon { font-size: 18px; }
-
-    /* سبد شناور */
-    .cart-summary {
-      background: var(--card-bg);
-      border: 1px solid var(--primary);
-      border-radius: 12px;
-      padding: 12px;
-      margin-top: 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-  </style>
+  <!-- استایل‌ها -->
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- هدر -->
-  <div class="header">
-    <div>
-      <div id="user-name" style="font-weight: bold; font-size: 15px;">در حال بارگذاری...</div>
-      <div id="user-status" style="font-size: 12px; color: var(--hint);">شناسه: ---</div>
+  <!-- هدر اپلیکیشن -->
+  <header class="app-header">
+    <div class="user-info">
+      <div class="avatar" id="user-avatar">👤</div>
+      <span class="username" id="user-name">کاربر</span>
     </div>
-    <div id="role-badge" class="badge">کاربر</div>
-  </div>
+    <div class="brand-title" id="app-title">Black Item</div>
+    <div class="user-balance">
+      <span id="balance-amount">0</span> 💰
+    </div>
+  </header>
 
-  <div class="container">
-    <!-- تب ۱: محصولات و کاتالوگ -->
-    <div id="tab-shop" class="tab-content active">
-      <div id="products-list"></div>
+  <!-- محتوای اصلی و گرید آیتم‌ها -->
+  <main class="content-area">
+    <div class="items-grid" id="products-container">
+      <!-- محصولات از طریق جاوااسکریپت اینجا چیده می‌شوند -->
+    </div>
+  </main>
 
-      <!-- نوار سبد خرید -->
-      <div id="cart-box" style="display:none;" class="cart-summary">
-        <div>
-          <div style="font-size: 13px;">سبد خرید شما</div>
-          <div id="cart-count" style="font-size: 12px; color: var(--hint);">0 محصول انتخاب شده</div>
-        </div>
-        <button class="btn btn-success" style="width:auto; padding: 8px 16px;" onclick="checkout()">تأیید و ارسال سفارش</button>
+  <!-- نوار ناوبری پایین -->
+  <nav class="bottom-nav" id="bottom-nav">
+    <button class="nav-item" data-tab="profile">👤 <span>پروفایل</span></button>
+    <button class="nav-item" data-tab="task">📋 <span>Task</span></button>
+    <button class="nav-item active" data-tab="shop">🛍️ <span>فروشگاه</span></button>
+    <button class="nav-item" data-tab="game">🎮 <span>بازی</span></button>
+    <button class="nav-item" data-tab="wallet">💳 <span>کیف پول</span></button>
+  </nav>
+
+  <!-- دکمه شناور چرخ‌دنده (مخصوص ادمین) -->
+  <button id="admin-gear-btn" class="admin-fab hidden">⚙️</button>
+
+  <!-- پنجره مودال پنل مدیریت -->
+  <div id="admin-modal" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>پنل مدیریت فوق پیشرفته</h3>
+        <button id="close-admin">✖</button>
       </div>
-    </div>
+      <div class="modal-body">
+        <label>عنوان مینی‌اپ:</label>
+        <input type="text" id="cfg-app-title">
 
-    <!-- تب ۲: پروفایل -->
-    <div id="tab-profile" class="tab-content">
-      <div class="card">
-        <h4 style="margin: 0 0 10px 0;">اطلاعات حساب</h4>
-        <p style="font-size: 13px; color: var(--hint); margin: 4px 0;">آیدی تلگرام: <b id="prof-id" style="color:var(--text);">---</b></p>
-        <p style="font-size: 13px; color: var(--hint); margin: 4px 0;">نام کاربری: <b id="prof-username" style="color:var(--text);">---</b></p>
-        <p style="font-size: 13px; color: var(--hint); margin: 4px 0;">سطح دسترسی: <b id="prof-role" style="color:var(--text);">عادی</b></p>
+        <label>رنگ پس‌زمینه اصلی:</label>
+        <input type="color" id="cfg-bg-color">
+
+        <label>رنگ کارت‌ها:</label>
+        <input type="color" id="cfg-card-color">
+
+        <label>رنگ متن‌ها:</label>
+        <input type="color" id="cfg-text-color">
+
+        <hr>
+        <h4>افزودن محصول جدید</h4>
+        <input type="text" id="new-prod-title" placeholder="نام محصول">
+        <input type="text" id="new-prod-desc" placeholder="توضیحات کوتاه">
+        <input type="text" id="new-prod-price" placeholder="قیمت (مثلاً 50$)">
+        <input type="text" id="new-prod-img" placeholder="لینک عکس محصول">
+        <button id="add-product-btn" class="action-btn">افزودن محصول</button>
+
+        <hr>
+        <button id="save-settings-btn" class="save-btn">💾 ذخیره تمام تغییرات</button>
       </div>
-      <button class="btn btn-danger" onclick="tg.close()">بستن اپلیکیشن</button>
-    </div>
-
-    <!-- تب ۳: پنل ادمین (مخفی برای غیر ادمین) -->
-    <div id="tab-admin" class="tab-content">
-      <div class="card">
-        <h3 style="margin: 0 0 12px 0; color: var(--success);">➕ افزودن محصول جدید</h3>
-        <div class="form-group">
-          <label>نام محصول:</label>
-          <input type="text" id="adm-title" placeholder="مثلاً: سرویس اشتراکی ۱ ماهه">
-        </div>
-        <div class="form-group">
-          <label>قیمت (تومان یا عددی):</label>
-          <input type="text" id="adm-price" placeholder="مثلاً: 120,000 تومان">
-        </div>
-        <div class="form-group">
-          <label>توضیحات کوتاه:</label>
-          <input type="text" id="adm-desc" placeholder="مثلاً: حجم نامحدود، تحویل آنی">
-        </div>
-        <button class="btn btn-success" onclick="adminAddProduct()">ثبت و انتشار محصول</button>
-      </div>
-
-      <div class="card">
-        <h4 style="margin: 0 0 8px 0;">راهنما</h4>
-        <p style="font-size: 12px; color: var(--hint); line-height: 1.6;">
-          شما به عنوان مدیر کل می‌توانید هر محصولی را مستقیماً از بخش فروشگاه با زدن روی دکمه «حذف 🗑️» پاک کنید.
-        </p>
-      </div>
-    </div>
-  </div>
-
-  <!-- منوی تب پایین -->
-  <div class="bottom-nav">
-    <div class="nav-item active" onclick="switchTab('shop', this)">
-      <div class="nav-icon">🛍️</div>
-      <div>فروشگاه</div>
-    </div>
-    <div class="nav-item" onclick="switchTab('profile', this)">
-      <div class="nav-icon">👤</div>
-      <div>پروفایل</div>
-    </div>
-    <div class="nav-item" id="nav-admin-btn" style="display:none;" onclick="switchTab('admin', this)">
-      <div class="nav-icon">⚙️</div>
-      <div>مدیریت</div>
     </div>
   </div>
 
-  <script>
-    const tg = window.Telegram.WebApp;
-    tg.ready();
-    tg.expand();
-
-    // شناسه ادمین اصلی
-    const ADMIN_ID = 1309025996;
-
-    const user = tg.initDataUnsafe?.user || {};
-    const userId = user.id || 0;
-    const userName = user.first_name || 'کاربر گرامی';
-    const userTag = user.username ? '@' + user.username : 'ندارد';
-    const isAdmin = (userId === ADMIN_ID);
-
-    // تنظیم اطلاعات کاربر
-    document.getElementById('user-name').innerText = userName;
-    document.getElementById('user-status').innerText = 'شناسه: ' + (userId || 'نامشخص');
-    document.getElementById('prof-id').innerText = userId;
-    document.getElementById('prof-username').innerText = userTag;
-
-    if (isAdmin) {
-      document.getElementById('role-badge').innerText = 'مدیر سیستم';
-      document.getElementById('role-badge').classList.add('admin');
-      document.getElementById('prof-role').innerText = 'مدیر کل (Full Access)';
-      document.getElementById('nav-admin-btn').style.display = 'flex';
-    }
-
-    // لیست محصولات اولیه در صورتی که دیتابیس خالی باشد
-    const initialProducts = [
-      { id: 1, title: 'اشتراک VIP یک ماهه', price: '۹۹,۰۰۰ تومان', desc: 'سرعت نامحدود + پشتیبانی ۲۴ ساعته' },
-      { id: 2, title: 'اشتراک VIP سه ماهه', price: '۲۴۹,۰۰۰ تومان', desc: 'سه کاربره به همراه سرور اختصاصی' }
-    ];
-
-    let cart = [];
-
-    function loadProducts() {
-      const saved = localStorage.getItem('miniapp_prods');
-      return saved ? JSON.parse(saved) : initialProducts;
-    }
-
-    function saveProducts(prods) {
-      localStorage.setItem('miniapp_prods', JSON.stringify(prods));
-    }
-
-    function renderShop() {
-      const list = document.getElementById('products-list');
-      const prods = loadProducts();
-      list.innerHTML = '';
-
-      if (prods.length === 0) {
-        list.innerHTML = '<div style="text-align:center; padding:30px; color:var(--hint);">هیچ محصولی موجود نیست.</div>';
-        return;
-      }
-
-      prods.forEach(p => {
-        list.innerHTML += `
-          <div class="card">
-            <div class="card-top">
-              <span class="prod-title">${p.title}</span>
-              <span class="prod-price">${p.price}</span>
-            </div>
-            <div class="prod-desc">${p.desc || ''}</div>
-            <div style="display:flex; gap:8px; align-items:center; margin-top:6px;">
-              <button class="btn" onclick="addToCart(${p.id}, '${p.title}')">🛒 افزودن به سبد</button>
-              ${isAdmin ? `<button class="btn btn-danger" onclick="deleteProduct(${p.id})">🗑️</button>` : ''}
-            </div>
-          </div>
-        `;
-      });
-    }
-
-    function switchTab(tabName, el) {
-      if (tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
-      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-      
-      document.getElementById('tab-' + tabName).classList.add('active');
-      el.classList.add('active');
-    }
-
-    function addToCart(id, title) {
-      if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
-      cart.push({ id, title });
-      updateCartUI();
-    }
-
-    function updateCartUI() {
-      const box = document.getElementById('cart-box');
-      if (cart.length > 0) {
-        box.style.display = 'flex';
-        document.getElementById('cart-count').innerText = `${cart.length} محصول انتخاب شده`;
-      } else {
-        box.style.display = 'none';
-      }
-    }
-
-    function checkout() {
-      if (cart.length === 0) return;
-      if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-
-      const itemsList = cart.map(c => c.title).join(' | ');
-      const orderPayload = {
-        action: 'new_order',
-        buyer_id: userId,
-        buyer_name: userName,
-        buyer_username: userTag,
-        items: itemsList,
-        count: cart.length
-      };
-
-      // ارسال مستقیم به چت ربات
-      tg.sendData(JSON.stringify(orderPayload));
-    }
-
-    // عملکردهای ادمین
-    function adminAddProduct() {
-      const title = document.getElementById('adm-title').value.trim();
-      const price = document.getElementById('adm-price').value.trim();
-      const desc = document.getElementById('adm-desc').value.trim();
-
-      if (!title || !price) {
-        alert('لطفاً نام و قیمت محصول را وارد کنید.');
-        return;
-      }
-
-      const prods = loadProducts();
-      prods.unshift({
-        id: Date.now(),
-        title: title,
-        price: price,
-        desc: desc
-      });
-
-      saveProducts(prods);
-
-      document.getElementById('adm-title').value = '';
-      document.getElementById('adm-price').value = '';
-      document.getElementById('adm-desc').value = '';
-
-      if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-      alert('محصول با موفقیت اضافه شد!');
-      
-      renderShop();
-      // بازگشت به تب فروشگاه
-      document.querySelector('.bottom-nav .nav-item').click();
-    }
-
-    function deleteProduct(id) {
-      if (!confirm('آیا از حذف این محصول مطمئن هستید؟')) return;
-      let prods = loadProducts();
-      prods = prods.filter(p => p.id !== id);
-      saveProducts(prods);
-      if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('warning');
-      renderShop();
-    }
-
-    renderShop();
-  </script>
+  <script src="app.js"></script>
 </body>
 </html>
 
-            
