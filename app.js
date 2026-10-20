@@ -1,12 +1,12 @@
 const ADMIN_ID = 1309025996;
 
-// آیکون‌های وکتور شیک پیش‌فرض (با Remix Icon)
+// ساختار پیش‌فرض تب‌ها و شناسه‌های صفحات
 const defaultNavItems = [
-  { icon: "ri-user-3-line", label: "پروفایل" },
-  { icon: "ri-task-line", label: "Task" },
-  { icon: "ri-store-2-line", label: "فروشگاه" },
-  { icon: "ri-gamepad-line", label: "بازی" },
-  { icon: "ri-wallet-3-line", label: "کیف پول" }
+  { pageId: "page-profile", icon: "ri-user-3-line", label: "پروفایل" },
+  { pageId: "page-task", icon: "ri-task-line", label: "Task" },
+  { pageId: "page-shop", icon: "ri-store-2-line", label: "فروشگاه" },
+  { pageId: "page-game", icon: "ri-gamepad-line", label: "بازی" },
+  { pageId: "page-wallet", icon: "ri-wallet-3-line", label: "کیف پول" }
 ];
 
 let defaultConfig = {
@@ -17,11 +17,12 @@ let defaultConfig = {
   navActiveColor: "#0088cc",
   navItems: defaultNavItems,
   products: [
-    { id: 1, title: "محصول نمونه ۱", desc: "توضیحات آیتم اول", price: "10$", img: "https://via.placeholder.com/150" },
-    { id: 2, title: "محصول نمونه ۲", desc: "توضیحات آیتم دوم", price: "25$", img: "https://via.placeholder.com/150" }
+    { id: 1, title: "محصول نمونه ۱", desc: "توضیحات و مشخصات آیتم اول", price: "10$", img: "https://via.placeholder.com/150" },
+    { id: 2, title: "محصول نمونه ۲", desc: "توضیحات و مشخصات آیتم دوم", price: "25$", img: "https://via.placeholder.com/150" }
   ]
 };
 
+// دریافت تنظیمات
 let saved = localStorage.getItem("black_item_config");
 let appConfig = saved ? JSON.parse(saved) : defaultConfig;
 
@@ -29,15 +30,30 @@ if (!appConfig.navItems || appConfig.navItems.length < 5) {
   appConfig.navItems = defaultNavItems;
 }
 
+// دیتای کاربری، تسک‌ها و بازی
+let userData = JSON.parse(localStorage.getItem("black_item_user")) || {
+  coins: 0,
+  energy: 100
+};
+
+const tasksList = [
+  { id: 1, title: "عضویت در کانال تلگرام", reward: 50, link: "https://t.me", done: false },
+  { id: 2, title: "دنبال کردن صفحه توییتر (X)", reward: 30, link: "https://x.com", done: false },
+  { id: 3, title: "دعوت ۳ نفر از دوستان", reward: 100, link: "", done: false }
+];
+
+// اتصال وب‌اپ تلگرام
 const tg = window.Telegram?.WebApp;
 if (tg) {
   tg.ready();
   tg.expand();
 }
 
+// المان‌ها
 const appTitleEl = document.getElementById("app-title");
 const productsContainer = document.getElementById("products-container");
 const bottomNav = document.getElementById("bottom-nav");
+const balanceAmountEl = document.getElementById("balance-amount");
 const adminGearBtn = document.getElementById("admin-gear-btn");
 const adminModal = document.getElementById("admin-modal");
 const closeAdminBtn = document.getElementById("close-admin");
@@ -45,6 +61,13 @@ const saveSettingsBtn = document.getElementById("save-settings-btn");
 const addProductBtn = document.getElementById("add-product-btn");
 
 let activeTabIndex = 2; // پیش‌فرض روی فروشگاه
+
+function updateBalanceUI() {
+  balanceAmountEl.textContent = userData.coins;
+  const profBalance = document.getElementById("prof-balance");
+  if (profBalance) profBalance.textContent = userData.coins;
+  localStorage.setItem("black_item_user", JSON.stringify(userData));
+}
 
 function applyTheme() {
   document.documentElement.style.setProperty("--bg-color", appConfig.bgColor);
@@ -54,19 +77,24 @@ function applyTheme() {
   appTitleEl.textContent = appConfig.title;
 }
 
-// تابع هوشمند برای تشخیص نوع آیکون (عکس اینترنتی، کلاس RemixIcon یا ایموجی)
 function renderIconHTML(iconStr) {
   if (!iconStr) return "★";
-  // اگر لینک تصویر بود
   if (iconStr.startsWith("http://") || iconStr.startsWith("https://") || iconStr.endsWith(".png") || iconStr.endsWith(".svg")) {
-    return `<img src="${iconStr}" style="width: 22px; height: 22px; object-fit: contain; display: block;" alt="icon">`;
+    return `<img src="${iconStr}" style="width: 20px; height: 20px; object-fit: contain; display: block;" alt="icon">`;
   }
-  // اگر کلاس آیکون وکتور بود
   if (iconStr.startsWith("ri-")) {
     return `<i class="${iconStr}" style="font-size: 20px;"></i>`;
   }
-  // اگر ایموجی یا کاراکتر متنی بود
   return `<span style="font-size: 18px;">${iconStr}</span>`;
+}
+
+// تغییر صفحات مینی‌اپ
+function switchPage(pageId, index) {
+  activeTabIndex = index;
+  document.querySelectorAll(".app-page").forEach(page => page.classList.add("hidden"));
+  const targetPage = document.getElementById(pageId);
+  if (targetPage) targetPage.classList.remove("hidden");
+  renderBottomNav();
 }
 
 function renderBottomNav() {
@@ -76,10 +104,95 @@ function renderBottomNav() {
     btn.className = `nav-item ${index === activeTabIndex ? "active" : ""}`;
     btn.innerHTML = `${renderIconHTML(item.icon)} <span>${item.label}</span>`;
     btn.addEventListener("click", () => {
-      activeTabIndex = index;
-      renderBottomNav();
+      switchPage(defaultNavItems[index].pageId, index);
     });
     bottomNav.appendChild(btn);
+  });
+}
+
+// راه‌اندازی اطلاعات پروفایل
+function initProfile() {
+  const user = tg?.initDataUnsafe?.user;
+  if (user) {
+    document.getElementById("user-name").textContent = user.first_name || "کاربر";
+    document.getElementById("prof-name").textContent = `${user.first_name || ""} ${user.last_name || ""}`;
+    document.getElementById("prof-id").textContent = `ID: ${user.id}`;
+    if (user.photo_url) {
+      document.getElementById("user-avatar").innerHTML = `<img src="${user.photo_url}" style="width:100%; height:100%; border-radius:50%;">`;
+      document.getElementById("prof-avatar").innerHTML = `<img src="${user.photo_url}" style="width:100%; height:100%; border-radius:50%;">`;
+    }
+  }
+}
+
+// راه‌اندازی تسک‌ها
+function initTasks() {
+  const tasksContainer = document.getElementById("tasks-container");
+  if (!tasksContainer) return;
+  tasksContainer.innerHTML = "";
+
+  tasksList.forEach(t => {
+    const item = document.createElement("div");
+    item.className = "task-item";
+    item.innerHTML = `
+      <div class="task-info">
+        <h4>${t.title}</h4>
+        <span>+${t.reward} سکه 💰</span>
+      </div>
+      <button class="task-btn ${t.done ? 'completed' : ''}" id="task-btn-${t.id}">
+        ${t.done ? 'انجام شد' : 'انجام'}
+      </button>
+    `;
+    item.querySelector("button").addEventListener("click", () => {
+      if (t.done) return;
+      if (t.link) window.open(t.link, "_blank");
+      t.done = true;
+      userData.coins += t.reward;
+      updateBalanceUI();
+      initTasks();
+    });
+    tasksContainer.appendChild(item);
+  });
+}
+
+// راه‌اندازی بازی ضربه‌ای
+function initGame() {
+  const coinTap = document.getElementById("coin-tap");
+  const energyEl = document.getElementById("game-energy");
+  if (!coinTap) return;
+
+  coinTap.addEventListener("click", () => {
+    if (userData.energy > 0) {
+      userData.coins += 1;
+      userData.energy -= 1;
+      energyEl.textContent = userData.energy;
+      updateBalanceUI();
+    } else {
+      alert("انرژی شما به پایان رسید! کمی صبر کنید.");
+    }
+  });
+
+  // پر شدن خودکار انرژی هر ۳ ثانیه
+  setInterval(() => {
+    if (userData.energy < 100) {
+      userData.energy += 1;
+      if (energyEl) energyEl.textContent = userData.energy;
+    }
+  }, 3000);
+}
+
+// راه‌اندازی کیف پول
+function initWallet() {
+  const connectBtn = document.getElementById("btn-connect-wallet");
+  const statusEl = document.getElementById("wallet-status");
+  if (!connectBtn) return;
+
+  connectBtn.addEventListener("click", () => {
+    statusEl.textContent = "در حال اتصال به کیف پول...";
+    setTimeout(() => {
+      statusEl.textContent = "آدرس متصل: UQD...9xK (شبکه TON)";
+      connectBtn.textContent = "قطع اتصال";
+      connectBtn.style.background = "#e74c3c";
+    }, 1000);
   });
 }
 
@@ -177,11 +290,16 @@ saveSettingsBtn.addEventListener("click", () => {
   applyTheme();
   renderBottomNav();
   adminModal.classList.add("hidden");
-  alert("تمام تنظیمات و آیکون‌ها ذخیره شدند!");
+  alert("تمام تنظیمات و تب‌ها ذخیره شدند!");
 });
 
+// راه‌اندازی کل سیستم
 applyTheme();
+updateBalanceUI();
 renderProducts();
 renderBottomNav();
+initProfile();
+initTasks();
+initGame();
+initWallet();
 checkAdminAccess();
-                             
