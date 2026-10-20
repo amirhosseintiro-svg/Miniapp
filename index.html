@@ -4,14 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>Black Item</title>
-  <!-- اسکریپت وب‌اپ تلگرام -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <!-- استایل‌ها -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- هدر اپلیکیشن -->
+  <!-- هدر -->
   <header class="app-header">
     <div class="user-info">
       <div class="avatar" id="user-avatar">👤</div>
@@ -23,37 +21,30 @@
     </div>
   </header>
 
-  <!-- محتوای اصلی و گرید آیتم‌ها -->
+  <!-- محتوا -->
   <main class="content-area">
-    <div class="items-grid" id="products-container">
-      <!-- محصولات از طریق جاوااسکریپت اینجا چیده می‌شوند -->
-    </div>
+    <div class="items-grid" id="products-container"></div>
   </main>
 
-  <!-- نوار ناوبری پایین -->
-  <nav class="bottom-nav" id="bottom-nav">
-    <button class="nav-item" data-tab="profile">👤 <span>پروفایل</span></button>
-    <button class="nav-item" data-tab="task">📋 <span>Task</span></button>
-    <button class="nav-item active" data-tab="shop">🛍️ <span>فروشگاه</span></button>
-    <button class="nav-item" data-tab="game">🎮 <span>بازی</span></button>
-    <button class="nav-item" data-tab="wallet">💳 <span>کیف پول</span></button>
-  </nav>
+  <!-- نوار ناوبری پویا -->
+  <nav class="bottom-nav" id="bottom-nav"></nav>
 
-  <!-- دکمه شناور چرخ‌دنده (مخصوص ادمین) -->
+  <!-- دکمه شناور چرخ‌دنده ادمین -->
   <button id="admin-gear-btn" class="admin-fab hidden">⚙️</button>
 
-  <!-- پنجره مودال پنل مدیریت -->
+  <!-- مودال پنل مدیریت -->
   <div id="admin-modal" class="modal hidden">
     <div class="modal-content">
       <div class="modal-header">
-        <h3>پنل مدیریت فوق پیشرفته</h3>
+        <h3>تنظیمات فوق پیشرفته</h3>
         <button id="close-admin">✖</button>
       </div>
       <div class="modal-body">
+        <h4>🎨 ظاهر و رنگ‌ها</h4>
         <label>عنوان مینی‌اپ:</label>
         <input type="text" id="cfg-app-title">
 
-        <label>رنگ پس‌زمینه اصلی:</label>
+        <label>رنگ پس‌زمینه:</label>
         <input type="color" id="cfg-bg-color">
 
         <label>رنگ کارت‌ها:</label>
@@ -62,8 +53,17 @@
         <label>رنگ متن‌ها:</label>
         <input type="color" id="cfg-text-color">
 
+        <label>رنگ تب فعال ناوبری:</label>
+        <input type="color" id="cfg-nav-active-color">
+
         <hr>
-        <h4>افزودن محصول جدید</h4>
+        <h4>🧭 مدیریت نوار ناوبری (منوی پایین)</h4>
+        <div id="nav-items-manager">
+          <!-- فیلدهای ویرایش تب‌ها اینجا چیده می‌شوند -->
+        </div>
+
+        <hr>
+        <h4>🛍️ افزودن محصول</h4>
         <input type="text" id="new-prod-title" placeholder="نام محصول">
         <input type="text" id="new-prod-desc" placeholder="توضیحات کوتاه">
         <input type="text" id="new-prod-price" placeholder="قیمت (مثلاً 50$)">
