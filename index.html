@@ -788,8 +788,7 @@
       localStorage.setItem('blacknet_balances', JSON.stringify(userBalances));
       renderHeader();
     }
-
-    // جابه‌جایی تب‌ها
+    // جابه‌جایی تب‌ها (پایان پارت ۸)
     function switchTab(tabId, tabEl) {
       document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
       document.querySelectorAll('.dock-tab').forEach(el => el.classList.remove('active'));
@@ -797,8 +796,8 @@
       if (target) target.classList.add('active');
       if (tabEl) tabEl.classList.add('active');
     }
-  <script>
-      // متد استاندارد ارسال پیام به ربات، کانال لاگ یا پی‌وی کاربر
+
+    // متد استاندارد ارسال پیام به ربات، کانال لاگ یا پی‌وی کاربر (شروع پارت ۹)
     async function sendTelegramNotification(text, targetChatId = null) {
       if (!appData.botToken) return false;
       const target = targetChatId || appData.logChannel || appData.adminChatId;
