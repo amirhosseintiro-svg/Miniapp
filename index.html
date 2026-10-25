@@ -4,20 +4,17 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>BlackNet Elite MiniApp</title>
-
-  <!-- Telegram WebApp SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-
   <style>
     :root {
-      --bg-base: #05070c;
-      --bg-surface: rgba(13, 17, 28, 0.78);
-      --bg-elevated: rgba(22, 29, 48, 0.92);
+      --bg-base: #07090e;
+      --bg-surface: rgba(15, 20, 32, 0.85);
+      --bg-elevated: rgba(22, 29, 48, 0.95);
       --border-glass: rgba(255, 255, 255, 0.08);
-      --border-neon-cyan: rgba(0, 242, 254, 0.35);
-      --border-neon-gold: rgba(251, 191, 36, 0.35);
+      --border-neon-cyan: rgba(0, 242, 254, 0.4);
+      --border-neon-gold: rgba(251, 191, 36, 0.4);
       --neon-cyan: #00f2fe;
-      --neon-blue: #4facfe;
+      --neon-blue: #38bdf8;
       --neon-gold: #fbbf24;
       --neon-purple: #c084fc;
       --neon-green: #10b981;
@@ -37,9 +34,6 @@
 
     body {
       background-color: var(--bg-base);
-      background-image: 
-        radial-gradient(circle at 15% 15%, rgba(0, 242, 254, 0.06) 0%, transparent 40%),
-        radial-gradient(circle at 85% 85%, rgba(192, 132, 252, 0.06) 0%, transparent 40%);
       color: var(--text-main);
       min-height: 100vh;
       display: flex;
@@ -48,7 +42,6 @@
       overflow-x: hidden;
     }
 
-    /* هدر با طراحی شیشه‌ای مدرن */
     .app-header {
       display: flex;
       justify-content: space-between;
@@ -81,7 +74,6 @@
     .user-meta h4 {
       font-size: 13px;
       font-weight: 800;
-      color: #fff;
     }
 
     .user-meta span {
@@ -90,7 +82,7 @@
     }
 
     .balance-box {
-      background: rgba(0, 242, 254, 0.06);
+      background: rgba(0, 242, 254, 0.08);
       border: 1px solid var(--border-neon-cyan);
       border-radius: 14px;
       padding: 6px 12px;
@@ -112,14 +104,13 @@
       font-weight: 700;
     }
 
-    /* تب‌بار معلق شیشه‌ای لوکس (Floating Glass Dock) */
     .floating-dock {
       position: fixed;
       bottom: 14px;
       left: 14px;
       right: 14px;
       height: 64px;
-      background: rgba(10, 14, 24, 0.88);
+      background: rgba(10, 14, 24, 0.92);
       backdrop-filter: blur(25px);
       -webkit-backdrop-filter: blur(25px);
       border: 1px solid var(--border-glass);
@@ -144,7 +135,7 @@
       font-weight: 600;
       flex: 1;
       height: 100%;
-      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: all 0.25s ease;
       position: relative;
     }
 
@@ -176,15 +167,14 @@
       box-shadow: 0 0 8px var(--neon-cyan);
     }
 
-    /* محتوای تب‌ها */
     .tab-content {
       display: none;
       padding: 16px;
-      animation: tabFade 0.25s ease;
     }
 
     .tab-content.active {
       display: block;
+      animation: tabFade 0.25s ease;
     }
 
     @keyframes tabFade {
@@ -192,7 +182,145 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* دسته‌بندی محصولات */
+    /* استایل‌های رولت افقی بر اساس تصویر ارسالی */
+    .case-live-ticker {
+      background: rgba(22, 29, 48, 0.6);
+      border: 1px solid var(--border-glass);
+      border-radius: 14px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .roulette-container {
+      position: relative;
+      width: 100%;
+      height: 110px;
+      background: #0d121d;
+      border: 1px solid var(--border-glass);
+      border-radius: 18px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .roulette-track {
+      display: flex;
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      transition: transform 5s cubic-bezier(0.1, 0.95, 0.2, 1);
+    }
+
+    .roulette-item {
+      width: 90px;
+      height: 90px;
+      margin: 10px 5px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      gap: 4px;
+    }
+
+    .roulette-marker {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 3px;
+      background: var(--neon-purple);
+      box-shadow: 0 0 12px var(--neon-purple);
+      z-index: 10;
+    }
+
+    .roulette-marker::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-top: 8px solid var(--neon-purple);
+    }
+
+    .roulette-marker::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-bottom: 8px solid var(--neon-purple);
+    }
+
+    .rewards-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .reward-showcase-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-glass);
+      border-radius: 16px;
+      padding: 14px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .btn-action {
+      width: 100%;
+      padding: 12px;
+      border-radius: 14px;
+      font-size: 13px;
+      font-weight: 800;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .btn-neon-cyan {
+      background: linear-gradient(135deg, var(--neon-blue), var(--neon-cyan));
+      color: #05070c;
+    }
+
+    .btn-neon-gold {
+      background: linear-gradient(135deg, #f59e0b, #fbbf24);
+      color: #05070c;
+    }
+
+    .glass-input {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--border-glass);
+      border-radius: 12px;
+      padding: 10px 14px;
+      color: #fff;
+      font-size: 12px;
+      outline: none;
+      margin-bottom: 10px;
+    }
+
+    .glass-input:focus {
+      border-color: var(--neon-cyan);
+    }
+
     .category-pills {
       display: flex;
       gap: 8px;
@@ -201,7 +329,6 @@
       margin-bottom: 12px;
       scrollbar-width: none;
     }
-    .category-pills::-webkit-scrollbar { display: none; }
 
     .cat-btn {
       background: var(--bg-surface);
@@ -213,17 +340,14 @@
       font-weight: 700;
       white-space: nowrap;
       cursor: pointer;
-      transition: all 0.2s;
     }
 
     .cat-btn.active {
       background: rgba(0, 242, 254, 0.12);
       border-color: var(--neon-cyan);
       color: var(--neon-cyan);
-      box-shadow: 0 0 10px rgba(0, 242, 254, 0.2);
     }
 
-    /* کارت‌های فروشگاه */
     .store-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -232,14 +356,11 @@
 
     .card-product {
       background: var(--bg-surface);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
       border: 1px solid var(--border-glass);
       border-radius: 18px;
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      position: relative;
     }
 
     .product-img-box {
@@ -253,19 +374,6 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-    }
-
-    .card-badge {
-      position: absolute;
-      top: 6px;
-      right: 6px;
-      background: rgba(244, 63, 94, 0.85);
-      color: #fff;
-      font-size: 9px;
-      font-weight: 800;
-      padding: 2px 7px;
-      border-radius: 6px;
-      backdrop-filter: blur(4px);
     }
 
     .product-info {
@@ -286,10 +394,6 @@
       font-size: 10px;
       color: var(--text-muted);
       margin-bottom: 8px;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
       line-height: 1.4;
     }
 
@@ -302,148 +406,14 @@
     }
 
     .product-price {
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 900;
       color: var(--text-main);
-    }
-
-    .btn-buy {
-      background: linear-gradient(135deg, var(--neon-blue), var(--neon-cyan));
-      color: #05070c;
-      border: none;
-      padding: 5px 10px;
-      border-radius: 8px;
-      font-size: 10px;
-      font-weight: 800;
-      cursor: pointer;
-    }
-
-    /* مینی‌گیم گردونه متالیک نئونی */
-    .wheel-arena-card {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-glass);
-      border-radius: 22px;
-      padding: 16px;
-      margin-bottom: 18px;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .wheel-stage {
-      position: relative;
-      width: 250px;
-      height: 250px;
-      margin: 14px auto;
-    }
-
-    .wheel-outer-ring {
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      border: 4px solid var(--border-neon-cyan);
-      box-shadow: 0 0 25px rgba(0, 242, 254, 0.25);
-      position: relative;
-      background: #090c14;
-    }
-
-    .wheel-canvas {
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      transition: transform 4.5s cubic-bezier(0.12, 0.95, 0.2, 1);
-    }
-
-    .wheel-pin {
-      position: absolute;
-      top: -12px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 0;
-      height: 0;
-      border-left: 12px solid transparent;
-      border-right: 12px solid transparent;
-      border-top: 22px solid var(--neon-rose);
-      z-index: 10;
-      filter: drop-shadow(0 0 8px var(--neon-rose));
-    }
-
-    /* پاپ‌آپ سینمایی برنده شدن (Jackpot Modal) */
-    .jackpot-modal {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.88);
-      backdrop-filter: blur(12px);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 300;
-      padding: 20px;
-    }
-
-    .jackpot-card {
-      background: var(--bg-elevated);
-      border: 2px solid var(--neon-gold);
-      border-radius: 24px;
-      padding: 24px 18px;
-      text-align: center;
-      max-width: 320px;
-      width: 100%;
-      box-shadow: 0 0 35px rgba(251, 191, 36, 0.35);
-      animation: popJackpot 0.4s cubic-bezier(0.17, 0.89, 0.32, 1.28);
-    }
-
-    @keyframes popJackpot {
-      from { transform: scale(0.6); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
-    }
-
-    /* فرم‌ها و دکمه‌ها */
-    .btn-action {
-      width: 100%;
-      padding: 12px;
-      border-radius: 14px;
-      font-size: 13px;
-      font-weight: 800;
-      border: none;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-    }
-
-    .btn-neon-cyan {
-      background: linear-gradient(135deg, var(--neon-blue), var(--neon-cyan));
-      color: #05070c;
-      box-shadow: 0 0 15px rgba(0, 242, 254, 0.3);
-    }
-
-    .btn-neon-gold {
-      background: linear-gradient(135deg, #f59e0b, #fbbf24);
-      color: #05070c;
-      box-shadow: 0 0 15px rgba(251, 191, 36, 0.3);
-    }
-
-    .glass-input {
-      width: 100%;
-      background: rgba(0, 0, 0, 0.35);
-      border: 1px solid var(--border-glass);
-      border-radius: 12px;
-      padding: 10px 14px;
-      color: #fff;
-      font-size: 12px;
-      outline: none;
-      margin-bottom: 10px;
-    }
-
-    .glass-input:focus {
-      border-color: var(--neon-cyan);
     }
   </style>
 </head>
 <body>
-  <!-- هدر اپلیکیشن نئونی -->
+  <!-- هدر اپلیکیشن نئونی با بالانس تومان و ستاره -->
   <header class="app-header">
     <div class="user-profile-header">
       <img id="user-avatar" src="https://via.placeholder.com/44" alt="Avatar" class="user-avatar" />
@@ -458,111 +428,116 @@
     </div>
   </header>
 
-  <!-- تب ۱: فروشگاه محصولات همراه با دسته‌بندی پویا -->
+  <!-- تب ۱: فروشگاه همراه با دسته‌بندی پویا -->
   <main id="tab-store" class="tab-content active">
     <!-- نوار فیلتر دسته‌بندی‌ها -->
     <div id="category-bar" class="category-pills">
       <button class="cat-btn active" onclick="filterCategory('all', this)">همه محصولات</button>
-      <!-- دسته‌ها به صورت پویا از جاوااسکریپت تزریق می‌شوند -->
     </div>
 
-    <!-- گرید محصولات -->
+    <!-- گرید نمایش محصولات -->
     <div id="store-container" class="store-grid">
-      <!-- کارت‌ها به صورت پویا لود می‌شوند -->
+      <!-- کارت‌های محصولات به صورت پویا اضافه می‌شوند -->
     </div>
   </main>
-
-  <!-- تب ۲: مینی‌گیم گردونه‌های آرنا -->
+    <!-- تب ۲: بازی شانس و رولت نواری جعبه‌گشایی -->
   <main id="tab-game" class="tab-content">
-    <!-- گردونه اول: شانس رایگان (تبدیل به نقره‌ای بعد از اولین چرخش) -->
-    <div class="wheel-arena-card">
-      <h3 id="free-wheel-title" style="font-size: 14px; margin-bottom: 4px; color: var(--neon-cyan);">گردونه خوش‌آمدگویی رایگان</h3>
-      <p id="free-wheel-subtitle" style="font-size: 11px; color: var(--text-muted);">یک بار شانس برنده شدن تا ۵۰,۰۰۰ تومان وجه نقد</p>
-      
-      <div class="wheel-stage">
-        <div class="wheel-pin"></div>
-        <div class="wheel-outer-ring">
-          <canvas id="wheel-free-canvas" class="wheel-canvas" width="250" height="250"></canvas>
+    <!-- نوار وضعیت آخرین برنده زنده -->
+    <div class="case-live-ticker">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <span style="font-size: 18px;">🎁</span>
+        <div>
+          <div id="live-drop-user" style="font-size: 11px; font-weight: bold; color: var(--neon-cyan);">کاربر ***</div>
+          <div id="live-drop-item" style="font-size: 10px; color: var(--text-muted);">برنده یک اشتراک ویژه</div>
         </div>
       </div>
-      <button id="btn-spin-free" class="btn-action btn-neon-cyan" onclick="spinFreeWheel()">چرخش شانس رایگان</button>
+      <span style="background: rgba(244,63,94,0.15); color: var(--neon-rose); padding: 3px 8px; border-radius: 8px; font-size: 10px; font-weight: bold;">همین حالا</span>
     </div>
 
-    <!-- گردونه دوم: ویژه VIP بلک‌نت -->
-    <div class="wheel-arena-card">
-      <h3 style="font-size: 14px; margin-bottom: 4px; color: var(--neon-gold);">گردونه ویژه VIP بلک‌نت</h3>
-      <p id="vip-wheel-cost-text" style="font-size: 11px; color: var(--text-muted);">هزینه ورودی: ۳۰,۰۰۰ تومان</p>
-      
-      <div class="wheel-stage">
-        <div class="wheel-pin"></div>
-        <div class="wheel-outer-ring" style="border-color: var(--border-neon-gold); box-shadow: 0 0 25px rgba(251, 191, 36, 0.25);">
-          <canvas id="wheel-paid-canvas" class="wheel-canvas" width="250" height="250"></canvas>
-        </div>
+    <!-- باکس اسلایدر رولت افقی با نشانگر وسط -->
+    <div class="roulette-container">
+      <div class="roulette-marker"></div>
+      <div id="roulette-track" class="roulette-track">
+        <!-- آیتم‌های گردونه به صورت پویا ساخته می‌شوند -->
       </div>
-      <button id="btn-spin-paid" class="btn-action btn-neon-gold" onclick="spinPaidWheel()">چرخش VIP</button>
+    </div>
+
+    <!-- دکمه باز کردن جعبه شانس -->
+    <button id="btn-spin-roulette" class="btn-action btn-neon-gold" onclick="spinHorizontalRoulette()" style="margin-bottom: 20px;">
+      🎁 باز کردن جعبه شانس
+    </button>
+
+    <!-- ویترین پاداش‌های ممکن در جعبه -->
+    <div style="font-size: 12px; font-weight: bold; color: var(--text-muted); display: flex; align-items: center; gap: 6px;">
+      <span>📦</span> پاداش‌های موجود در این جعبه
+    </div>
+    <div id="rewards-showcase" class="rewards-grid">
+      <!-- کارت پاداش‌ها به صورت خودکار لود می‌شوند -->
     </div>
   </main>
-
-  <!-- تب ۳: تسک‌ها و دعوت دوستان -->
+    <!-- تب ۳: تسک‌ها، دعوت دوستان و آموزش ارزش ستاره‌ها -->
   <main id="tab-tasks" class="tab-content">
-    <div style="background: var(--bg-surface); border: 1px solid var(--border-glass); border-radius: 18px; padding: 14px; margin-bottom: 16px;">
-      <h3 style="font-size: 13px; color: var(--neon-purple); margin-bottom: 6px;">لینک اختصاصی دعوت دوستان</h3>
-      <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 10px; line-height: 1.5;">
-        با دعوت هر دوست، ۱ ستاره + ۱ شانس گردونه بگیرید و ۳٪ از خریدهای بعدی دوستتان را پورسانت تومانی دریافت کنید.
+    <!-- باکس آموزشی ستاره به عنوان پول نقد داخل برنامه -->
+    <div style="background: rgba(251,191,36,0.06); border: 1px solid var(--border-neon-gold); border-radius: 16px; padding: 12px; margin-bottom: 14px;">
+      <h4 style="font-size: 12px; color: var(--neon-gold); margin-bottom: 4px;">⭐ ستاره‌های شما، پول نقد شماست!</h4>
+      <p style="font-size: 10px; color: var(--text-muted); line-height: 1.6;">
+        با انجام تسک‌ها و دعوت دوستان ستاره جمع کنید. هر زمان به حد نصاب رسیدید، می‌توانید تمام محصولات فروشگاه را مستقیماً با ستاره بخرید یا به تومان نقد کنید.
       </p>
-      <div style="display: flex; gap: 8px;">
-        <input type="text" id="referral-link" readonly class="glass-input" style="margin-bottom: 0;" />
-        <button class="btn-action btn-neon-cyan" onclick="copyReferralLink()" style="width: auto; padding: 0 16px;">کپی</button>
+    </div>
+
+    <!-- لینک دعوت دوستان -->
+    <div style="background: var(--bg-surface); border: 1px solid var(--border-glass); border-radius: 16px; padding: 12px; margin-bottom: 14px;">
+      <div style="font-size: 11px; margin-bottom: 8px;">لینک اختصاصی دعوت:</div>
+      <div style="display: flex; gap: 6px;">
+        <input type="text" id="referral-link" readonly class="glass-input" style="margin-bottom: 0; font-size: 11px;" />
+        <button class="btn-action btn-neon-cyan" onclick="copyReferralLink()" style="width: auto; padding: 0 14px; font-size: 11px;">کپی</button>
       </div>
     </div>
-    
-    <h4 style="font-size: 13px; margin-bottom: 10px; color: var(--text-muted);">ماموریت‌های فعال</h4>
+
+    <h4 style="font-size: 12px; margin-bottom: 10px; color: var(--text-muted);">ماموریت‌های فعال</h4>
     <div id="tasks-list"></div>
   </main>
 
-  <!-- تب ۴: کیف پول و ماشین حساب تبدیل کریپتو/ستاره به تومان -->
+  <!-- تب ۴: کیف پول اختصاصی تومان و تون با تگ ممو -->
   <main id="tab-wallet" class="tab-content">
-    <div style="background: var(--bg-surface); border: 1px solid var(--border-glass); border-radius: 18px; padding: 16px; margin-bottom: 16px;">
-      <h3 style="font-size: 14px; margin-bottom: 12px;">شارژ حساب (کارت به کارت تومان)</h3>
-      <div id="bank-card-details" style="font-size: 11px; margin-bottom: 10px; line-height: 1.7; background: rgba(0,0,0,0.35); padding: 12px; border-radius: 12px;"></div>
-      <button class="btn-action btn-neon-cyan" onclick="openDepositModal()">ثبت فیش واریز تومانی</button>
+    <!-- کارت بانکی تومان -->
+    <div style="background: var(--bg-surface); border: 1px solid var(--border-glass); border-radius: 16px; padding: 14px; margin-bottom: 14px;">
+      <h4 style="font-size: 13px; margin-bottom: 8px;">شارژ حساب با کارت به کارت (تومان)</h4>
+      <div id="bank-card-details" style="font-size: 11px; margin-bottom: 10px; line-height: 1.7; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 10px;"></div>
+      <button class="btn-action btn-neon-cyan" onclick="openDepositModal()">ثبت اطلاعات واریز کارت</button>
     </div>
 
-    <!-- شارژ دستی کریپتو با تبدیل خودکار به تومان -->
-    <div style="background: var(--bg-surface); border: 1px solid var(--border-glass); border-radius: 18px; padding: 16px; margin-bottom: 16px;">
-      <h3 style="font-size: 14px; margin-bottom: 10px; color: var(--neon-cyan);">واریز تتر یا تون (شارژ تومانی حساب)</h3>
-      <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 10px;">پس از انتقال به آدرس ولت، معادل ریالی به موجودی شما افزوده می‌شود.</p>
+    <!-- شارژ فقط با شبکه TON و مموی اختصاصی (تتر حذف شد) -->
+    <div style="background: var(--bg-surface); border: 1px solid var(--border-glass); border-radius: 16px; padding: 14px; margin-bottom: 14px;">
+      <h4 style="font-size: 13px; color: var(--neon-cyan); margin-bottom: 6px;">شارژ با شبکه تون (TON)</h4>
+      <p style="font-size: 10px; color: var(--text-muted); margin-bottom: 8px;">معادل تومانی واریزی بلافاصله پس از تایید به موجودی شما افزوده می‌شود.</p>
       
-      <div style="margin-bottom: 10px;">
-        <label style="font-size: 10px; color: var(--text-muted);">آدرس تتر (USDT - TRC20):</label>
+      <div style="margin-bottom: 8px;">
+        <label style="font-size: 10px; color: var(--text-muted);">آدرس ولت تون:</label>
         <div style="display: flex; gap: 6px; margin-top: 4px;">
-          <input type="text" id="wallet-usdt-addr" readonly class="glass-input" style="margin-bottom: 0; font-size: 11px;" />
-          <button class="btn-action" style="width: auto; padding: 0 12px; background: rgba(255,255,255,0.08); color: #fff;" onclick="copyAddress('wallet-usdt-addr')">کپی</button>
+          <input type="text" id="wallet-ton-addr" readonly class="glass-input" style="margin-bottom: 0; font-size: 10px;" />
+          <button class="btn-action" style="width: auto; padding: 0 10px; background: rgba(255,255,255,0.08); color: #fff; font-size: 10px;" onclick="copyAddress('wallet-ton-addr')">کپی</button>
         </div>
       </div>
 
-      <div style="margin-bottom: 12px;">
-        <label style="font-size: 10px; color: var(--text-muted);">آدرس شبکه تون (TON):</label>
-        <div style="display: flex; gap: 6px; margin-top: 4px;">
-          <input type="text" id="wallet-ton-addr" readonly class="glass-input" style="margin-bottom: 0; font-size: 11px;" />
-          <button class="btn-action" style="width: auto; padding: 0 12px; background: rgba(255,255,255,0.08); color: #fff;" onclick="copyAddress('wallet-ton-addr')">کپی</button>
-        </div>
+      <div style="margin-bottom: 10px; background: rgba(0, 242, 254, 0.06); border: 1px dashed var(--border-neon-cyan); padding: 8px; border-radius: 10px;">
+        <div style="font-size: 10px; color: var(--neon-cyan); font-weight: bold;">تگ ممو (Comment) اختصاصی شما:</div>
+        <div id="user-ton-memo" style="font-size: 12px; font-weight: 900; color: #fff; margin-top: 2px;">MEMO: 000000</div>
+        <div style="font-size: 9px; color: var(--text-muted); margin-top: 2px;">حتماً این کد را هنگام ارسال در بخش Comment وارد کنید.</div>
       </div>
 
-      <button class="btn-action btn-neon-cyan" onclick="openCryptoDepositModal()">ثبت هش تراکنش کریپتو</button>
+      <button class="btn-action btn-neon-cyan" onclick="openCryptoDepositModal()">ثبت درخواست شارژ با TON</button>
     </div>
 
-    <!-- نقد کردن ستاره به تومان -->
-    <div style="background: var(--bg-surface); border: 1px solid var(--border-glass); border-radius: 18px; padding: 16px;">
-      <h3 style="font-size: 14px; color: var(--neon-gold); margin-bottom: 6px;">نقد کردن ستاره تلگرام به تومان</h3>
-      <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 10px;">ارسال گیفت به آیدی اعلامی و تسویه آنی ریالی ظرف ۳ روز کاری.</p>
+    <!-- نقد کردن ستاره به تومان با دکمه انتقال مستقیم به پی‌وی -->
+    <div style="background: var(--bg-surface); border: 1px solid var(--border-glass); border-radius: 16px; padding: 14px;">
+      <h4 style="font-size: 13px; color: var(--neon-gold); margin-bottom: 6px;">نقد کردن ستاره تلگرام</h4>
       <input type="number" id="exchange-stars-input" placeholder="تعداد ستاره برای نقد کردن..." oninput="calculateStarsExchange()" class="glass-input" />
-      <div id="exchange-preview" style="font-size: 12px; font-weight: bold; color: var(--neon-gold); margin-bottom: 12px;">مبلغ دریافتی: ۰ تومان</div>
-      <button class="btn-action btn-neon-gold" onclick="submitStarsCashout()">ثبت درخواست تسویه ستاره</button>
+      <div id="exchange-preview" style="font-size: 11px; font-weight: bold; color: var(--neon-gold); margin-bottom: 10px;">مبلغ دریافتی: ۰ تومان</div>
+      <button class="btn-action btn-neon-gold" onclick="submitStarsCashout()">ثبت درخواست تسویه</button>
     </div>
   </main>
-
-  <!-- تب ۵: پروفایل کاربر -->
+    <!-- تب ۵: پروفایل کاربر و دکمه احراز هویت -->
   <main id="tab-profile" class="tab-content">
     <div style="background: var(--bg-surface); border: 1px solid var(--border-glass); border-radius: 18px; padding: 16px; margin-bottom: 14px; text-align: center;">
       <img id="profile-detail-avatar" src="https://via.placeholder.com/64" style="width: 64px; height: 64px; border-radius: 50%; border: 2px solid var(--neon-cyan); margin-bottom: 8px;" />
@@ -573,12 +548,12 @@
       </div>
     </div>
 
-    <!-- دکمه احراز هویت دستی کاربر -->
+    <!-- دکمه احراز هویت کاربر -->
     <button class="btn-action btn-neon-cyan" style="margin-bottom: 14px;" onclick="openKYCModal()">
-      📝 احراز هویت بانکی (۳ مرحله‌ای)
+      📝 احراز هویت بانکی
     </button>
 
-    <!-- کلید ورود به پنل ادمین (مخفی برای غیر ادمین) -->
+    <!-- دکمه ورود به پنل ادمین (فقط برای ادمین نمایان می‌شود) -->
     <div id="admin-entry-box" style="display: none;">
       <button class="btn-action" style="background: linear-gradient(135deg, #ec4899, #8b5cf6); color: #fff;" onclick="openAdminPanel()">
         ⚡ باز کردن پنل مدیریت جامع ادمین
@@ -586,1067 +561,1211 @@
     </div>
   </main>
 
-  <!-- تب ۶: پنل مدیریت جامع ادمین (فول‌کنترل) -->
+  <!-- تب ۶: پنل مدیریت جامع ادمین (بخش ۱) -->
   <main id="tab-admin" class="tab-content">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
-      <h3 style="font-size: 15px; color: var(--neon-cyan);">پنل مدیریت جامع بلک‌نت</h3>
-      <button onclick="switchTab('profile', document.querySelectorAll('.dock-tab')[4])" style="background: none; border: none; color: var(--text-muted); font-size: 12px; cursor: pointer;">✕ بستن پنل</button>
+      <h3 style="font-size: 14px; color: var(--neon-cyan);">پنل مدیریت جامع بلک‌نت</h3>
+      <button onclick="switchTab('profile', document.querySelectorAll('.dock-tab')[4])" style="background: none; border: none; color: var(--text-muted); font-size: 11px; cursor: pointer;">✕ بستن پنل</button>
     </div>
 
-    <!-- تنظیمات توکن بات و کانال گزارش‌ها -->
-    <div style="background: var(--bg-surface); border: 1px solid var(--border-glass); border-radius: 14px; padding: 14px; margin-bottom: 14px;">
-      <h4 style="font-size: 12px; margin-bottom: 8px; color: var(--neon-gold);">تنظیمات تلگرام (ارسال قطعی اعلان‌ها)</h4>
-      <input type="text" id="admin-bot-token" placeholder="توکن ربات تلگرام (مثلاً 123456:ABC-DEF)..." class="glass-input" />
-      <input type="text" id="admin-log-channel" placeholder="آیدی یا یوزرنیم کانال لاگ (مثلاً @MyChannel یا -100...)..." class="glass-input" />
-      <input type="text" id="admin-chat-id" placeholder="آیدی عددی پی‌وی شما برای دریافت گزارش‌ها..." class="glass-input" />
-      <button class="btn-action btn-neon-gold" onclick="saveAdminTelegramSettings()">ذخیره تنظیمات ربات و کانال</button>
+    <!-- تنظیمات توکن بات، آیدی کانال لاگ و متن اختصاصی احراز هویت -->
+    <div style="background: var(--bg-surface); border: 1px solid var(--border-glass); border-radius: 14px; padding: 12px; margin-bottom: 12px;">
+      <h4 style="font-size: 12px; margin-bottom: 8px; color: var(--neon-gold);">تنظیمات تلگرام و متن تعهد احراز هویت</h4>
+      <input type="text" id="admin-bot-token" placeholder="توکن ربات تلگرام (از BotFather)..." class="glass-input" />
+      <input type="text" id="admin-log-channel" placeholder="آیدی عددی کانال لاگ (مثال: -1001234567890)..." class="glass-input" />
+      <input type="text" id="admin-chat-id" placeholder="آیدی عددی پی‌وی شما برای دریافت اعلان‌ها..." class="glass-input" />
+      
+      <label style="font-size: 10px; color: var(--text-muted);">متنی که کاربر باید روی کاغذ بنویسد و کنار کارت عکس بگیرد:</label>
+      <textarea id="admin-kyc-instruction" rows="2" class="glass-input" style="height: auto; resize: none;" placeholder="متن تعهد دست‌نویس برای کاربر..."></textarea>
+      
+      <button class="btn-action btn-neon-gold" onclick="saveAdminTelegramSettings()">ذخیره تنظیمات ربات و احراز</button>
+    </div>
+
+    <!-- تنظیمات مالی (کارت، ولت تون، نرخ‌ها) -->
+    <div style="background: var(--bg-surface); border: 1px solid var(--border-glass); border-radius: 14px; padding: 12px; margin-bottom: 12px;">
+      <h4 style="font-size: 12px; margin-bottom: 8px; color: var(--neon-cyan);">تنظیمات مالی و آدرس‌ها</h4>
+      <input type="text" id="admin-bank-card" placeholder="شماره کارت بانکی..." class="glass-input" />
+      <input type="text" id="admin-card-owner" placeholder="نام صاحب حساب..." class="glass-input" />
+      <input type="text" id="admin-ton-addr" placeholder="آدرس ولت تون (TON)..." class="glass-input" />
+      <input type="text" id="admin-gift-id" placeholder="یوزرنیم پی‌وی جهت دریافت گیفت (بدون @)..." class="glass-input" />
+      <input type="number" id="admin-ton-rate" placeholder="نرخ هر تون به تومان..." class="glass-input" />
+      <input type="number" id="admin-star-rate" placeholder="نرخ هر ستاره به تومان..." class="glass-input" />
+      <button class="btn-action btn-neon-cyan" onclick="saveAdminFinancialSettings()">ذخیره تنظیمات مالی</button>
     </div>
 
     <!-- مدیریت دسته‌بندی محصولات -->
-    <div style="background: var(--bg-surface); border: 1px solid var(--border-glass); border-radius: 14px; padding: 14px; margin-bottom: 14px;">
-      <h4 style="font-size: 12px; margin-bottom: 8px;">مدیریت دسته‌بندی محصولات</h4>
+    <div style="background: var(--bg-surface); border: 1px solid var(--border-glass); border-radius: 14px; padding: 12px; margin-bottom: 12px;">
+      <h4 style="font-size: 12px; margin-bottom: 8px;">مدیریت دسته‌بندی‌ها</h4>
       <div style="display: flex; gap: 6px; margin-bottom: 8px;">
-        <input type="text" id="new-cat-title" placeholder="عنوان دسته (مثلاً کانفیگ VPN)..." class="glass-input" style="margin-bottom: 0;" />
-        <button class="btn-action btn-neon-cyan" style="width: auto; padding: 0 14px;" onclick="adminAddCategory()">افزودن</button>
+        <input type="text" id="new-cat-title" placeholder="عنوان دسته جدید..." class="glass-input" style="margin-bottom: 0;" />
+        <button class="btn-action btn-neon-cyan" style="width: auto; padding: 0 14px; font-size: 11px;" onclick="adminAddCategory()">افزودن</button>
       </div>
       <div id="admin-categories-list"></div>
     </div>
-
-    <!-- افزودن و مدیریت محصولات -->
-    <div style="background: var(--bg-surface); border: 1px solid var(--border-glass); border-radius: 14px; padding: 14px; margin-bottom: 14px;">
+        <!-- تعریف محصول با فیلد هوشمند تحویل و قیمت ستاره‌ای -->
+    <div style="background: var(--bg-surface); border: 1px solid var(--border-glass); border-radius: 14px; padding: 12px; margin-bottom: 12px;">
       <h4 style="font-size: 12px; margin-bottom: 8px;">افزودن محصول جدید</h4>
-      <select id="new-prod-cat" class="glass-input"></select>
       <input type="text" id="new-prod-title" placeholder="عنوان محصول..." class="glass-input" />
       <input type="text" id="new-prod-desc" placeholder="توضیحات کوتاه..." class="glass-input" />
       <input type="number" id="new-prod-price" placeholder="قیمت به تومان..." class="glass-input" />
-      <input type="text" id="new-prod-img" placeholder="لینک مستقیم تصویر (خالی = عکس نئونی پیش‌فرض)..." class="glass-input" />
-      <input type="text" id="new-prod-badge" placeholder="برچسب (مثلاً تخفیف یا ویژه)..." class="glass-input" />
-      <button class="btn-action btn-neon-cyan" onclick="adminAddNewProduct()">ثبت محصول</button>
-      <div id="admin-products-list" style="margin-top: 14px;"></div>
+      <input type="number" id="new-prod-stars" placeholder="قیمت به ستاره (اختیاری)..." class="glass-input" />
+      <input type="text" id="new-prod-img" placeholder="لینک مستقیم تصویر (PostImages)..." class="glass-input" />
+      <input type="text" id="new-prod-badge" placeholder="برچسب (مثال: پرفروش، ویژه)..." class="glass-input" />
+      
+      <label style="font-size: 10px; color: var(--text-muted);">دسته‌بندی:</label>
+      <select id="new-prod-cat" class="glass-input" style="background: #0f1420;"></select>
+
+      <label style="font-size: 10px; color: var(--neon-cyan);">اطلاعات مورد نیاز از خریدار موقع سفارش:</label>
+      <select id="new-prod-req-info" class="glass-input" style="background: #0f1420;">
+        <option value="none">بدون نیاز به ورودی اضافی (تحویل مستقیم با ربات)</option>
+        <option value="telegram_id">آیدی عددی / یوزرنیم تلگرام (برای گیفت/استارز)</option>
+        <option value="gmail">جیمیل / ایمیل کاربر (برای اکانت‌ها)</option>
+        <option value="wallet">آدرس کیف پول (برای ارز دیجیتال)</option>
+      </select>
+
+      <button class="btn-action btn-neon-cyan" onclick="adminAddNewProduct()">افزودن محصول به فروشگاه</button>
+      <div id="admin-products-list" style="margin-top: 10px;"></div>
     </div>
 
-    <!-- مدیریت تسک‌ها و ماموریت‌ها -->
-    <div style="background: var(--bg-surface); border: 1px solid var(--border-glass); border-radius: 14px; padding: 14px; margin-bottom: 14px;">
-      <h4 style="font-size: 12px; margin-bottom: 8px; color: var(--neon-purple);">مدیریت تسک‌ها</h4>
+    <!-- صف واریزی‌های در انتظار تایید (با امکان شارژ با ۱ کلیک) -->
+    <div style="background: var(--bg-surface); border: 1px solid var(--border-glass); border-radius: 14px; padding: 12px; margin-bottom: 12px;">
+      <h4 style="font-size: 12px; margin-bottom: 8px; color: var(--neon-cyan);">واریزی‌های در انتظار تأیید</h4>
+      <div id="admin-deposits-list"></div>
+    </div>
+
+    <!-- ارسال مستقیم کانفیگ یا متن از طریق ربات به خریدار -->
+    <div style="background: var(--bg-surface); border: 1px solid var(--border-glass); border-radius: 14px; padding: 12px; margin-bottom: 12px;">
+      <h4 style="font-size: 12px; margin-bottom: 8px; color: var(--neon-green);">تحویل مستقیم محصول با ربات به خریدار</h4>
+      <input type="number" id="admin-deliver-userid" placeholder="آیدی عددی خریدار..." class="glass-input" />
+      <textarea id="admin-deliver-text" rows="3" class="glass-input" style="height: auto;" placeholder="متن کانفیگ، یوزر/پسورد یا پیام تحویل..."></textarea>
+      <button class="btn-action btn-neon-green" onclick="adminSendProductViaBot()">ارسال مستقیم از ربات به کاربر</button>
+    </div>
+
+    <!-- مدیریت تسک‌ها و احراز هویت‌ها -->
+    <div style="background: var(--bg-surface); border: 1px solid var(--border-glass); border-radius: 14px; padding: 12px; margin-bottom: 12px;">
+      <h4 style="font-size: 12px; margin-bottom: 8px;">مدیریت تسک‌ها</h4>
       <input type="text" id="new-task-title" placeholder="عنوان تسک..." class="glass-input" />
-      <input type="text" id="new-task-link" placeholder="لینک کانال یا گروه (https://t.me/...)..." class="glass-input" />
-      <input type="number" id="new-task-stars" placeholder="پاداش ستاره (مثلاً ۱ یا ۵)..." class="glass-input" />
-      <button class="btn-action" style="background: var(--neon-purple); color: #fff;" onclick="adminAddTask()">افزودن تسک جدید</button>
-      <div id="admin-tasks-list" style="margin-top: 14px;"></div>
+      <input type="text" id="new-task-link" placeholder="لینک چنل یا گروه..." class="glass-input" />
+      <input type="number" id="new-task-stars" placeholder="تعداد ستاره پاداش..." class="glass-input" />
+      <button class="btn-action btn-neon-cyan" onclick="adminAddTask()">افزودن تسک</button>
+      <div id="admin-tasks-list" style="margin-top: 10px;"></div>
     </div>
 
-    <!-- تنظیم قیمت گردونه‌ها و داده‌های مالی -->
-    <div style="background: var(--bg-surface); border: 1px solid var(--border-glass); border-radius: 14px; padding: 14px; margin-bottom: 14px;">
-      <h4 style="font-size: 12px; margin-bottom: 8px;">تنظیم قیمت گردونه‌ها و نرخ‌ها (تومان)</h4>
-      <label style="font-size: 10px; color: var(--text-muted);">قیمت بلیط گردونه اول پس از چرخش رایگان (تومان):</label>
-      <input type="number" id="admin-silver-spin-price" class="glass-input" />
-
-      <label style="font-size: 10px; color: var(--text-muted);">قیمت هر چرخش گردونه VIP (تومان):</label>
-      <input type="number" id="admin-vip-spin-price" class="glass-input" />
-
-      <label style="font-size: 10px; color: var(--text-muted);">شماره کارت بانکی و صاحب حساب:</label>
-      <input type="text" id="admin-bank-card" placeholder="شماره کارت..." class="glass-input" />
-      <input type="text" id="admin-card-owner" placeholder="نام صاحب کارت..." class="glass-input" />
-
-      <label style="font-size: 10px; color: var(--text-muted);">آدرس‌های ولت دستی و آیدی گیفت:</label>
-      <input type="text" id="admin-usdt-addr" placeholder="آدرس ولت تتر..." class="glass-input" />
-      <input type="text" id="admin-ton-addr" placeholder="آدرس ولت تون..." class="glass-input" />
-      <input type="text" id="admin-gift-id" placeholder="آیدی دریافت گیفت ستاره..." class="glass-input" />
-
-      <label style="font-size: 10px; color: var(--text-muted);">نرخ‌های تبدیل به تومان:</label>
-      <input type="number" id="admin-usdt-rate" placeholder="نرخ هر تتر به تومان..." class="glass-input" />
-      <input type="number" id="admin-ton-rate" placeholder="نرخ هر تون به تومان..." class="glass-input" />
-      <input type="number" id="admin-star-rate" placeholder="نرخ هر ستاره به تومان..." class="glass-input" />
-
-      <button class="btn-action btn-neon-cyan" onclick="saveAdminFinancialSettings()">ذخیره تمام نرخ‌ها و اطلاعات مالی</button>
-    </div>
-
-    <!-- بررسی درخواست‌های احراز هویت ۳ مرحله‌ای -->
-    <div style="background: var(--bg-surface); border: 1px solid var(--border-glass); border-radius: 14px; padding: 14px;">
+    <div style="background: var(--bg-surface); border: 1px solid var(--border-glass); border-radius: 14px; padding: 12px;">
       <h4 style="font-size: 12px; margin-bottom: 8px;">درخواست‌های احراز هویت (KYC)</h4>
       <div id="admin-kyc-list"></div>
     </div>
   </main>
-
-  <!-- تب‌بار معلق شیشه‌ای با آیکون‌های وکتور اختصاصی Duotone (Floating Glass Dock) -->
+    <!-- نوار ناوبری معلق پایینی (Floating Glass Dock) -->
   <nav class="floating-dock">
-    <!-- تب فروشگاه -->
     <div class="dock-tab active" onclick="switchTab('store', this)">
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
-        <line x1="3" y1="6" x2="21" y2="6"></line>
-        <path d="M16 10a4 4 0 0 1-8 0"></path>
-      </svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
       <span>فروشگاه</span>
     </div>
-
-    <!-- تب گردونه -->
     <div class="dock-tab" onclick="switchTab('game', this)">
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="10"></circle>
-        <line x1="12" y1="2" x2="12" y2="6"></line>
-        <line x1="12" y1="18" x2="12" y2="22"></line>
-        <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line>
-        <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line>
-        <line x1="2" y1="12" x2="6" y2="12"></line>
-        <line x1="18" y1="12" x2="22" y2="12"></line>
-      </svg>
-      <span>گردونه</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12V8H6a2 2 0 0 1-2-2V4"/><rect x="2" y="14" width="20" height="8" rx="2"/><path d="M6 18h.01"/><path d="M10 18h.01"/></svg>
+      <span>شانس</span>
     </div>
-
-    <!-- تب تسک‌ها -->
     <div class="dock-tab" onclick="switchTab('tasks', this)">
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M9 11l3 3L22 4"></path>
-        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
-      </svg>
-      <span>تسک‌ها</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      <span>ستاره‌ها</span>
     </div>
-
-    <!-- تب کیف پول -->
     <div class="dock-tab" onclick="switchTab('wallet', this)">
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="2" y="4" width="20" height="16" rx="2"></rect>
-        <line x1="2" y1="10" x2="22" y2="10"></line>
-        <line x1="16" y1="15" x2="18" y2="15"></line>
-      </svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
       <span>کیف پول</span>
     </div>
-
-    <!-- تب پروفایل -->
     <div class="dock-tab" onclick="switchTab('profile', this)">
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-        <circle cx="12" cy="7" r="4"></circle>
-      </svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       <span>پروفایل</span>
     </div>
   </nav>
 
-  <!-- مودال تأیید خرید محصول با موجودی تومانی -->
-  <div id="modal-confirm-buy" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 200; padding: 20px;">
-    <div style="background: var(--bg-elevated); border: 1px solid var(--border-neon-cyan); border-radius: 20px; padding: 18px; width: 100%; max-width: 320px; text-align: center;">
-      <img id="modal-product-img" src="" style="width: 100%; height: 130px; object-fit: cover; border-radius: 12px; margin-bottom: 10px;" />
-      <h3 id="modal-product-title" style="font-size: 14px; margin-bottom: 6px;">عنوان محصول</h3>
-      <p id="modal-product-price" style="font-size: 16px; font-weight: 900; color: var(--neon-cyan); margin-bottom: 16px;">۰ تومان</p>
+  <!-- مودال خرید هوشمند محصول با فیلد پویا و انتخاب شیوه پرداخت (تومان / ستاره) -->
+  <div id="modal-product" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); z-index: 120; align-items: center; justify-content: center; padding: 16px;">
+    <div style="background: var(--bg-elevated); border: 1px solid var(--border-neon-cyan); border-radius: 20px; width: 100%; max-width: 360px; padding: 16px; position: relative;">
+      <h3 id="modal-prod-title" style="font-size: 14px; margin-bottom: 6px; color: var(--neon-cyan);">عنوان محصول</h3>
+      <p id="modal-prod-desc" style="font-size: 11px; color: var(--text-muted); margin-bottom: 12px;"></p>
+      
+      <!-- فیلد ورودی سفارشی که با توجه به نوع محصول نمایش داده می‌شود -->
+      <div id="modal-custom-field-box" style="display: none; margin-bottom: 12px;">
+        <label id="modal-custom-field-label" style="font-size: 11px; color: var(--neon-cyan); font-weight: bold; display: block; margin-bottom: 4px;"></label>
+        <input type="text" id="modal-custom-field-input" class="glass-input" style="margin-bottom: 0;" />
+      </div>
+
       <div style="display: flex; gap: 8px;">
-        <button class="btn-action btn-neon-cyan" onclick="executeBuyProduct()">تأیید و پرداخت</button>
-        <button class="btn-action" style="background: rgba(255,255,255,0.08); color: #fff;" onclick="closeModal('modal-confirm-buy')">انصراف</button>
+        <button id="btn-pay-toman" class="btn-action btn-neon-cyan" style="flex: 1;" onclick="submitOrder('toman')">خرید با تومان</button>
+        <button id="btn-pay-stars" class="btn-action btn-neon-gold" style="flex: 1;" onclick="submitOrder('stars')">خرید با ستاره</button>
       </div>
+      <button onclick="closeProductModal()" style="width: 100%; background: none; border: none; color: var(--text-muted); font-size: 11px; margin-top: 10px; cursor: pointer;">انصراف</button>
     </div>
   </div>
 
-  <!-- فرم احراز هویت استاندارد ۳ مرحله‌ای با آپلود فایل عکس -->
-  <div id="modal-kyc" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.88); backdrop-filter: blur(10px); display: none; align-items: center; justify-content: center; z-index: 200; padding: 20px;">
-    <div style="background: var(--bg-elevated); border: 1px solid var(--border-glass); border-radius: 22px; padding: 18px; width: 100%; max-width: 330px; text-align: center;">
-      <h3 style="font-size: 14px; margin-bottom: 6px; color: var(--neon-cyan);">احراز هویت بانکی</h3>
-      <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 12px;">اطلاعات را مطابق با کارت واریزی ثبت کنید:</p>
-
-      <!-- ۱. نام و نام خانوادگی -->
-      <input type="text" id="kyc-full-name" placeholder="نام و نام خانوادگی کامل..." class="glass-input" />
+  <!-- مودال احراز هویت با متن تعهد سفارشی و آپلود عکس -->
+  <div id="modal-kyc" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); z-index: 120; align-items: center; justify-content: center; padding: 16px;">
+    <div style="background: var(--bg-elevated); border: 1px solid var(--border-glass); border-radius: 20px; width: 100%; max-width: 360px; padding: 16px;">
+      <h3 style="font-size: 13px; color: var(--neon-cyan); margin-bottom: 8px;">احراز هویت حساب بانکی</h3>
+      <div id="kyc-user-instruction" style="background: rgba(0,242,254,0.06); border: 1px solid var(--border-neon-cyan); border-radius: 12px; padding: 10px; font-size: 11px; line-height: 1.6; margin-bottom: 12px; color: #fff;"></div>
       
-      <!-- ۲. شماره کارت بانکی -->
-      <input type="text" id="kyc-card-number" placeholder="شماره ۱۶ رقمی کارت بانکی..." class="glass-input" />
+      <input type="text" id="kyc-realname" placeholder="نام و نام خانوادگی..." class="glass-input" />
+      <input type="text" id="kyc-cardnumber" placeholder="شماره ۱۶ رقمی کارت بانکی..." class="glass-input" />
       
-      <!-- ۳. انتخاب مستقیم فایل عکس دست‌نویس با کارت -->
-      <div style="margin-bottom: 12px; text-align: right;">
-        <label style="font-size: 10px; color: var(--text-muted); display: block; margin-bottom: 4px;">تصویر مدرک / دست‌نویس در کنار کارت:</label>
-        <input type="file" id="kyc-photo-file" accept="image/*" class="glass-input" onchange="previewKYCImage(event)" style="padding: 6px; font-size: 11px;" />
-        <img id="kyc-image-preview" src="" style="width: 100%; max-height: 120px; object-fit: cover; border-radius: 10px; display: none; margin-top: 6px; border: 1px solid var(--border-glass);" />
-      </div>
-
-      <button class="btn-action btn-neon-cyan" onclick="submitKYCDetails()">ارسال اطلاعات جهت بررسی ادمین</button>
-      <button class="btn-action" style="background: none; color: var(--text-muted); margin-top: 6px;" onclick="closeModal('modal-kyc')">انصراف</button>
+      <label style="font-size: 10px; color: var(--text-muted); display: block; margin-bottom: 4px;">انتخاب عکس دست‌نوشته و کارت:</label>
+      <input type="file" id="kyc-photo-file" accept="image/*" class="glass-input" style="padding: 6px;" />
+      
+      <button class="btn-action btn-neon-cyan" onclick="submitKYCRequest()">ارسال مدارک برای تایید</button>
+      <button onclick="closeKYCModal()" style="width: 100%; background: none; border: none; color: var(--text-muted); font-size: 11px; margin-top: 10px; cursor: pointer;">انصراف</button>
+    </div>
+  </div>
+    <!-- مودال ثبت واریز کارت به کارت (تومان) -->
+  <div id="modal-deposit" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); z-index: 120; align-items: center; justify-content: center; padding: 16px;">
+    <div style="background: var(--bg-elevated); border: 1px solid var(--border-glass); border-radius: 20px; width: 100%; max-width: 360px; padding: 16px;">
+      <h3 style="font-size: 13px; color: var(--neon-cyan); margin-bottom: 8px;">ثبت اطلاعات واریز کارت</h3>
+      <input type="number" id="dep-toman-amount" placeholder="مبلغ واریز شده به تومان..." class="glass-input" />
+      <input type="text" id="dep-toman-card" placeholder="۴ رقم آخر کارت واریز کننده..." class="glass-input" />
+      <input type="text" id="dep-toman-tracking" placeholder="شماره پیگیری فیش..." class="glass-input" />
+      <button class="btn-action btn-neon-cyan" onclick="submitDepositToman()">ارسال جهت تأیید و شارژ</button>
+      <button onclick="closeDepositModal()" style="width: 100%; background: none; border: none; color: var(--text-muted); font-size: 11px; margin-top: 10px; cursor: pointer;">انصراف</button>
     </div>
   </div>
 
-  <!-- پاپ‌آپ سینمایی برنده شدن جایزه در گردونه (Jackpot Modal) -->
-  <div id="modal-jackpot" class="jackpot-modal">
-    <div class="jackpot-card">
-      <div style="font-size: 40px; margin-bottom: 8px;">🎉</div>
-      <h2 style="font-size: 18px; color: var(--neon-gold); font-weight: 900; margin-bottom: 6px;">تبریک! برنده شدی</h2>
-      <p id="jackpot-prize-title" style="font-size: 14px; font-weight: bold; color: #fff; margin-bottom: 16px;"></p>
-      <button class="btn-action btn-neon-gold" onclick="closeJackpotModal()">دریافت جایزه</button>
+  <!-- مودال ثبت واریز با شبکه تون (TON) -->
+  <div id="modal-crypto-deposit" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); z-index: 120; align-items: center; justify-content: center; padding: 16px;">
+    <div style="background: var(--bg-elevated); border: 1px solid var(--border-glass); border-radius: 20px; width: 100%; max-width: 360px; padding: 16px;">
+      <h3 style="font-size: 13px; color: var(--neon-cyan); margin-bottom: 8px;">ثبت شارژ با TON</h3>
+      <input type="number" step="0.01" id="dep-crypto-amount" placeholder="مقدار تون واریزی (مثال: 1.5)..." class="glass-input" />
+      <button class="btn-action btn-neon-cyan" onclick="submitDepositCrypto()">ثبت جهت تایید و شارژ حساب</button>
+      <button onclick="closeCryptoDepositModal()" style="width: 100%; background: none; border: none; color: var(--text-muted); font-size: 11px; margin-top: 10px; cursor: pointer;">انصراف</button>
     </div>
   </div>
-    <script>
+
+  <script>
     const tg = window.Telegram?.WebApp;
     if (tg) {
-      tg.ready();
       tg.expand();
+      tg.enableClosingConfirmation();
     }
 
-    // لرزش لمسی هوشمند تلگرام (Haptic Feedback)
-    function triggerHaptic(type = 'light') {
-      try {
-        if (tg?.HapticFeedback) {
-          if (type === 'light') tg.HapticFeedback.impactOccurred('light');
-          if (type === 'medium') tg.HapticFeedback.impactOccurred('medium');
-          if (type === 'heavy') tg.HapticFeedback.impactOccurred('heavy');
-          if (type === 'success') tg.HapticFeedback.notificationOccurred('success');
-          if (type === 'error') tg.HapticFeedback.notificationOccurred('error');
-        }
-      } catch (e) {}
-    }
-
-    // عکس کاور نئونی پیش‌فرض بلک‌نت (ضد خرابی لینک)
-    const DEFAULT_COVER = "data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20width%3D'300'%20height%3D'200'%20viewBox%3D'0%200%20300%20200'%3E%3Crect%20fill%3D'%23090d16'%20width%3D'300'%20height%3D'200'%2F%3E%3Ctext%20fill%3D'%2300f2fe'%20font-family%3D'sans-serif'%20font-size%3D'20'%20font-weight%3D'bold'%20x%3D'50%25'%20y%3D'50%25'%20text-anchor%3D'middle'%20dy%3D'.3em'%3EBLACKNET%20VIP%3C%2Ftext%3E%3C%2Fsvg%3E";
-
-    // وضعیت کاربر و احراز هویت
-    const ADMIN_TELEGRAM_ID = 1309025996;
-    let currentUser = {
-      id: tg?.initDataUnsafe?.user?.id || 12345678,
-      name: tg?.initDataUnsafe?.user?.first_name || 'کاربر مهمان',
-      username: tg?.initDataUnsafe?.user?.username || '',
-      avatar: tg?.initDataUnsafe?.user?.photo_url || 'https://via.placeholder.com/44',
-      balanceToman: 0,
-      stars: 0,
-      hasSpunFree: false,
-      isKYCVerified: false
+    // شناسایی کاربر تلگرام و تنظیم تگ ممو یکتا
+    const currentUser = {
+      id: tg?.initDataUnsafe?.user?.id || 1309025996,
+      name: (tg?.initDataUnsafe?.user?.first_name || 'کاربر') + ' ' + (tg?.initDataUnsafe?.user?.last_name || ''),
+      username: tg?.initDataUnsafe?.user?.username || 'tooelve',
+      photo: tg?.initDataUnsafe?.user?.photo_url || 'https://via.placeholder.com/64'
     };
 
-    // تنظیمات پلتفرم (به تومان)
-    let settings = {
+    // مقادیر اولیه دیتابیس لوکال
+    const defaultData = {
       botToken: '',
-      logChannel: '@BlackNetLogs',
+      logChannel: '',
       adminChatId: '1309025996',
-      silverSpinPrice: 15000,
-      vipSpinPrice: 30000,
-      bankCard: '۶۰۳۷-۹۹۷۵-۱۲۳۴-۵۶۷۸',
-      cardOwner: 'بلک‌نت',
-      usdtAddress: 'TX_YOUR_USDT_TRC20_WALLET',
-      tonAddress: 'UQ_YOUR_TON_WALLET_ADDRESS',
-      giftTargetId: '@BlackNetGift',
-      usdtRateToman: 90000,
-      tonRateToman: 350000,
-      starRateToman: 1200
+      kycInstruction: 'لطفاً متن "جهت خرید از بلک‌نت" را همراه تاریخ و امضا روی کاغذ نوشته و کنار کارت بانکی خود عکس بگیرید.',
+      bankCard: '۶۰۳۷۹۹۷۰۱۲۳۴۵۶۷۸',
+      cardOwner: 'مدیریت بلک‌نت',
+      tonAddress: 'UQDF...TON_WALLET_ADDRESS',
+      giftUsername: 'tooelve',
+      tonRate: 450000,
+      starRate: 1500,
+      categories: ['کانفیگ VPN', 'اکانت پرمیوم', 'ستاره و گیفت تلگرام'],
+      products: [],
+      tasks: [],
+      pendingDeposits: [],
+      pendingKYC: [],
+      verifiedUsers: []
     };
 
-    // دسته‌بندی‌های پویا
-    let categories = [
-      { id: 'vpn', title: 'کانفیگ و VPN' },
-      { id: 'accounts', title: 'اکانت‌های ویژه' },
-      { id: 'stars', title: 'ستاره و گیفت' }
-    ];
+    let appData = JSON.parse(localStorage.getItem('blacknet_data')) || defaultData;
+    let userBalances = JSON.parse(localStorage.getItem('blacknet_balances')) || {};
 
-    // محصولات پیش‌فرض
-    let products = [
-      { id: 1, catId: 'vpn', title: 'کانفیگ مستر ادیشن ۱ ماهه', desc: 'سرعت بدون مرز، اتصال پایدار روی تمام اپراتورها', priceToman: 120000, img: '', badge: 'ویژه' },
-      { id: 2, catId: 'accounts', title: 'اکانت اختصاصی جیمینای پرو', desc: 'دسترسی کامل ۳۰ روزه به هوش مصنوعی گوگل', priceToman: 280000, img: '', badge: 'پرفروش' },
-      { id: 3, catId: 'stars', title: 'بسته ۵۰ عددی ستاره تلگرام', desc: 'واریز آنی به حساب یا کانال شما', priceToman: 60000, img: '', badge: 'تحویل فوری' }
-    ];
+    if (!userBalances[currentUser.id]) {
+      userBalances[currentUser.id] = { balance: 0, stars: 0 };
+    }
 
-    let tasks = [
-      { id: 1, title: 'عضویت در کانال رسمی بلک‌نت', link: 'https://t.me/blacknet', stars: 1, completed: false },
-      { id: 2, title: 'عضویت در کانال پروکسی و کانفیگ', link: 'https://t.me/blacknet', stars: 1, completed: false }
-    ];
+    function saveAppData() {
+      localStorage.setItem('blacknet_data', JSON.stringify(appData));
+    }
 
-    let kycRequests = [];
-    let selectedProductForBuy = null;
-    let selectedKYCBase64 = null;
-    let activeFilterCat = 'all';
+    function saveBalances() {
+      localStorage.setItem('blacknet_balances', JSON.stringify(userBalances));
+      renderHeader();
+    }
 
-    // راه‌اندازی اولیه
-    window.addEventListener('DOMContentLoaded', () => {
-      loadStorageData();
-      renderUserProfile();
-      renderCategories();
-      renderStore();
-      renderTasks();
-      updateWalletView();
+    // جابه‌جایی تب‌ها
+    function switchTab(tabId, tabEl) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.dock-tab').forEach(el => el.classList.remove('active'));
+      const target = document.getElementById('tab-' + tabId);
+      if (target) target.classList.add('active');
+      if (tabEl) tabEl.classList.add('active');
+    }
+  </script>
+      // متد استاندارد ارسال پیام به ربات، کانال لاگ یا پی‌وی کاربر
+    async function sendTelegramNotification(text, targetChatId = null) {
+      if (!appData.botToken) return false;
+      const target = targetChatId || appData.logChannel || appData.adminChatId;
+      if (!target) return false;
 
-      if (currentUser.id === ADMIN_TELEGRAM_ID) {
-        document.getElementById('admin-entry-box').style.display = 'block';
+      try {
+        const res = await fetch(`https://api.telegram.org/bot${appData.botToken}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: target,
+            text: text,
+            parse_mode: 'HTML'
+          })
+        });
+        return res.ok;
+      } catch (err) {
+        console.error('TG Send Error:', err);
+        return false;
       }
-    });
-
-    function loadStorageData() {
-      const u = localStorage.getItem('bn_user_' + currentUser.id);
-      if (u) currentUser = { ...currentUser, ...JSON.parse(u) };
-
-      const s = localStorage.getItem('bn_settings');
-      if (s) settings = { ...settings, ...JSON.parse(s) };
-
-      const c = localStorage.getItem('bn_cats');
-      if (c) categories = JSON.parse(c);
-
-      const p = localStorage.getItem('bn_prods');
-      if (p) products = JSON.parse(p);
-
-      const t = localStorage.getItem('bn_tasks');
-      if (t) tasks = JSON.parse(t);
-
-      const k = localStorage.getItem('bn_kyc_list');
-      if (k) kycRequests = JSON.parse(k);
     }
 
-    function saveUserData() {
-      localStorage.setItem('bn_user_' + currentUser.id, JSON.stringify(currentUser));
-      renderUserProfile();
-    }
-
-    function renderUserProfile() {
+    // به‌روزرسانی هدر، آواتار و موجودی کاربر
+    function renderHeader() {
+      const uBal = userBalances[currentUser.id] || { balance: 0, stars: 0 };
+      document.getElementById('user-balance').innerText = Number(uBal.balance).toLocaleString('fa-IR');
+      document.getElementById('user-stars').innerText = Number(uBal.stars).toLocaleString('fa-IR');
       document.getElementById('user-name').innerText = currentUser.name;
       document.getElementById('user-tg-id').innerText = 'ID: ' + currentUser.id;
-      document.getElementById('user-avatar').src = currentUser.avatar;
-      document.getElementById('user-balance').innerText = currentUser.balanceToman.toLocaleString();
-      document.getElementById('user-stars').innerText = currentUser.stars;
+      
+      const avatarEl = document.getElementById('user-avatar');
+      if (currentUser.photo && avatarEl) avatarEl.src = currentUser.photo;
 
-      document.getElementById('profile-detail-avatar').src = currentUser.avatar;
+      // پروفایل تب
+      const pAvatar = document.getElementById('profile-detail-avatar');
+      if (pAvatar && currentUser.photo) pAvatar.src = currentUser.photo;
       document.getElementById('profile-detail-name').innerText = currentUser.name;
-      document.getElementById('profile-detail-id').innerText = 'ID: ' + currentUser.id;
+      document.getElementById('profile-detail-id').innerText = 'شناسه عددی: ' + currentUser.id;
 
+      // نمایش دکمه ورود به ادمین برای ادمین
+      if (String(currentUser.id) === String(appData.adminChatId)) {
+        document.getElementById('admin-entry-box').style.display = 'block';
+      }
+
+      // وضعیت احراز هویت
       const kycTag = document.getElementById('profile-kyc-status');
-      if (currentUser.isKYCVerified) {
-        kycTag.innerText = 'احراز هویت شده ✓ (مجاز به خرید و واریز بالا)';
+      if (appData.verifiedUsers && appData.verifiedUsers.includes(currentUser.id)) {
+        kycTag.innerText = 'احراز هویت شده ✓';
+        kycTag.style.background = 'rgba(16, 185, 129, 0.15)';
         kycTag.style.color = 'var(--neon-green)';
-        kycTag.style.background = 'rgba(16, 185, 129, 0.12)';
         kycTag.style.borderColor = 'rgba(16, 185, 129, 0.4)';
-      } else {
-        kycTag.innerText = 'احراز هویت نشده';
       }
 
-      document.getElementById('referral-link').value = `https://t.me/share/url?url=https://t.me/YourBot?start=ref_${currentUser.id}`;
+      // تگ ممو اختصاصی بر اساس شناسه عددی کاربر
+      document.getElementById('user-ton-memo').innerText = 'MEMO: ' + currentUser.id;
     }
 
-    // ناوبری تب‌ها
-    function switchTab(tabId, el) {
-      triggerHaptic('light');
-      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.dock-tab').forEach(d => d.classList.remove('active'));
-      document.getElementById('tab-' + tabId).classList.add('active');
-      if (el) el.classList.add('active');
-    }
-
-    // دسته‌بندی‌ها و فروشگاه
-    function renderCategories() {
-      const bar = document.getElementById('category-bar');
-      bar.innerHTML = `<button class="cat-btn ${activeFilterCat === 'all' ? 'active' : ''}" onclick="filterCategory('all', this)">همه محصولات</button>`;
-      categories.forEach(c => {
-        bar.innerHTML += `<button class="cat-btn ${activeFilterCat === c.id ? 'active' : ''}" onclick="filterCategory('${c.id}', this)">${c.title}</button>`;
-      });
-
-      const select = document.getElementById('new-prod-cat');
-      if (select) {
-        select.innerHTML = '';
-        categories.forEach(c => {
-          select.innerHTML += `<option value="${c.id}">${c.title}</option>`;
-        });
-      }
-    }
-
-    function filterCategory(catId, btn) {
-      triggerHaptic('light');
-      activeFilterCat = catId;
-      document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      renderStore();
-    }
+    // رندر دسته‌بندی‌ها و محصولات فروشگاه
+    let currentCategory = 'all';
 
     function renderStore() {
-      const box = document.getElementById('store-container');
-      box.innerHTML = '';
-      const filtered = activeFilterCat === 'all' ? products : products.filter(p => p.catId === activeFilterCat);
+      const catBar = document.getElementById('category-bar');
+      catBar.innerHTML = `<button class="cat-btn ${currentCategory === 'all' ? 'active' : ''}" onclick="filterCategory('all', this)">همه محصولات</button>`;
+      
+      (appData.categories || []).forEach(cat => {
+        catBar.innerHTML += `<button class="cat-btn ${currentCategory === cat ? 'active' : ''}" onclick="filterCategory('${cat}', this)">${cat}</button>`;
+      });
+
+      const storeBox = document.getElementById('store-container');
+      storeBox.innerHTML = '';
+
+      const filtered = currentCategory === 'all' 
+        ? appData.products 
+        : appData.products.filter(p => p.category === currentCategory);
+
+      if (filtered.length === 0) {
+        storeBox.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: var(--text-muted); font-size: 11px; padding: 30px;">محصولی در این بخش موجود نیست.</div>';
+        return;
+      }
 
       filtered.forEach(p => {
-        const item = document.createElement('div');
-        item.className = 'card-product';
-        const imgUrl = p.img && p.img.trim() !== '' ? p.img : DEFAULT_COVER;
-        item.innerHTML = `
-          <div class="product-img-box">
-            ${p.badge ? `<span class="card-badge">${p.badge}</span>` : ''}
-            <img src="${imgUrl}" class="product-img" onerror="this.src='${DEFAULT_COVER}'" alt="${p.title}" />
-          </div>
-          <div class="product-info">
-            <div class="product-title">${p.title}</div>
-            <div class="product-desc">${p.desc}</div>
-            <div class="product-footer">
-              <span class="product-price">${p.priceToman.toLocaleString()} ت</span>
-              <button class="btn-buy" onclick="openBuyModal(${p.id})">خرید</button>
+        const starPriceHtml = p.starsPrice ? `<div style="font-size: 10px; color: var(--neon-gold); font-weight: bold;">یا ⭐ ${Number(p.starsPrice).toLocaleString('fa-IR')}</div>` : '';
+        storeBox.innerHTML += `
+          <div class="card-product">
+            <div class="product-img-box">
+              <img src="${p.img || 'https://via.placeholder.com/150'}" class="product-img" onerror="this.src='https://via.placeholder.com/150'" />
+              ${p.badge ? `<span style="position: absolute; top: 6px; right: 6px; background: rgba(0,242,254,0.25); border: 1px solid var(--neon-cyan); color: var(--neon-cyan); font-size: 9px; padding: 2px 6px; border-radius: 6px; font-weight: bold;">${p.badge}</span>` : ''}
+            </div>
+            <div class="product-info">
+              <div>
+                <div class="product-title">${p.title}</div>
+                <div class="product-desc">${p.desc || ''}</div>
+              </div>
+              <div class="product-footer">
+                <div>
+                  <div class="product-price">${Number(p.price).toLocaleString('fa-IR')} ت</div>
+                  ${starPriceHtml}
+                </div>
+                <button class="btn-action btn-neon-cyan" style="width: auto; padding: 6px 12px; font-size: 11px;" onclick="openProductModal(${p.id})">خرید</button>
+              </div>
             </div>
           </div>
         `;
-        box.appendChild(item);
       });
     }
 
-    function openBuyModal(id) {
-      triggerHaptic('light');
-      const prod = products.find(p => p.id === id);
-      if (!prod) return;
-      selectedProductForBuy = prod;
-      document.getElementById('modal-product-img').src = prod.img && prod.img.trim() !== '' ? prod.img : DEFAULT_COVER;
-      document.getElementById('modal-product-title').innerText = prod.title;
-      document.getElementById('modal-product-price').innerText = prod.priceToman.toLocaleString() + ' تومان';
-      document.getElementById('modal-confirm-buy').style.display = 'flex';
+    function filterCategory(cat, btn) {
+      currentCategory = cat;
+      document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      renderStore();
+    }
+      // متغیر موقت برای محصول انتخاب‌شده
+    let selectedProduct = null;
+
+    // باز کردن پنجره خرید و تنظیم فیلد سفارشی هوشمند
+    function openProductModal(productId) {
+      selectedProduct = appData.products.find(p => p.id === productId);
+      if (!selectedProduct) return;
+
+      document.getElementById('modal-prod-title').innerText = selectedProduct.title;
+      document.getElementById('modal-prod-desc').innerText = selectedProduct.desc || '';
+
+      const customBox = document.getElementById('modal-custom-field-box');
+      const customLabel = document.getElementById('modal-custom-field-label');
+      const customInput = document.getElementById('modal-custom-field-input');
+      customInput.value = '';
+
+      // تنظیم هوشمند فیلد ورودی بر اساس نوع محصول
+      if (selectedProduct.reqInfo === 'telegram_id') {
+        customBox.style.display = 'block';
+        customLabel.innerText = 'آیدی عددی یا یوزرنیم تلگرام دریافت‌کننده:';
+        customInput.placeholder = '@username یا آیدی عددی';
+      } else if (selectedProduct.reqInfo === 'gmail') {
+        customBox.style.display = 'block';
+        customLabel.innerText = 'جیمیل / ایمیل جهت فعال‌سازی یا تحویل:';
+        customInput.placeholder = 'example@gmail.com';
+      } else if (selectedProduct.reqInfo === 'wallet') {
+        customBox.style.display = 'block';
+        customLabel.innerText = 'آدرس کیف پول (Wallet Address):';
+        customInput.placeholder = 'آدرس ولت را وارد کنید...';
+      } else {
+        customBox.style.display = 'none';
+      }
+
+      // تنظیم دکمه پرداخت با ستاره
+      const starBtn = document.getElementById('btn-pay-stars');
+      if (selectedProduct.starsPrice && Number(selectedProduct.starsPrice) > 0) {
+        starBtn.style.display = 'block';
+        starBtn.innerText = `خرید با ⭐ ${Number(selectedProduct.starsPrice).toLocaleString('fa-IR')}`;
+      } else {
+        starBtn.style.display = 'none';
+      }
+
+      document.getElementById('modal-product').style.display = 'flex';
     }
 
-    function executeBuyProduct() {
-      if (!selectedProductForBuy) return;
+    function closeProductModal() {
+      document.getElementById('modal-product').style.display = 'none';
+      selectedProduct = null;
+    }
 
-      if (currentUser.balanceToman < selectedProductForBuy.priceToman) {
-        triggerHaptic('error');
-        alert('موجودی تومانی شما کافی نیست! لطفاً ابتدا حساب خود را شارژ کنید.');
-        closeModal('modal-confirm-buy');
-        switchTab('wallet', document.querySelectorAll('.dock-tab')[3]);
+    // ثبت نهایی سفارش با تومان یا ستاره همراه با متن گزارش تفکیک‌شده
+    async function submitOrder(paymentType) {
+      if (!selectedProduct) return;
+      const uBal = userBalances[currentUser.id] || { balance: 0, stars: 0 };
+      const customInput = document.getElementById('modal-custom-field-input');
+      const customVal = customInput.value.trim();
+
+      // اعتبارسنجی فیلد اختصاصی در صورت اجباری بودن
+      if (selectedProduct.reqInfo && selectedProduct.reqInfo !== 'none' && !customVal) {
+        alert('لطفاً اطلاعات مورد نیاز (جیمیل، آیدی یا آدرس والت) را تکمیل کنید.');
         return;
       }
 
-      currentUser.balanceToman -= selectedProductForBuy.priceToman;
-      saveUserData();
-      triggerHaptic('success');
+      const orderTracking = 'ORD-' + Math.floor(100000 + Math.random() * 900000);
 
-      // متن اطلاع‌رسانی سفارش با لینک مستقیم به خریدار
-      const buyerName = currentUser.name;
-      const buyerUser = currentUser.username ? `@${currentUser.username}` : 'ندارد';
-      const orderText = `🛍️ **سفارش جدید در بلک‌نت**\n\n` +
-        `📦 **محصول:** ${selectedProductForBuy.title}\n` +
-        `💰 **مبلغ کسر شده:** ${selectedProductForBuy.priceToman.toLocaleString()} تومان\n\n` +
-        `👤 **خریدار:** ${buyerName} (${buyerUser})\n` +
-        `🆔 **شناسه عددی:** \`${currentUser.id}\`\n` +
-        `⏰ **زمان ثبت:** ${new Date().toLocaleTimeString('fa-IR')}`;
+      if (paymentType === 'toman') {
+        if (uBal.balance < selectedProduct.price) {
+          alert('موجودی کیف پول شما کافی نیست. لطفاً ابتدا از تب کیف پول حساب خود را شارژ کنید.');
+          return;
+        }
+        uBal.balance -= selectedProduct.price;
+      } else if (paymentType === 'stars') {
+        if (!selectedProduct.starsPrice || uBal.stars < selectedProduct.starsPrice) {
+          alert(`موجودی ستاره شما کافی نیست! موجودی فعلی: ${uBal.stars} ستاره.`);
+          return;
+        }
+        uBal.stars -= selectedProduct.starsPrice;
+      }
 
-      const buyerDirectUrl = `tg://user?id=${currentUser.id}`;
-      sendTelegramDirectMessage(orderText, "ارسال پیام و تحویل سفارش به خریدار", buyerDirectUrl);
+      saveBalances();
+      closeProductModal();
 
-      alert(`سفارش "${selectedProductForBuy.title}" با موفقیت ثبت شد! جهت دریافت محصول به زودی با شما تماس گرفته می‌شود.`);
-      closeModal('modal-confirm-buy');
+      // ساخت متن سفارش استاندارد و تفکیک‌شده برای تلگرام
+      const payLabel = paymentType === 'toman' 
+        ? `${Number(selectedProduct.price).toLocaleString('fa-IR')} تومان` 
+        : `${Number(selectedProduct.starsPrice).toLocaleString('fa-IR')} ستاره`;
+
+      const orderReport = `🛒 <b>سفارش جدید ثبت شد!</b>\n` +
+        `➖➖➖➖➖➖➖➖\n` +
+        `📦 <b>محصول:</b> ${selectedProduct.title}\n` +
+        `🧾 <b>کد رهگیری:</b> <code>${orderTracking}</code>\n` +
+        `👤 <b>خریدار:</b> ${currentUser.name} (<code>${currentUser.id}</code>)\n` +
+        `💳 <b>روش پرداخت:</b> ${payLabel}\n` +
+        (customVal ? `📋 <b>اطلاعات تحویل خریدار:</b>\n<code>${customVal}</code>\n` : `📋 <b>نوع تحویل:</b> تحویل مستقیم با ربات\n`) +
+        `➖➖➖➖➖➖➖➖\n` +
+        `⚡ لطفاً جهت تحویل از پنل مدیریت اقدام فرمایید.`;
+
+      await sendTelegramNotification(orderReport);
+
+      alert(`✅ سفارش شما با کد پیگیری ${orderTracking} با موفقیت ثبت شد!\nدر صورت نیاز به ارسال کانفیگ یا اکانت، اطلاعات از طریق همین ربات برای شما ارسال خواهد شد.`);
+    }
+              // لیست جوایز ممکن در جعبه شانس
+    const boxRewards = [
+      { id: 1, title: '۱۰,۰۰۰ تومان', type: 'balance', value: 10000, icon: '💵', color: '#10b981' },
+      { id: 2, title: '۵ ستاره', type: 'stars', value: 5, icon: '⭐', color: '#fbbf24' },
+      { id: 3, title: 'کانفیگ ۱ ماهه', type: 'config', value: 0, icon: '🚀', color: '#00f2fe' },
+      { id: 4, title: '۲۵,۰۰۰ تومان', type: 'balance', value: 25000, icon: '💰', color: '#10b981' },
+      { id: 5, title: '۱۰ ستاره', type: 'stars', value: 10, icon: '⭐', color: '#fbbf24' },
+      { id: 6, title: 'اکانت پرمیوم', type: 'account', value: 0, icon: '👑', color: '#c084fc' },
+      { id: 7, title: '۵۰,۰۰۰ تومان', type: 'balance', value: 50000, icon: '💎', color: '#38bdf8' },
+      { id: 8, title: 'شانس مجدد', type: 'again', value: 0, icon: '🔄', color: '#94a3b8' }
+    ];
+
+    let isSpinning = false;
+
+    // بارگذاری ویترین پاداش‌ها در زیر گردونه و آماده‌سازی نوار افقی
+    function initHorizontalRoulette() {
+      const showcase = document.getElementById('rewards-showcase');
+      if (showcase) {
+        showcase.innerHTML = '';
+        boxRewards.forEach(r => {
+          showcase.innerHTML += `
+            <div class="reward-showcase-card">
+              <div style="font-size: 30px; margin-bottom: 6px;">${r.icon}</div>
+              <div style="font-size: 11px; font-weight: bold; color: ${r.color};">${r.title}</div>
+              <div style="font-size: 9px; color: var(--text-muted); margin-top: 2px;">پاداش معتبر</div>
+            </div>
+          `;
+        });
+      }
+      buildRouletteTrack();
     }
 
-    function closeModal(id) {
-      document.getElementById(id).style.display = 'none';
-    }
+    // چیدن زنجیره‌ای آیتم‌ها در نوار اسلایدر
+    function buildRouletteTrack() {
+      const track = document.getElementById('roulette-track');
+      if (!track) return;
+      track.style.transition = 'none';
+      track.style.transform = 'translateX(0px)';
+      track.innerHTML = '';
 
-    // تسک‌ها
-    function renderTasks() {
-      const box = document.getElementById('tasks-list');
-      box.innerHTML = '';
-      tasks.forEach(t => {
-        const row = document.createElement('div');
-        row.style.cssText = 'background: var(--bg-surface); border: 1px solid var(--border-glass); border-radius: 14px; padding: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;';
-        row.innerHTML = `
-          <div>
-            <div style="font-size: 13px; font-weight: 700; margin-bottom: 2px;">${t.title}</div>
-            <div style="font-size: 11px; color: var(--neon-gold);">پاداش: +${t.stars} ستاره ⭐</div>
-          </div>
-          <button class="btn-action ${t.completed ? '' : 'btn-neon-cyan'}" style="width: auto; padding: 6px 14px; font-size: 11px; background: ${t.completed ? 'rgba(255,255,255,0.06)' : ''}" onclick="completeTask(${t.id})">
-            ${t.completed ? 'انجام شد' : 'شروع ماموریت'}
-          </button>
+      // ایجاد زنجیره‌ای از ۶۰ آیتم برای چرخش نرم و طولانی
+      for (let i = 0; i < 60; i++) {
+        const item = boxRewards[i % boxRewards.length];
+        const el = document.createElement('div');
+        el.className = 'roulette-item';
+        el.innerHTML = `
+          <div style="font-size: 26px;">${item.icon}</div>
+          <div style="font-size: 9px; font-weight: bold; color: ${item.color};">${item.title}</div>
         `;
-        box.appendChild(row);
-      });
+        track.appendChild(el);
+      }
     }
 
-    function completeTask(id) {
-      const t = tasks.find(x => x.id === id);
-      if (!t) return;
-      if (t.completed) return;
+    // انیمیشن چرخیدن رولت و توقف دقیق روی آیتم برنده
+    function spinHorizontalRoulette() {
+      if (isSpinning) return;
+      const uBal = userBalances[currentUser.id] || { balance: 0, stars: 0 };
 
-      if (tg?.openTelegramLink) tg.openTelegramLink(t.link);
-      else window.open(t.link, '_blank');
+      // هزینه باز کردن جعبه: ۲۰۰۰ تومان یا ۵ ستاره
+      if (uBal.balance < 2000) {
+        alert('برای باز کردن جعبه حداقل ۲۰۰۰ تومان موجودی نیاز است.');
+        return;
+      }
+
+      uBal.balance -= 2000;
+      saveBalances();
+      isSpinning = true;
+
+      const track = document.getElementById('roulette-track');
+      track.style.transition = 'none';
+      track.style.transform = 'translateX(0px)';
+
+      // انتخاب رندوم آیتم برنده بین خانه ۳۵ تا ۴۵
+      const targetIndex = Math.floor(Math.random() * 10) + 35;
+      const winningReward = boxRewards[targetIndex % boxRewards.length];
+      const itemWidth = 100; // عرض هر کارت + مارجین
+      const offset = (targetIndex * itemWidth) - 120 + Math.floor(Math.random() * 40 - 20);
 
       setTimeout(() => {
-        t.completed = true;
-        currentUser.stars += t.stars;
-        saveUserData();
-        renderTasks();
-        triggerHaptic('success');
-        alert(`تسک تکمیل شد و ${t.stars} ستاره به حسابتان اضافه گردید!`);
-      }, 2500);
+        track.style.transition = 'transform 5s cubic-bezier(0.12, 0.98, 0.22, 1)';
+        track.style.transform = `translateX(-${offset}px)`;
+      }, 50);
+
+      setTimeout(() => {
+        isSpinning = false;
+        applyRoulettePrize(winningReward);
+      }, 5200);
     }
 
-    function copyReferralLink() {
-      triggerHaptic('light');
-      const input = document.getElementById('referral-link');
-      input.select();
-      navigator.clipboard.writeText(input.value);
-      alert('لینک دعوت در حافظه کپی شد!');
-    }
+    // اعمال جایزه برنده شده به کیف پول و ثبت در تیکر
+    function applyRoulettePrize(reward) {
+      const uBal = userBalances[currentUser.id] || { balance: 0, stars: 0 };
 
-    // پیش‌نمایش تصویر و احراز هویت ۳ مرحله‌ای
-    function openKYCModal() {
-      triggerHaptic('light');
-      document.getElementById('modal-kyc').style.display = 'flex';
-    }
-
-    function previewKYCImage(e) {
-      const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(evt) {
-          selectedKYCBase64 = evt.target.result;
-          const img = document.getElementById('kyc-image-preview');
-          img.src = selectedKYCBase64;
-          img.style.display = 'block';
-        };
-        reader.readAsDataURL(file);
+      if (reward.type === 'balance') {
+        uBal.balance += reward.value;
+      } else if (reward.type === 'stars') {
+        uBal.stars += reward.value;
       }
+
+      saveBalances();
+
+      // آپدیت تیکر زنده
+      document.getElementById('live-drop-user').innerText = currentUser.name;
+      document.getElementById('live-drop-item').innerText = 'برنده ' + reward.title + ' شد!';
+
+      alert(`🎉 تبریک! شما برنده [ ${reward.title} ] شدید.`);
     }
+            // متغیر ذخیره زمان‌سنج تسک‌ها
+    let taskTimers = {};
 
-    function submitKYCDetails() {
-      const name = document.getElementById('kyc-full-name').value.trim();
-      const card = document.getElementById('kyc-card-number').value.trim();
+    // نمایش لیست تسک‌ها
+    function renderTasks() {
+      const listEl = document.getElementById('tasks-list');
+      if (!listEl) return;
+      listEl.innerHTML = '';
 
-      if (!name || !card) {
-        alert('لطفاً نام کامل و شماره کارت بانکی را وارد کنید.');
+      if (!appData.tasks || appData.tasks.length === 0) {
+        listEl.innerHTML = '<div style="text-align: center; color: var(--text-muted); font-size: 11px; padding: 20px;">در حال حاضر تسک فعالی وجود ندارد.</div>';
         return;
       }
 
-      if (!selectedKYCBase64) {
-        alert('لطفاً تصویر مدرک / دست‌نویس در کنار کارت را انتخاب کنید.');
-        return;
-      }
-
-      const reqObj = {
-        userId: currentUser.id,
-        userName: currentUser.name,
-        name: name,
-        card: card,
-        photo: selectedKYCBase64,
-        date: new Date().toLocaleDateString('fa-IR')
-      };
-
-      kycRequests.push(reqObj);
-      localStorage.setItem('bn_kyc_list', JSON.stringify(kycRequests));
-      closeModal('modal-kyc');
-      triggerHaptic('success');
-
-      // مخابره متن به همراه دکمه خریدار
-      const kycMsg = `📑 **درخواست احراز هویت جدید (KYC)**\n\n` +
-        `👤 **کاربر:** ${currentUser.name}\n` +
-        `💳 **نام روی کارت:** ${name}\n` +
-        `🔢 **شماره کارت:** \`${card}\`\n` +
-        `🆔 **آیدی عددی:** \`${currentUser.id}\`\n\n` +
-        `تصویر مدرک در پنل مدیریت مینی‌اپ ثبت شد.`;
-
-      sendTelegramDirectMessage(kycMsg, "بررسی پی‌وی کاربر", `tg://user?id=${currentUser.id}`);
-      alert('اطلاعات احراز هویت با موفقیت ارسال شد و پس از بررسی ادمین تأیید خواهد شد.');
+      appData.tasks.forEach(t => {
+        const isClaimed = t.completedBy && t.completedBy.includes(currentUser.id);
+        listEl.innerHTML += `
+          <div style="background: var(--bg-surface); border: 1px solid var(--border-glass); border-radius: 14px; padding: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <div style="font-size: 12px; font-weight: bold;">${t.title}</div>
+              <div style="font-size: 10px; color: var(--neon-gold); margin-top: 2px;">⭐ ${t.stars} ستاره پاداش</div>
+            </div>
+            <div>
+              ${isClaimed 
+                ? '<span style="font-size: 11px; color: var(--neon-green); font-weight: bold;">انجام شد ✓</span>' 
+                : `<button id="btn-task-${t.id}" class="btn-action btn-neon-cyan" style="width: auto; padding: 6px 14px; font-size: 11px;" onclick="startTask(${t.id}, '${t.link}')">عضویت</button>`
+              }
+            </div>
+          </div>
+        `;
+      });
     }
-          // موتور ارسال مستقیم تلگرام با Bot API (به کانال لاگ و پی‌وی ادمین)
-    async function sendTelegramDirectMessage(text, buttonText = null, buttonUrl = null) {
-      if (!settings.botToken) {
-        console.warn('Telegram Bot Token is not set in admin settings.');
-        return;
-      }
 
-      const targets = [];
-      if (settings.logChannel && settings.logChannel.trim() !== '') targets.push(settings.logChannel.trim());
-      if (settings.adminChatId && settings.adminChatId.trim() !== '') targets.push(settings.adminChatId.trim());
+    // باز کردن لینک تسک و شروع تایمر ۱۰ ثانیه‌ای
+    function startTask(taskId, link) {
+      if (link) window.open(link, '_blank');
+      const btn = document.getElementById(`btn-task-${taskId}`);
+      if (!btn || taskTimers[taskId]) return;
 
-      const url = `https://api.telegram.org/bot${settings.botToken}/sendMessage`;
+      let timeLeft = 10;
+      btn.disabled = true;
+      btn.style.opacity = '0.7';
+      btn.innerText = `صبر کنید (${timeLeft}s)`;
 
-      for (const chat of targets) {
-        const bodyPayload = {
-          chat_id: chat,
-          text: text,
-          parse_mode: 'Markdown'
-        };
-
-        if (buttonText && buttonUrl) {
-          bodyPayload.reply_markup = {
-            inline_keyboard: [
-              [{ text: buttonText, url: buttonUrl }]
-            ]
-          };
+      taskTimers[taskId] = setInterval(() => {
+        timeLeft--;
+        if (timeLeft > 0) {
+          btn.innerText = `صبر کنید (${timeLeft}s)`;
+        } else {
+          clearInterval(taskTimers[taskId]);
+          delete taskTimers[taskId];
+          btn.disabled = false;
+          btn.style.opacity = '1';
+          btn.className = 'btn-action btn-neon-gold';
+          btn.innerText = 'دریافت پاداش ⭐';
+          btn.onclick = () => claimTaskReward(taskId);
         }
-
-        try {
-          await fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(bodyPayload)
-          });
-        } catch (err) {
-          console.error('Bot API delivery error to chat:', chat, err);
-        }
-      }
+      }, 1000);
     }
 
-    // کیف پول، واریز دستی و ماشین تبدیل به تومان
-    function updateWalletView() {
-      document.getElementById('bank-card-details').innerHTML = `
-        شماره کارت جهت واریز: <b style="color: #fff; font-size: 13px;">${settings.bankCard}</b><br/>
-        به نام: <b style="color: var(--neon-cyan);">${settings.cardOwner}</b>
-      `;
-      document.getElementById('wallet-usdt-addr').value = settings.usdtAddress;
-      document.getElementById('wallet-ton-addr').value = settings.tonAddress;
-      document.getElementById('vip-wheel-cost-text').innerText = `هزینه ورودی: ${settings.vipSpinPrice.toLocaleString()} تومان`;
+    // دریافت پاداش تسک بعد از تایمر
+    function claimTaskReward(taskId) {
+      const task = appData.tasks.find(t => t.id === taskId);
+      if (!task) return;
+
+      if (!task.completedBy) task.completedBy = [];
+      if (task.completedBy.includes(currentUser.id)) return;
+
+      task.completedBy.push(currentUser.id);
+      const uBal = userBalances[currentUser.id] || { balance: 0, stars: 0 };
+      uBal.stars += Number(task.stars);
+
+      saveAppData();
+      saveBalances();
+      renderTasks();
+      alert(`🎉 تبریک! ${task.stars} ستاره به حساب شما افزوده شد.`);
+    }
+
+    // تنظیمات و کپی مشخصات کیف پول
+    function setupWalletInfo() {
+      const bankEl = document.getElementById('bank-card-details');
+      if (bankEl) {
+        bankEl.innerHTML = `شماره کارت: <b style="color: var(--neon-cyan);">${appData.bankCard}</b><br>به نام: ${appData.cardOwner}`;
+      }
+      const tonAddrInput = document.getElementById('wallet-ton-addr');
+      if (tonAddrInput) tonAddrInput.value = appData.tonAddress || '';
       
-      if (currentUser.hasSpunFree) {
-        document.getElementById('free-wheel-title').innerText = 'گردونه نقره‌ای بلک‌نت';
-        document.getElementById('free-wheel-subtitle').innerText = `هزینه هر بلیط: ${settings.silverSpinPrice.toLocaleString()} تومان`;
-        document.getElementById('btn-spin-free').innerText = `چرخش نقره‌ای (${settings.silverSpinPrice.toLocaleString()} ت)`;
+      const memoEl = document.getElementById('user-ton-memo');
+      if (memoEl) memoEl.innerText = 'MEMO: ' + currentUser.id;
+    }
+
+    function copyAddress(elemId) {
+      const el = document.getElementById(elemId);
+      if (el) {
+        navigator.clipboard.writeText(el.value);
+        alert('📋 آدرس با موفقیت کپی شد.');
       }
     }
-
-    function copyAddress(inputId) {
-      triggerHaptic('light');
-      const input = document.getElementById(inputId);
-      input.select();
-      navigator.clipboard.writeText(input.value);
-      alert('آدرس ولت با موفقیت کپی شد!');
-    }
-
+            // کنترل باز و بسته شدن مودال‌های واریز
     function openDepositModal() {
-      triggerHaptic('light');
-      const amountStr = prompt('مبلغ واریز شده به کارت را به تومان وارد کنید:');
-      const amount = parseInt(amountStr);
-      if (isNaN(amount) || amount <= 0) return;
-
-      if (amount > 500000 && !currentUser.isKYCVerified) {
-        alert('مبالغ بالای ۵۰۰,۰۰۰ تومان نیاز به احراز هویت دارند. لطفاً ابتدا در تب پروفایل مدارک را ثبت کنید.');
-        openKYCModal();
-        return;
-      }
-
-      const depMsg = `💳 **درخواست بررسی واریز کارت به کارت**\n\n` +
-        `👤 **کاربر:** ${currentUser.name}\n` +
-        `🆔 **شناسه عددی:** \`${currentUser.id}\`\n` +
-        `💰 **مبلغ اعلامی:** ${amount.toLocaleString()} تومان\n\n` +
-        `کاربر فیش را واریز کرده و منتظر شارژ حساب است.`;
-
-      sendTelegramDirectMessage(depMsg, "چت و ارسال پیام به کاربر", `tg://user?id=${currentUser.id}`);
-      alert('درخواست شارژ ثبت شد. پس از بررسی فیش، کیف پول شما شارژ خواهد شد.');
+      document.getElementById('modal-deposit').style.display = 'flex';
+    }
+    function closeDepositModal() {
+      document.getElementById('modal-deposit').style.display = 'none';
     }
 
     function openCryptoDepositModal() {
-      triggerHaptic('light');
-      const network = prompt('نوع ارز واریزی را انتخاب کنید (1 برای USDT تتر، 2 برای TON تون):');
-      if (network !== '1' && network !== '2') return;
-
-      const txid = prompt('شناسه یا هش تراکنش (TXID / Hash) را وارد کنید:');
-      if (!txid || txid.trim() === '') return;
-
-      const rawAmount = prompt('مقدار ارز واریز شده را به عدد وارد کنید:');
-      const cryptoVal = parseFloat(rawAmount);
-      if (isNaN(cryptoVal) || cryptoVal <= 0) return;
-
-      let estimatedToman = 0;
-      let currencyName = '';
-      if (network === '1') {
-        currencyName = 'تتر (USDT)';
-        estimatedToman = Math.round(cryptoVal * settings.usdtRateToman);
-      } else {
-        currencyName = 'تون (TON)';
-        estimatedToman = Math.round(cryptoVal * settings.tonRateToman);
-      }
-
-      const cryptoMsg = `🪙 **واریز کریپتو ثبت شد (در انتظار تأیید)**\n\n` +
-        `👤 **کاربر:** ${currentUser.name}\n` +
-        `🆔 **شناسه عددی:** \`${currentUser.id}\`\n` +
-        `💎 **ارز:** ${currencyName}\n` +
-        `📊 **مقدار:** ${cryptoVal}\n` +
-        `💵 **معادل تقریبی ریالی:** ${estimatedToman.toLocaleString()} تومان\n` +
-        `🔗 **هش تراکنش:** \`${txid}\``;
-
-      sendTelegramDirectMessage(cryptoMsg, "بررسی و گفت‌وگو با واریزکننده", `tg://user?id=${currentUser.id}`);
-      alert(`تراکنش ثبت شد! معادل تخمینی: ${estimatedToman.toLocaleString()} تومان. پس از بررسی شبکه کیف پولتان شارژ می‌شود.`);
+      document.getElementById('modal-crypto-deposit').style.display = 'flex';
+    }
+    function closeCryptoDepositModal() {
+      document.getElementById('modal-crypto-deposit').style.display = 'none';
     }
 
+    // ثبت درخواست شارژ با کارت به کارت (تومان)
+    async function submitDepositToman() {
+      const amount = Number(document.getElementById('dep-toman-amount').value);
+      const cardLast4 = document.getElementById('dep-toman-card').value.trim();
+      const tracking = document.getElementById('dep-toman-tracking').value.trim();
+
+      if (!amount || amount < 5000) {
+        alert('لطفاً مبلغ واریزی معتبر (حداقل ۵۰۰۰ تومان) وارد کنید.');
+        return;
+      }
+
+      const depositItem = {
+        id: Date.now(),
+        userId: currentUser.id,
+        userName: currentUser.name,
+        type: 'toman',
+        amount: amount,
+        cardLast4: cardLast4,
+        tracking: tracking,
+        status: 'pending',
+        date: new Date().toLocaleDateString('fa-IR')
+      };
+
+      if (!appData.pendingDeposits) appData.pendingDeposits = [];
+      appData.pendingDeposits.push(depositItem);
+      saveAppData();
+      closeDepositModal();
+
+      const notifText = `💳 <b>درخواست شارژ حساب (کارت به کارت)</b>\n` +
+        `➖➖➖➖➖➖➖➖\n` +
+        `👤 <b>کاربر:</b> ${currentUser.name} (<code>${currentUser.id}</code>)\n` +
+        `💰 <b>مبلغ:</b> ${amount.toLocaleString('fa-IR')} تومان\n` +
+        `🔢 <b>۴ رقم کارت:</b> <code>${cardLast4 || 'ثبت نشده'}</code>\n` +
+        `🧾 <b>شماره پیگیری:</b> <code>${tracking || 'ثبت نشده'}</code>\n` +
+        `➖➖➖➖➖➖➖➖\n` +
+        `⚡ جهت تأیید و شارژ به پنل مدیریت مراجعه فرمایید.`;
+
+      await sendTelegramNotification(notifText);
+      alert('درخواست شارژ با موفقیت ثبت شد و پس از بررسی و تایید، حساب شما شارژ می‌گردد.');
+    }
+
+    // ثبت درخواست شارژ با تون (TON) همراه با ممو یکتای کاربر
+    async function submitDepositCrypto() {
+      const tonAmount = parseFloat(document.getElementById('dep-crypto-amount').value);
+      if (!tonAmount || tonAmount <= 0) {
+        alert('لطفاً مقدار تون معتبر وارد کنید.');
+        return;
+      }
+
+      const tomanEquivalent = Math.round(tonAmount * (appData.tonRate || 450000));
+      const depositItem = {
+        id: Date.now(),
+        userId: currentUser.id,
+        userName: currentUser.name,
+        type: 'ton',
+        cryptoAmount: tonAmount,
+        amount: tomanEquivalent,
+        memo: currentUser.id,
+        status: 'pending',
+        date: new Date().toLocaleDateString('fa-IR')
+      };
+
+      if (!appData.pendingDeposits) appData.pendingDeposits = [];
+      appData.pendingDeposits.push(depositItem);
+      saveAppData();
+      closeCryptoDepositModal();
+
+      const notifText = `💎 <b>درخواست شارژ حساب با شبکه TON</b>\n` +
+        `➖➖➖➖➖➖➖➖\n` +
+        `👤 <b>کاربر:</b> ${currentUser.name} (<code>${currentUser.id}</code>)\n` +
+        `🪙 <b>مقدار تون:</b> <code>${tonAmount} TON</code>\n` +
+        `🏷 <b>تگ ممو کاربر:</b> <code>${currentUser.id}</code>\n` +
+        `💰 <b>معادل تومانی:</b> ${tomanEquivalent.toLocaleString('fa-IR')} تومان\n` +
+        `➖➖➖➖➖➖➖➖\n` +
+        `⚡ لطفاً پس از تطبیق ممو در ولت، از پنل ادمین با یک کلیک تایید کنید.`;
+
+      await sendTelegramNotification(notifText);
+      alert(`درخواست شارژ با ${tonAmount} TON ثبت شد. پس از تایید مدیریت، مبلغ ${tomanEquivalent.toLocaleString('fa-IR')} تومان به موجودی شما افزوده خواهد شد.`);
+    }
+
+    // محاسبه زنده نقد کردن ستاره به تومان
     function calculateStarsExchange() {
-      const count = parseInt(document.getElementById('exchange-stars-input').value) || 0;
-      const totalToman = count * settings.starRateToman;
-      document.getElementById('exchange-preview').innerText = `مبلغ دریافتی: ${totalToman.toLocaleString()} تومان`;
+      const input = document.getElementById('exchange-stars-input');
+      const val = Number(input.value) || 0;
+      const rate = appData.starRate || 1500;
+      const total = val * rate;
+      document.getElementById('exchange-preview').innerText = `مبلغ دریافتی: ${total.toLocaleString('fa-IR')} تومان`;
     }
 
-    function submitStarsCashout() {
-      const count = parseInt(document.getElementById('exchange-stars-input').value) || 0;
-      if (count <= 0) {
-        alert('لطفاً تعداد ستاره معتبر وارد کنید.');
+    // نقد کردن ستاره و هدایت مستقیم کاربر به پی‌وی ادمین
+    async function submitStarsCashout() {
+      const count = Number(document.getElementById('exchange-stars-input').value);
+      const uBal = userBalances[currentUser.id] || { balance: 0, stars: 0 };
+
+      if (!count || count <= 0) {
+        alert('تعداد ستاره معتبر وارد کنید.');
         return;
       }
-      triggerHaptic('medium');
-      const totalToman = count * settings.starRateToman;
-      const sheba = prompt('شماره شبا یا شماره کارت خود را جهت واریز ریالی وارد کنید:');
-      if (!sheba) return;
-
-      const cashoutMsg = `⭐ **درخواست نقد کردن ستاره تلگرام**\n\n` +
-        `👤 **کاربر:** ${currentUser.name}\n` +
-        `🆔 **شناسه:** \`${currentUser.id}\`\n` +
-        `✨ **تعداد ستاره:** ${count} ستاره\n` +
-        `💰 **مبلغ تسویه ریالی:** ${totalToman.toLocaleString()} تومان\n` +
-        `🏦 **شبا / کارت:** \`${sheba}\``;
-
-      sendTelegramDirectMessage(cashoutMsg, "بررسی و ارسال گیفت", `tg://user?id=${currentUser.id}`);
-      alert(`درخواست تسویه ${count} ستاره ثبت شد. لطفاً گیفت معادل را به ${settings.giftTargetId} ارسال کنید. وجه ظرف ۳ روز کاری واریز خواهد شد.`);
-    }
-
-    // جدول شانس گردونه‌ها (مجموع دقیقاً ۱۰۰٪)
-    const freeWheelPrizes = [
-      { label: '۱۰ هزار ت', weight: 30, valueToman: 10000, type: 'toman' },
-      { label: '۲۰ هزار ت', weight: 25, valueToman: 20000, type: 'toman' },
-      { label: '۳۰ هزار ت', weight: 20, valueToman: 30000, type: 'toman' },
-      { label: '۴۰ هزار ت', weight: 15, valueToman: 40000, type: 'toman' },
-      { label: '۵۰ هزار ت', weight: 10, valueToman: 50000, type: 'toman' }
-    ];
-
-    const vipWheelPrizes = [
-      { label: 'گیفت تدی', weight: 19, type: 'gift' },
-      { label: 'قلب صورتی', weight: 20, type: 'gift' },
-      { label: '۰.۲ تون', weight: 20, type: 'ton', value: 0.2 },
-      { label: 'رز نئونی', weight: 10, type: 'gift' },
-      { label: 'جعبه کادو', weight: 10, type: 'gift' },
-      { label: 'جیمینای پرو', weight: 10, type: 'account' },
-      { label: '۸۰ هزار شارژ', weight: 7, type: 'toman', valueToman: 80000 },
-      { label: '۵۰ ستاره', weight: 2, type: 'stars', value: 50 },
-      { label: '۰.۵ تون', weight: 1.5, type: 'ton', value: 0.5 },
-      { label: '۱ تون', weight: 0.5, type: 'ton', value: 1.0 }
-    ];
-
-    function drawWheel(canvasId, prizeList) {
-      const canvas = document.getElementById(canvasId);
-      if (!canvas) return;
-      const ctx = canvas.getContext('2d');
-      const numSegments = prizeList.length;
-      const anglePerSegment = (2 * Math.PI) / numSegments;
-      const centerX = canvas.width / 2;
-      const centerY = canvas.height / 2;
-      const radius = canvas.width / 2;
-
-      const palette = ['#0f172a', '#1e293b', '#172554', '#1e1b4b', '#312e81'];
-
-      for (let i = 0; i < numSegments; i++) {
-        const startAngle = i * anglePerSegment;
-        const endAngle = startAngle + anglePerSegment;
-
-        ctx.beginPath();
-        ctx.moveTo(centerX, centerY);
-        ctx.arc(centerX, centerY, radius, startAngle, endAngle);
-        ctx.fillStyle = palette[i % palette.length];
-        ctx.fill();
-        ctx.lineWidth = 1;
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
-        ctx.stroke();
-
-        ctx.save();
-        ctx.translate(centerX, centerY);
-        ctx.rotate(startAngle + anglePerSegment / 2);
-        ctx.textAlign = 'right';
-        ctx.fillStyle = '#f8fafc';
-        ctx.font = 'bold 9px sans-serif';
-        ctx.fillText(prizeList[i].label, radius - 15, 3);
-        ctx.restore();
+      if (uBal.stars < count) {
+        alert('موجودی ستاره شما کافی نیست.');
+        return;
       }
-    }
 
-    function pickWeightedPrize(prizes) {
-      const rand = Math.random() * 100;
-      let cum = 0;
-      for (let i = 0; i < prizes.length; i++) {
-        cum += prizes[i].weight;
-        if (rand <= cum) return { prize: prizes[i], index: i };
+      const totalToman = count * (appData.starRate || 1500);
+      const adminUsername = appData.giftUsername || 'tooelve';
+
+      // کسر ستاره و ثبت
+      uBal.stars -= count;
+      saveBalances();
+
+      const notifText = `⭐ <b>درخواست نقد کردن ستاره ثبت شد!</b>\n` +
+        `➖➖➖➖➖➖➖➖\n` +
+        `👤 <b>کاربر:</b> ${currentUser.name} (<code>${currentUser.id}</code>)\n` +
+        `⭐ <b>تعداد ستاره:</b> ${count}\n` +
+        `💵 <b>مبلغ قابل تسویه:</b> ${totalToman.toLocaleString('fa-IR')} تومان\n` +
+        `➖➖➖➖➖➖➖➖\n` +
+        `کاربر جهت ارسال گیفت به پی‌وی هدایت شد.`;
+
+      await sendTelegramNotification(notifText);
+
+      alert(`✅ درخواست تسویه ثبت شد!\nاکنون مستقیماً به پی‌وی هدایت می‌شوید تا گیفت ستاره را ارسال کنید.`);
+      window.open(`https://t.me/${adminUsername}`, '_blank');
+    }
+            // کنترل مودال احراز هویت
+    function openKYCModal() {
+      const instBox = document.getElementById('kyc-user-instruction');
+      if (instBox) {
+        instBox.innerText = appData.kycInstruction || 'متن تعهد دست‌نویس را کنار کارت بانکی قرار دهید و عکس بگیرید.';
       }
-      return { prize: prizes[0], index: 0 };
+      document.getElementById('modal-kyc').style.display = 'flex';
     }
 
-    // چرخش گردونه اول (رایگان در ابتدا، سپس با بلیط نقره‌ای)
-    function spinFreeWheel() {
-      if (currentUser.hasSpunFree) {
-        if (currentUser.balanceToman < settings.silverSpinPrice) {
-          alert(`موجودی کافی نیست! هزینه چرخش گردونه نقره‌ای ${settings.silverSpinPrice.toLocaleString()} تومان است.`);
-          return;
+    function closeKYCModal() {
+      document.getElementById('modal-kyc').style.display = 'none';
+    }
+
+    // ارسال فرم احراز هویت همراه با ارسال عکس مدارک به تلگرام
+    async function submitKYCRequest() {
+      const realname = document.getElementById('kyc-realname').value.trim();
+      const cardnumber = document.getElementById('kyc-cardnumber').value.trim();
+      const fileInput = document.getElementById('kyc-photo-file');
+
+      if (!realname || !cardnumber) {
+        alert('لطفاً نام واقعی و شماره کارت را به درستی وارد کنید.');
+        return;
+      }
+
+      const kycItem = {
+        id: Date.now(),
+        userId: currentUser.id,
+        userName: currentUser.name,
+        realname: realname,
+        cardnumber: cardnumber,
+        date: new Date().toLocaleDateString('fa-IR')
+      };
+
+      if (!appData.pendingKYC) appData.pendingKYC = [];
+      appData.pendingKYC.push(kycItem);
+      saveAppData();
+      closeKYCModal();
+
+      const caption = `📝 <b>درخواست احراز هویت جدید (KYC)</b>\n` +
+        `➖➖➖➖➖➖➖➖\n` +
+        `👤 <b>کاربر:</b> ${currentUser.name} (<code>${currentUser.id}</code>)\n` +
+        `📛 <b>نام ثبت‌شده:</b> ${realname}\n` +
+        `💳 <b>شماره کارت:</b> <code>${cardnumber}</code>\n` +
+        `➖➖➖➖➖➖➖➖\n` +
+        `⚡ لطفاً از پنل مدیریت مدارک را بررسی و تأیید فرمایید.`;
+
+      // اگر عکس انتخاب شده بود مستقیماً با sendPhoto ارسال شود
+      if (fileInput.files && fileInput.files[0] && appData.botToken) {
+        const formData = new FormData();
+        formData.append('chat_id', appData.logChannel || appData.adminChatId);
+        formData.append('caption', caption);
+        formData.append('parse_mode', 'HTML');
+        formData.append('photo', fileInput.files[0]);
+
+        try {
+          await fetch(`https://api.telegram.org/bot${appData.botToken}/sendPhoto`, {
+            method: 'POST',
+            body: formData
+          });
+        } catch (e) {
+          console.error('Photo Send Error:', e);
         }
-        currentUser.balanceToman -= settings.silverSpinPrice;
-        saveUserData();
+      } else {
+        await sendTelegramNotification(caption);
       }
 
-      triggerHaptic('medium');
-      const btn = document.getElementById('btn-spin-free');
-      btn.disabled = true;
-
-      const { prize, index } = pickWeightedPrize(freeWheelPrizes);
-      const segmentAngle = 360 / freeWheelPrizes.length;
-      const targetRotation = (360 * 5) + (360 - (index * segmentAngle + segmentAngle / 2));
-
-      const canvas = document.getElementById('wheel-free-canvas');
-      canvas.style.transform = `rotate(${targetRotation}deg)`;
-
-      setTimeout(() => {
-        btn.disabled = false;
-        currentUser.hasSpunFree = true;
-        currentUser.balanceToman += prize.valueToman;
-        saveUserData();
-        updateWalletView();
-        triggerHaptic('success');
-        openJackpotModal(prize.label);
-
-        const winMsg = `🎡 **برنده گردونه نقره‌ای / رایگان**\n\n` +
-          `👤 **کاربر:** ${currentUser.name}\n` +
-          `🎁 **جایزه:** ${prize.label}\n` +
-          `💰 **مبلغ افزوده شده:** ${prize.valueToman.toLocaleString()} تومان`;
-        sendTelegramDirectMessage(winMsg, "مشاهده پروفایل برنده", `tg://user?id=${currentUser.id}`);
-      }, 4500);
+      alert('مدارک شما با موفقیت ثبت شد و برای ادمین ارسال گردید. پس از بررسی، پیام تاییدیه برای شما ارسال می‌شود.');
     }
 
-    // چرخش گردونه VIP
-    function spinPaidWheel() {
-      if (currentUser.balanceToman < settings.vipSpinPrice) {
-        alert(`موجودی تومانی کافی نیست! هزینه ورودی ${settings.vipSpinPrice.toLocaleString()} تومان است.`);
-        return;
-      }
+    // ذخیره تنظیمات تلگرام و متن تعهد احراز هویت در ادمین
+    function saveAdminTelegramSettings() {
+      appData.botToken = document.getElementById('admin-bot-token').value.trim();
+      appData.logChannel = document.getElementById('admin-log-channel').value.trim();
+      appData.adminChatId = document.getElementById('admin-chat-id').value.trim();
+      appData.kycInstruction = document.getElementById('admin-kyc-instruction').value.trim();
 
-      triggerHaptic('heavy');
-      const btn = document.getElementById('btn-spin-paid');
-      btn.disabled = true;
-
-      currentUser.balanceToman -= settings.vipSpinPrice;
-      saveUserData();
-
-      const { prize, index } = pickWeightedPrize(vipWheelPrizes);
-      const segmentAngle = 360 / vipWheelPrizes.length;
-      const targetRotation = (360 * 6) + (360 - (index * segmentAngle + segmentAngle / 2));
-
-      const canvas = document.getElementById('wheel-paid-canvas');
-      canvas.style.transform = `rotate(${targetRotation}deg)`;
-
-      setTimeout(() => {
-        btn.disabled = false;
-        if (prize.type === 'stars') currentUser.stars += prize.value;
-        if (prize.type === 'toman') currentUser.balanceToman += prize.valueToman;
-        saveUserData();
-        triggerHaptic('success');
-        openJackpotModal(prize.label);
-
-        const winVipMsg = `🔥 **برنده خوش‌شانس گردونه طلایی VIP**\n\n` +
-          `👤 **کاربر:** ${currentUser.name}\n` +
-          `🏆 **جایزه ارزشمند:** ${prize.label}\n` +
-          `🆔 **شناسه:** \`${currentUser.id}\``;
-        sendTelegramDirectMessage(winVipMsg, "ارسال پیام تبریک به برنده", `tg://user?id=${currentUser.id}`);
-      }, 4500);
+      saveAppData();
+      alert('تنظیمات ربات و متن احراز هویت با موفقیت ذخیره شد.');
     }
 
-    function openJackpotModal(prizeTitle) {
-      document.getElementById('jackpot-prize-title').innerText = prizeTitle;
-      document.getElementById('modal-jackpot').style.display = 'flex';
-    }
+    // ذخیره تنظیمات مالی، نرخ‌ها و آیدی گیفت
+    function saveAdminFinancialSettings() {
+      appData.bankCard = document.getElementById('admin-bank-card').value.trim();
+      appData.cardOwner = document.getElementById('admin-card-owner').value.trim();
+      appData.tonAddress = document.getElementById('admin-ton-addr').value.trim();
+      appData.giftUsername = document.getElementById('admin-gift-id').value.trim().replace('@', '');
+      appData.tonRate = Number(document.getElementById('admin-ton-rate').value) || 450000;
+      appData.starRate = Number(document.getElementById('admin-star-rate').value) || 1500;
 
-    function closeJackpotModal() {
-      document.getElementById('modal-jackpot').style.display = 'none';
+      saveAppData();
+      setupWalletInfo();
+      alert('تنظیمات مالی با موفقیت ذخیره شد.');
     }
-
-    // توابع پنل مدیریت جامع ادمین
+            // باز کردن پنل ادمین و مقداردهی اینپوت‌ها
     function openAdminPanel() {
-      triggerHaptic('medium');
-      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-      document.getElementById('tab-admin').classList.add('active');
-
-      document.getElementById('admin-bot-token').value = settings.botToken;
-      document.getElementById('admin-log-channel').value = settings.logChannel;
-      document.getElementById('admin-chat-id').value = settings.adminChatId;
-
-      document.getElementById('admin-silver-spin-price').value = settings.silverSpinPrice;
-      document.getElementById('admin-vip-spin-price').value = settings.vipSpinPrice;
-
-      document.getElementById('admin-bank-card').value = settings.bankCard;
-      document.getElementById('admin-card-owner').value = settings.cardOwner;
-      document.getElementById('admin-usdt-addr').value = settings.usdtAddress;
-      document.getElementById('admin-ton-addr').value = settings.tonAddress;
-      document.getElementById('admin-gift-id').value = settings.giftTargetId;
-
-      document.getElementById('admin-usdt-rate').value = settings.usdtRateToman;
-      document.getElementById('admin-ton-rate').value = settings.tonRateToman;
-      document.getElementById('admin-star-rate').value = settings.starRateToman;
+      document.getElementById('admin-bot-token').value = appData.botToken || '';
+      document.getElementById('admin-log-channel').value = appData.logChannel || '';
+      document.getElementById('admin-chat-id').value = appData.adminChatId || '';
+      document.getElementById('admin-kyc-instruction').value = appData.kycInstruction || '';
+      document.getElementById('admin-bank-card').value = appData.bankCard || '';
+      document.getElementById('admin-card-owner').value = appData.cardOwner || '';
+      document.getElementById('admin-ton-addr').value = appData.tonAddress || '';
+      document.getElementById('admin-gift-id').value = appData.giftUsername || '';
+      document.getElementById('admin-ton-rate').value = appData.tonRate || 450000;
+      document.getElementById('admin-star-rate').value = appData.starRate || 1500;
 
       renderAdminCategories();
       renderAdminProducts();
-      renderAdminTasks();
+      renderAdminDeposits();
       renderAdminKYC();
+      renderAdminTasks();
+
+      switchTab('admin', null);
     }
 
-    function saveAdminTelegramSettings() {
-      settings.botToken = document.getElementById('admin-bot-token').value.trim();
-      settings.logChannel = document.getElementById('admin-log-channel').value.trim();
-      settings.adminChatId = document.getElementById('admin-chat-id').value.trim();
-      localStorage.setItem('bn_settings', JSON.stringify(settings));
-      alert('تنظیمات بات و کانال گزارش‌ها ذخیره شد.');
+    // مدیریت دسته‌بندی‌ها
+    function renderAdminCategories() {
+      const list = document.getElementById('admin-categories-list');
+      const select = document.getElementById('new-prod-cat');
+      list.innerHTML = '';
+      select.innerHTML = '';
+
+      (appData.categories || []).forEach((cat, idx) => {
+        list.innerHTML += `
+          <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.2); padding: 6px 10px; border-radius: 8px; margin-bottom: 6px; font-size: 11px;">
+            <span>${cat}</span>
+            <button onclick="adminDeleteCategory(${idx})" style="background: none; border: none; color: var(--neon-rose); cursor: pointer;">حذف</button>
+          </div>
+        `;
+        select.innerHTML += `<option value="${cat}">${cat}</option>`;
+      });
     }
 
-    function saveAdminFinancialSettings() {
-      settings.silverSpinPrice = parseInt(document.getElementById('admin-silver-spin-price').value) || settings.silverSpinPrice;
-      settings.vipSpinPrice = parseInt(document.getElementById('admin-vip-spin-price').value) || settings.vipSpinPrice;
-
-      settings.bankCard = document.getElementById('admin-bank-card').value.trim();
-      settings.cardOwner = document.getElementById('admin-card-owner').value.trim();
-      settings.usdtAddress = document.getElementById('admin-usdt-addr').value.trim();
-      settings.tonAddress = document.getElementById('admin-ton-addr').value.trim();
-      settings.giftTargetId = document.getElementById('admin-gift-id').value.trim();
-
-      settings.usdtRateToman = parseInt(document.getElementById('admin-usdt-rate').value) || settings.usdtRateToman;
-      settings.tonRateToman = parseInt(document.getElementById('admin-ton-rate').value) || settings.tonRateToman;
-      settings.starRateToman = parseInt(document.getElementById('admin-star-rate').value) || settings.starRateToman;
-
-      localStorage.setItem('bn_settings', JSON.stringify(settings));
-      updateWalletView();
-      alert('تمامی نرخ‌ها و تنظیمات مالی با موفقیت ذخیره شدند.');
-    }
-
-    // دسته‌بندی‌ها در ادمین
     function adminAddCategory() {
       const title = document.getElementById('new-cat-title').value.trim();
       if (!title) return;
-      const newCat = { id: 'cat_' + Date.now(), title: title };
-      categories.push(newCat);
-      localStorage.setItem('bn_cats', JSON.stringify(categories));
+      if (!appData.categories) appData.categories = [];
+      appData.categories.push(title);
       document.getElementById('new-cat-title').value = '';
-      renderCategories();
+      saveAppData();
       renderAdminCategories();
+      renderStore();
     }
 
-    function renderAdminCategories() {
-      const box = document.getElementById('admin-categories-list');
-      box.innerHTML = '';
-      categories.forEach((c, idx) => {
-        const row = document.createElement('div');
-        row.style.cssText = 'display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.3); padding: 8px 12px; border-radius: 8px; margin-bottom: 6px; font-size: 11px;';
-        row.innerHTML = `
-          <span>${c.title}</span>
-          <button onclick="adminDeleteCategory(${idx})" style="background: var(--neon-rose); border: none; color: #fff; padding: 4px 8px; border-radius: 6px; font-size: 10px; cursor: pointer;">حذف</button>
-        `;
-        box.appendChild(row);
-      });
-    }
-
-    function adminDeleteCategory(idx) {
-      categories.splice(idx, 1);
-      localStorage.setItem('bn_cats', JSON.stringify(categories));
-      renderCategories();
+    function adminDeleteCategory(index) {
+      appData.categories.splice(index, 1);
+      saveAppData();
       renderAdminCategories();
+      renderStore();
     }
 
-    // محصولات در ادمین
+    // افزودن و حذف محصولات
     function adminAddNewProduct() {
       const title = document.getElementById('new-prod-title').value.trim();
       const desc = document.getElementById('new-prod-desc').value.trim();
-      const price = parseInt(document.getElementById('new-prod-price').value);
+      const price = Number(document.getElementById('new-prod-price').value);
+      const starsPrice = Number(document.getElementById('new-prod-stars').value) || 0;
       const img = document.getElementById('new-prod-img').value.trim();
       const badge = document.getElementById('new-prod-badge').value.trim();
-      const catId = document.getElementById('new-prod-cat').value;
+      const cat = document.getElementById('new-prod-cat').value;
+      const reqInfo = document.getElementById('new-prod-req-info').value;
 
-      if (!title || isNaN(price)) {
-        alert('عنوان و قیمت محصول به تومان الزامی است.');
+      if (!title || !price) {
+        alert('لطفاً عنوان و قیمت محصول را وارد کنید.');
         return;
       }
 
-      const pObj = {
+      if (!appData.products) appData.products = [];
+      appData.products.push({
         id: Date.now(),
-        catId: catId || 'vpn',
-        title: title,
-        desc: desc || '',
-        priceToman: price,
-        img: img || '',
-        badge: badge || ''
-      };
+        title,
+        desc,
+        price,
+        starsPrice,
+        img,
+        badge,
+        category: cat,
+        reqInfo
+      });
 
-      products.push(pObj);
-      localStorage.setItem('bn_prods', JSON.stringify(products));
-      renderStore();
+      saveAppData();
       renderAdminProducts();
-      alert('محصول جدید اضافه شد!');
+      renderStore();
+      alert('محصول با موفقیت اضافه شد.');
     }
 
     function renderAdminProducts() {
-      const box = document.getElementById('admin-products-list');
-      box.innerHTML = '';
-      products.forEach(p => {
-        const row = document.createElement('div');
-        row.style.cssText = 'display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.3); padding: 8px 12px; border-radius: 8px; margin-bottom: 6px; font-size: 11px;';
-        row.innerHTML = `
-          <span>${p.title} (${p.priceToman.toLocaleString()} ت)</span>
-          <button onclick="adminDeleteProduct(${p.id})" style="background: var(--neon-rose); border: none; color: #fff; padding: 4px 8px; border-radius: 6px; font-size: 10px; cursor: pointer;">حذف</button>
+      const list = document.getElementById('admin-products-list');
+      list.innerHTML = '';
+      (appData.products || []).forEach((p, idx) => {
+        list.innerHTML += `
+          <div style="background: rgba(0,0,0,0.3); padding: 8px; border-radius: 10px; margin-bottom: 6px; font-size: 11px; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <b>${p.title}</b> (${Number(p.price).toLocaleString('fa-IR')} ت)
+              <div style="font-size: 9px; color: var(--text-muted);">${p.category} | دریافت: ${p.reqInfo}</div>
+            </div>
+            <button onclick="adminDeleteProduct(${idx})" style="background: none; border: none; color: var(--neon-rose); cursor: pointer;">حذف</button>
+          </div>
         `;
-        box.appendChild(row);
       });
     }
 
-    function adminDeleteProduct(id) {
-      products = products.filter(x => x.id !== id);
-      localStorage.setItem('bn_prods', JSON.stringify(products));
-      renderStore();
+    function adminDeleteProduct(idx) {
+      appData.products.splice(idx, 1);
+      saveAppData();
       renderAdminProducts();
+      renderStore();
     }
 
-    // تسک‌ها در ادمین
+    // تایید واریزی‌ها با ۱ کلیک در پنل
+    function renderAdminDeposits() {
+      const list = document.getElementById('admin-deposits-list');
+      list.innerHTML = '';
+
+      const pending = (appData.pendingDeposits || []).filter(d => d.status === 'pending');
+      if (pending.length === 0) {
+        list.innerHTML = '<div style="font-size: 11px; color: var(--text-muted);">واریزی در انتظار تاییدی وجود ندارد.</div>';
+        return;
+      }
+
+      pending.forEach(d => {
+        list.innerHTML += `
+          <div style="background: rgba(0,0,0,0.3); border: 1px solid var(--border-glass); border-radius: 10px; padding: 10px; margin-bottom: 8px; font-size: 11px;">
+            <div><b>کاربر:</b> ${d.userName} (<code>${d.userId}</code>)</div>
+            <div><b>مبلغ:</b> ${Number(d.amount).toLocaleString('fa-IR')} تومان ${d.cryptoAmount ? `(${d.cryptoAmount} TON)` : ''}</div>
+            <div><b>شناسه / تگ ممو:</b> ${d.memo || d.cardLast4 || '-'}</div>
+            <div style="display: flex; gap: 6px; margin-top: 8px;">
+              <button class="btn-action btn-neon-green" style="padding: 4px 10px; font-size: 10px;" onclick="adminApproveDeposit(${d.id})">✓ تایید و شارژ ۱ کلیکه</button>
+              <button class="btn-action" style="padding: 4px 10px; font-size: 10px; background: rgba(244,63,94,0.2); color: var(--neon-rose);" onclick="adminRejectDeposit(${d.id})">✕ رد درخواست</button>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    async function adminApproveDeposit(depId) {
+      const dep = appData.pendingDeposits.find(d => d.id === depId);
+      if (!dep) return;
+
+      dep.status = 'approved';
+      if (!userBalances[dep.userId]) userBalances[dep.userId] = { balance: 0, stars: 0 };
+      userBalances[dep.userId].balance += dep.amount;
+
+      saveAppData();
+      saveBalances();
+      renderAdminDeposits();
+
+      // ارسال پیام تایید واریز به پی‌وی کاربر با ربات
+      await sendTelegramNotification(
+        `✅ <b>حساب شما شارژ شد!</b>\n\nمبلغ <b>${Number(dep.amount).toLocaleString('fa-IR')} تومان</b> با موفقیت به موجودی شما اضافه شد.`,
+        dep.userId
+      );
+
+      alert('موجودی کاربر با موفقیت افزایش یافت و پیام تایید برای او ارسال شد.');
+    }
+
+    function adminRejectDeposit(depId) {
+      const dep = appData.pendingDeposits.find(d => d.id === depId);
+      if (dep) dep.status = 'rejected';
+      saveAppData();
+      renderAdminDeposits();
+    }
+
+    // تایید هویت KYC، ارتقای حساب و ارسال خودکار پیام تبریک به خریدار
+    function renderAdminKYC() {
+      const list = document.getElementById('admin-kyc-list');
+      list.innerHTML = '';
+
+      if (!appData.pendingKYC || appData.pendingKYC.length === 0) {
+        list.innerHTML = '<div style="font-size: 11px; color: var(--text-muted);">درخواست احراز هویتی ثبت نشده است.</div>';
+        return;
+      }
+
+      appData.pendingKYC.forEach(k => {
+        list.innerHTML += `
+          <div style="background: rgba(0,0,0,0.3); border: 1px solid var(--border-glass); border-radius: 10px; padding: 10px; margin-bottom: 8px; font-size: 11px;">
+            <div><b>نام ثبت‌شده:</b> ${k.realname}</div>
+            <div><b>کاربر:</b> ${k.userName} (<code>${k.userId}</code>)</div>
+            <div><b>شماره کارت:</b> <code>${k.cardnumber}</code></div>
+            <div style="display: flex; gap: 6px; margin-top: 8px;">
+              <button class="btn-action btn-neon-green" style="padding: 4px 10px; font-size: 10px;" onclick="adminApproveKYC(${k.id})">✓ تایید مدارک و ارتقای کاربر</button>
+              <button class="btn-action" style="padding: 4px 10px; font-size: 10px; background: rgba(244,63,94,0.2); color: var(--neon-rose);" onclick="adminRejectKYC(${k.id})">✕ رد مدارک</button>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    async function adminApproveKYC(kycId) {
+      const kyc = appData.pendingKYC.find(k => k.id === kycId);
+      if (!kyc) return;
+
+      if (!appData.verifiedUsers) appData.verifiedUsers = [];
+      if (!appData.verifiedUsers.includes(kyc.userId)) {
+        appData.verifiedUsers.push(kyc.userId);
+      }
+
+      appData.pendingKYC = appData.pendingKYC.filter(k => k.id !== kycId);
+      saveAppData();
+      renderAdminKYC();
+      renderHeader();
+
+      // ارسال پیام تاییدیه رسمی احراز هویت به تلگرام کاربر
+      await sendTelegramNotification(
+        `🎉 <b>احراز هویت شما تایید شد!</b>\n\nمدارک هویتی و بانکی شما با موفقیت تایید گردید و حساب کاربری شما به سطح «تایید شده ✓» ارتقا یافت.`,
+        kyc.userId
+      );
+
+      alert('احراز هویت کاربر تایید شد، تگ تاییدیه فعال گردید و پیام برای او ارسال شد.');
+    }
+
+    function adminRejectKYC(kycId) {
+      appData.pendingKYC = appData.pendingKYC.filter(k => k.id !== kycId);
+      saveAppData();
+      renderAdminKYC();
+    }
+
+    // ارسال مستقیم کانفیگ، لایسنس یا متن سفارش از طریق ربات به چت خریدار
+    async function adminSendProductViaBot() {
+      const targetUserId = document.getElementById('admin-deliver-userid').value.trim();
+      const textToDeliver = document.getElementById('admin-deliver-text').value.trim();
+
+      if (!targetUserId || !textToDeliver) {
+        alert('لطفاً آیدی عددی خریدار و متن محصول را وارد کنید.');
+        return;
+      }
+
+      const deliveryMessage = `📦 <b>تحویل سفارش از فروشگاه بلک‌نت</b>\n` +
+        `➖➖➖➖➖➖➖➖\n` +
+        `اطلاعات محصول ارسالی شما:\n\n` +
+        `<code>${textToDeliver}</code>\n\n` +
+        `➖➖➖➖➖➖➖➖\n` +
+        `از خرید و اعتماد شما متشکریم! در صورت نیاز به پشتیبانی به چنل ما مراجعه کنید.`;
+
+      const success = await sendTelegramNotification(deliveryMessage, targetUserId);
+      if (success) {
+        alert('✅ سفارش مستقیماً از طریق ربات به چت کاربر ارسال شد!');
+        document.getElementById('admin-deliver-text').value = '';
+      } else {
+        alert('❌ ارسال ناموفق بود. مطمئن شوید کاربر ربات را Start کرده و توکن ربات فعال است.');
+      }
+    }
+
+    // مدیریت تسک‌ها
     function adminAddTask() {
       const title = document.getElementById('new-task-title').value.trim();
       const link = document.getElementById('new-task-link').value.trim();
-      const stars = parseInt(document.getElementById('new-task-stars').value) || 1;
+      const stars = Number(document.getElementById('new-task-stars').value) || 5;
 
-      if (!title || !link) {
-        alert('عنوان و لینک تسک الزامی است.');
-        return;
-      }
+      if (!title || !link) return;
+      if (!appData.tasks) appData.tasks = [];
 
-      tasks.push({ id: Date.now(), title: title, link: link, stars: stars, completed: false });
-      localStorage.setItem('bn_tasks', JSON.stringify(tasks));
-      renderTasks();
+      appData.tasks.push({
+        id: Date.now(),
+        title,
+        link,
+        stars,
+        completedBy: []
+      });
+
+      saveAppData();
       renderAdminTasks();
+      renderTasks();
       document.getElementById('new-task-title').value = '';
       document.getElementById('new-task-link').value = '';
+      alert('تسک با موفقیت اضافه شد.');
     }
 
     function renderAdminTasks() {
-      const box = document.getElementById('admin-tasks-list');
-      box.innerHTML = '';
-      tasks.forEach(t => {
-        const row = document.createElement('div');
-        row.style.cssText = 'display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.3); padding: 8px 12px; border-radius: 8px; margin-bottom: 6px; font-size: 11px;';
-        row.innerHTML = `
-          <span>${t.title} (+${t.stars} ⭐)</span>
-          <button onclick="adminDeleteTask(${t.id})" style="background: var(--neon-rose); border: none; color: #fff; padding: 4px 8px; border-radius: 6px; font-size: 10px; cursor: pointer;">حذف</button>
-        `;
-        box.appendChild(row);
-      });
-    }
-
-    function adminDeleteTask(id) {
-      tasks = tasks.filter(x => x.id !== id);
-      localStorage.setItem('bn_tasks', JSON.stringify(tasks));
-      renderTasks();
-      renderAdminTasks();
-    }
-
-    // احراز هویت در ادمین (مشاهده عکس و تایید)
-    function renderAdminKYC() {
-      const box = document.getElementById('admin-kyc-list');
-      box.innerHTML = '';
-      if (kycRequests.length === 0) {
-        box.innerHTML = '<span style="color: var(--text-muted); font-size: 11px;">درخواست احراز هویتی وجود ندارد.</span>';
-        return;
-      }
-
-      kycRequests.forEach((req, idx) => {
-        const card = document.createElement('div');
-        card.style.cssText = 'background: rgba(0,0,0,0.35); border: 1px solid var(--border-glass); padding: 10px; border-radius: 12px; margin-bottom: 8px; font-size: 11px;';
-        card.innerHTML = `
-          <div style="margin-bottom: 4px;"><b>نام:</b> ${req.name} | <b>کاربر:</b> ${req.userName}</div>
-          <div style="margin-bottom: 6px; color: var(--text-muted);"><b>کارت:</b> ${req.card}</div>
-          <img src="${req.photo}" style="width: 100%; max-height: 140px; object-fit: contain; border-radius: 8px; margin-bottom: 8px; border: 1px solid var(--border-glass);" />
-          <div style="display: flex; gap: 6px;">
-            <button onclick="adminVerifyKYC(${idx}, true)" style="flex: 1; background: var(--neon-green); border: none; color: #fff; padding: 6px; border-radius: 6px; font-weight: bold; cursor: pointer;">تأیید مدارک</button>
-            <button onclick="adminVerifyKYC(${idx}, false)" style="flex: 1; background: var(--neon-rose); border: none; color: #fff; padding: 6px; border-radius: 6px; font-weight: bold; cursor: pointer;">رد درخواست</button>
+      const list = document.getElementById('admin-tasks-list');
+      list.innerHTML = '';
+      (appData.tasks || []).forEach((t, idx) => {
+        list.innerHTML += `
+          <div style="background: rgba(0,0,0,0.3); padding: 8px; border-radius: 10px; margin-bottom: 6px; font-size: 11px; display: flex; justify-content: space-between; align-items: center;">
+            <span>${t.title} (⭐ ${t.stars})</span>
+            <button onclick="adminDeleteTask(${idx})" style="background: none; border: none; color: var(--neon-rose); cursor: pointer;">حذف</button>
           </div>
         `;
-        box.appendChild(card);
       });
     }
 
-    function adminVerifyKYC(idx, isApproved) {
-      const req = kycRequests[idx];
-      if (isApproved && req.userId === currentUser.id) {
-        currentUser.isKYCVerified = true;
-        saveUserData();
-      }
-      kycRequests.splice(idx, 1);
-      localStorage.setItem('bn_kyc_list', JSON.stringify(kycRequests));
-      renderAdminKYC();
-      alert(`درخواست ${isApproved ? 'تأیید شد' : 'رد شد'}.`);
+    function adminDeleteTask(idx) {
+      appData.tasks.splice(idx, 1);
+      saveAppData();
+      renderAdminTasks();
+      renderTasks();
     }
 
-    // رندر مجدد گردونه‌ها پس از لود کامل پنجره
-    window.addEventListener('load', () => {
-      drawWheel('wheel-free-canvas', freeWheelPrizes);
-      drawWheel('wheel-paid-canvas', vipWheelPrizes);
+    // کپی لینک رفرال
+    function copyReferralLink() {
+      const linkEl = document.getElementById('referral-link');
+      if (linkEl) {
+        navigator.clipboard.writeText(linkEl.value);
+        alert('لینک دعوت اختصاصی شما کپی شد.');
+      }
+    }
+
+    // راه‌اندازی و اجرای اولیه سیستم
+    window.addEventListener('DOMContentLoaded', () => {
+      renderHeader();
+      renderStore();
+      initHorizontalRoulette();
+      renderTasks();
+      setupWalletInfo();
+
+      const refEl = document.getElementById('referral-link');
+      if (refEl) {
+        refEl.value = `https://t.me/YourBotUsername?start=ref_${currentUser.id}`;
+      }
     });
   </script>
 </body>
-</html>
+                               </html>
+  
