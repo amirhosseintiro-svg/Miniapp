@@ -664,11 +664,11 @@
     </div>
     <div class="dock-tab" onclick="switchTab('game', this)">
       <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12V8H6a2 2 0 0 1-2-2V4"/><rect x="2" y="14" width="20" height="8" rx="2"/><path d="M6 18h.01"/><path d="M10 18h.01"/></svg>
-      <span>شانس</span>
+      <span>گردونه</span>
     </div>
     <div class="dock-tab" onclick="switchTab('tasks', this)">
       <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-      <span>ستاره‌ها</span>
+      <span>تسک‌ها</span>
     </div>
     <div class="dock-tab" onclick="switchTab('wallet', this)">
       <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
@@ -1015,7 +1015,7 @@
     const boxRewards = [
       { id: 1, title: '۱۰,۰۰۰ تومان', type: 'balance', value: 10000, icon: '💵', color: '#10b981' },
       { id: 2, title: '۵ ستاره', type: 'stars', value: 5, icon: '⭐', color: '#fbbf24' },
-      { id: 3, title: 'کانفیگ ۱ ماهه', type: 'config', value: 0, icon: '🚀', color: '#00f2fe' },
+      { id: 3, title: '0.5 ton', type: 'config', value: 0, icon: '🚀', color: '#00f2fe' },
       { id: 4, title: '۲۵,۰۰۰ تومان', type: 'balance', value: 25000, icon: '💰', color: '#10b981' },
       { id: 5, title: '۱۰ ستاره', type: 'stars', value: 10, icon: '⭐', color: '#fbbf24' },
       { id: 6, title: 'اکانت پرمیوم', type: 'account', value: 0, icon: '👑', color: '#c084fc' },
@@ -1069,13 +1069,13 @@
       if (isSpinning) return;
       const uBal = userBalances[currentUser.id] || { balance: 0, stars: 0 };
 
-      // هزینه باز کردن جعبه: ۲۰۰۰ تومان یا ۵ ستاره
-      if (uBal.balance < 2000) {
-        alert('برای باز کردن جعبه حداقل ۲۰۰۰ تومان موجودی نیاز است.');
+      // هزینه باز کردن جعبه: 150000 تومان یا 40 ستاره
+      if (uBal.balance < 150000) {
+        alert('برای باز کردن جعبه حداقل 150000 تومان موجودی نیاز است.');
         return;
       }
 
-      uBal.balance -= 2000;
+      uBal.balance -= 150000;
       saveBalances();
       isSpinning = true;
 
@@ -1237,8 +1237,8 @@
       const cardLast4 = document.getElementById('dep-toman-card').value.trim();
       const tracking = document.getElementById('dep-toman-tracking').value.trim();
 
-      if (!amount || amount < 5000) {
-        alert('لطفاً مبلغ واریزی معتبر (حداقل ۵۰۰۰ تومان) وارد کنید.');
+      if (!amount || amount < 50000) {
+        alert('لطفاً مبلغ واریزی معتبر (حداقل 50000 تومان) وارد کنید.');
         return;
       }
 
